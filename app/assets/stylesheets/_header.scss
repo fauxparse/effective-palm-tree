@@ -1,0 +1,34 @@
+$main-menu-item-count: 4;
+
+.application > header {
+  align-items: center;
+  border-bottom: $base-border;
+  display: flex;
+  flex-direction: row;
+  height: $sizing-increment;
+  padding: 0.5em $sizing-increment calc(0.5em - 1px) 0.5em;
+
+  h1 {
+    @include ellipsis;
+    font-size: 1.25em;
+    font-weight: $light-font-weight;
+    line-height: 2em;
+    margin: 0 0 0 3rem;
+  }
+
+  label[for="show-sidebar"] {
+    @include size($button-size);
+    background: $oc-gray-1;
+    border-radius: 50%;
+    font-weight: $base-font-weight;
+    margin: 0;
+    position: relative;
+    padding: (($button-size - $icon-size) / 2);
+
+    path {
+      stroke: $secondary-font-color;
+      stroke-linecap: square;
+      stroke-width: 1px;
+    }
+  }
+}

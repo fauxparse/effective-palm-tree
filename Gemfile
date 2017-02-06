@@ -35,6 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'autoprefixer-rails'
 gem 'bitters', github: 'thoughtbot/bitters'
 gem 'bourbon', '>= 5.0.0.beta.7'
 gem 'normalize-rails'
