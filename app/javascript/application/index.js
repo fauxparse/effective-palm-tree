@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Header from './components/header'
 import Sidebar from './components/sidebar'
+import Calendar from './components/calendar'
 
 class Application extends React.Component {
   render() {
@@ -9,6 +10,7 @@ class Application extends React.Component {
       <div className="application">
         <Sidebar/>
         <Header title="Hello world"/>
+        <Calendar/>
       </div>
     )
   }
