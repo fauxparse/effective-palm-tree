@@ -1,9 +1,53 @@
 .calendar {
+  @include position(absolute, 0 0 0 0);
   background: $base-background-color;
+  overflow: hidden;
   padding: 1rem;
 
-  h2 {
-    color: $secondary-font-color;
+  h3 {
+    color: $base-font-color;
+    font-size: $base-font-size;
     font-weight: $light-font-weight;
+    margin: 0;
+  }
+
+  .content {
+    @include position(absolute, 0 0 0 0);
+
+    > section {
+      @include position(absolute, 0 0 null 0);
+    }
+  }
+
+  .bookmark {
+    @include position(absolute, 0 1em null null);
+    background: none;
+    border: .5em solid $light-gray;
+    border-bottom-color: transparent;
+    border-radius: 0;
+    border-width: 2em 0.5em 0.5em;
+    box-shadow: none;
+    height: 2em;
+    margin: 0;
+    outline: none;
+    padding: 0;
+    top: -1em;
+    transform: translateY(-100%);
+    transition: transform $base-duration $ease-in-back;
+    width: 1em;
+    -webkit-tap-highlight-color: rgba(black, 0);
+
+    &::after {
+      @include position(absolute, null null 0.5em 50%);
+      @include size($button-size);
+      border-radius: 50%;
+      content: "";
+      margin: ($button-size / -2);
+    }
+  }
+
+  &.show-bookmark .bookmark {
+    transform: translateY(0);
+    transition: transform $base-duration $ease-out-back;
   }
 }

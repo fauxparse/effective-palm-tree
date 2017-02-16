@@ -13,8 +13,9 @@ export default function InfinitelyScrollable(WrappedComponent) {
       this.onTouchStart = this.onTouchStart.bind(this)
       this.onTouchMove = this.onTouchMove.bind(this)
       this.onTouchEnd = this.onTouchEnd.bind(this)
-      this.trackInertialScroll = this.trackInertialScroll.bind(this)
+      this.trackAutoScroll = this.trackAutoScroll.bind(this)
       this.autoScroll = this.autoScroll.bind(this)
+      this.scrollTo = this.scrollTo.bind(this)
     }
 
     render() {
@@ -23,7 +24,10 @@ export default function InfinitelyScrollable(WrappedComponent) {
           onTouchStart={this.onTouchStart}
           onMouseDown={this.onTouchStart}
           onWheel={this.onWheel}>
-          <WrappedComponent offset={this.state.offset} {...this.props}/>
+          <WrappedComponent
+            offset={this.state.offset}
+            scrollTo={this.scrollTo}
+            {...this.props}/>
         </div>
       )
     }
@@ -43,7 +47,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
         velocity: 0,
         frame: this.state.offset,
         timestamp: Date.now(),
-        ticker: setTimeout(this.trackInertialScroll, 100)
+        ticker: setTimeout(this.trackAutoScroll, 100)
       }
       this.setState({ dragging, autoScroll: false })
       window.addEventListener('touchmove', this.onTouchMove)
@@ -90,7 +94,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
         return e.clientY
     }
 
-    trackInertialScroll() {
+    trackAutoScroll() {
       let { offset, dragging } = this.state
       let { velocity, timestamp, frame } = dragging
 
@@ -100,12 +104,12 @@ export default function InfinitelyScrollable(WrappedComponent) {
       dragging.timestamp = now
       dragging.frame = offset
       dragging.velocity = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * velocity
-      dragging.ticker = setTimeout(this.trackInertialScroll, 100)
+      dragging.ticker = setTimeout(this.trackAutoScroll, 100)
       this.setState({ offset, dragging })
     }
 
     autoScroll() {
-      let { amplitude, target, timestamp } = this.state.autoScroll || {}
+      let { amplitude, origin, target, timestamp, duration } = this.state.autoScroll || {}
 
       if (amplitude) {
         let elapsed = Date.now() - timestamp
@@ -116,6 +120,12 @@ export default function InfinitelyScrollable(WrappedComponent) {
         } else if (target !== undefined) {
           this.setState({ offset: target })
         }
+      } else if (duration) {
+        let elapsed = Date.now() - timestamp
+        let d = Math.min(1, elapsed / duration)
+        let smooth = d * d * d * (d * (d * 6 - 15) + 10)
+        this.setState({ offset: Math.round(origin + smooth * (target - origin)) })
+        if (d < 1) requestAnimationFrame(this.autoScroll)
       }
     }
 
@@ -127,7 +137,24 @@ export default function InfinitelyScrollable(WrappedComponent) {
     }
 
     cancelAutoScroll() {
-      this.setState({ autoScroll: false })
+      if (this.state.autoScroll) {
+        this.setState({ autoScroll: false })
+      }
+    }
+
+    scrollTo(target) {
+      const { offset } = this.state
+      this.cancelDrag()
+
+      this.setState({
+        autoScroll: {
+          origin: offset,
+          target,
+          timestamp: Date.now(),
+          duration: Math.abs(target - offset) / 2
+        }
+      })
+      requestAnimationFrame(this.autoScroll)
     }
   }
 }
