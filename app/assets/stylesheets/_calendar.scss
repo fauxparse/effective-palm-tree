@@ -1,15 +1,10 @@
+$calendar-gutter-size: 4.5em;
+
 .calendar {
   @include position(absolute, 0 0 0 0);
   background: $base-background-color;
   overflow: hidden;
   padding: 1rem;
-
-  h3 {
-    color: $base-font-color;
-    font-size: $base-font-size;
-    font-weight: $light-font-weight;
-    margin: 0;
-  }
 
   .content {
     @include position(absolute, 0 0 0 0);
@@ -22,18 +17,19 @@
   .bookmark {
     @include position(absolute, 0 1em null null);
     background: none;
-    border: .5em solid $light-gray;
+    border: .5em solid $red;
     border-bottom-color: transparent;
     border-radius: 0;
     border-width: 2em 0.5em 0.5em;
     box-shadow: none;
     height: 2em;
     margin: 0;
+    mix-blend-mode: multiply;
     outline: none;
     padding: 0;
     top: -1em;
     transform: translateY(-100%);
-    transition: transform $base-duration $ease-in-back;
+    transition: transform $medium-duration $ease-in-back;
     width: 1em;
     -webkit-tap-highlight-color: rgba(black, 0);
 
@@ -48,6 +44,135 @@
 
   &.show-bookmark .bookmark {
     transform: translateY(0);
-    transition: transform $base-duration $ease-out-back;
+    transition-timing-function: $ease-out-back;
+  }
+
+  .month {
+    min-height: 8em;
+    padding: 0.5em 0 0.5em $calendar-gutter-size;
+
+    h3 {
+      @include ellipsis;
+      color: $secondary-font-color;
+      font-size: $small-font-size;
+      font-weight: $base-font-weight;
+      letter-spacing: 0.1em;
+      line-height: 1.5rem;
+      margin: 0 1rem 0.5rem 1.5rem;
+      text-transform: uppercase;
+    }
+
+    &::before {
+      @include position(absolute, 0 null 0 $calendar-gutter-size);
+      background: $base-border-color;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 0.125em,
+        $base-border-color 0.125em,
+        $base-border-color 0.375em,
+        transparent 0.375em,
+        transparent 0.5em
+      );
+      content: "";
+      pointer-events: none;
+      width: 1px;
+      z-index: -1;
+    }
+
+    &.loaded::before {
+      background: $base-border-color;
+    }
+
+    section {
+      position: relative;
+    }
+
+    h4 {
+      @include position(absolute, 0 null null (-$calendar-gutter-size));
+      font-size: $base-font-size;
+      font-weight: $base-font-weight;
+      margin: 0;
+      padding: 0 1em 0 0.5em;
+      text-align: center;
+      width: $calendar-gutter-size;
+
+      .date {
+        display: block;
+        font-size: 1.5em;
+        font-weight: $light-font-weight;
+        line-height: 1;
+      }
+
+      .day {
+        color: $secondary-font-color;
+        display: block;
+        font-size: $tiny-font-size;
+        line-height: ($base-font-size / $tiny-font-size);
+        text-transform: uppercase;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+    }
+
+    li {
+      margin: 0 0 1.5em;
+      padding: 0 1em 0 1.5em;
+      position: relative;
+
+      svg {
+        @include position(absolute, -0.5em null null -1.21875em);
+        @include size(2.4375em);
+
+        circle {
+          fill: $base-background-color;
+          stroke: $medium-gray;
+          stroke-width: 1px;
+        }
+
+        path {
+          fill: none;
+          stroke-linecap: square;
+          stroke-width: 1px;
+        }
+
+        .check {
+          display: none;
+          stroke: $green;
+        }
+
+        .cross {
+          display: none;
+          stroke: $red;
+        }
+
+        .question {
+          stroke: $medium-gray;
+        }
+      }
+
+      a {
+        color: $base-font-color;
+        display: flex;
+        align-items: baseline;
+      }
+
+      b {
+        @include ellipsis;
+        flex: 1;
+        font-weight: $base-font-weight;
+        margin-right: 1em;
+      }
+
+      small {
+        color: $secondary-font-color;
+        font-size: $small-font-size;
+        font-weight: $light-font-weight;
+        line-height: ($base-line-height * (1em / $small-font-size));
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import InfinitelyScrollable from './infinitely_scrollable'
+import Month from './month'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -50,9 +51,12 @@ class Calendar extends React.Component {
 
   renderMonth(month) {
     return (
-      <section key={month.index} className="month" style={this.transform(month.top)}>
-        <h3>{month.name}</h3>
-      </section>
+      <Month
+        key={month.index}
+        date={month.start}
+        dates={month.dates || []}
+        loaded={month.loaded}
+        style={this.transform(month.top)}/>
     )
   }
 
@@ -78,7 +82,7 @@ class Calendar extends React.Component {
       results.unshift(newMonth)
     }
 
-    return results.filter(month => month.top < offset + height)
+    return results.filter(month => offset < month.top + month.height && month.top < offset + height)
   }
 
   month(index, options) {
@@ -91,14 +95,30 @@ class Calendar extends React.Component {
       if (!this.loaders[index]) {
         this.loaders[index] = setTimeout(() => {
           let { months, min, max } = this.state
+          month.loaded = true
+          month.dates = this.tuesdays(month.start)
+          month.height = 56 + (month.dates.length || 1) * 48
           months[index] = month
           min = Math.min(index, min)
           max = Math.max(index, max)
           this.setState({ months, min, max })
-        })
+          setTimeout(() => this.refreshOffsetsFrom(index < 0 ? -1 : 0))
+        }, 100)
       }
     }
     return month
+  }
+
+  tuesdays(date) {
+    let results = []
+    let end = date.clone().endOf('month')
+    let d = date.clone().startOf('week').add(2, 'days')
+    while (d.isBefore(date)) d.add(1, 'week')
+    while (d.isBefore(end)) {
+      results.push(d)
+      d = d.clone().add(1, 'week')
+    }
+    return results
   }
 
   emptyMonth(index) {
@@ -108,7 +128,9 @@ class Calendar extends React.Component {
       start: date,
       name: date.format('MMMM YYYY'),
       index: index,
-      height: 64
+      height: 88,
+      loaded: false,
+      dates: []
     }
   }
 
@@ -124,6 +146,21 @@ class Calendar extends React.Component {
       }
     }
     return min
+  }
+
+  refreshOffsetsFrom(index) {
+    const { months } = this.state
+
+    if (index >= 0) {
+      for (let y = months[index].top; months[index]; y += months[index++].height) {
+        months[index].top = y
+      }
+    } else {
+      for (let y = months[index + 1].top; months[index]; index--) {
+        y = months[index].top = y - months[index].height
+      }
+    }
+    this.setState({ months })
   }
 
   isVisibleAt(offset, month) {

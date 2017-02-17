@@ -14,6 +14,8 @@ $heading-font-family: $base-font-family;
 
 // Font Sizes
 $base-font-size: 1em;
+$small-font-size: 0.875em;
+$tiny-font-size: 0.75em;
 
 // Font weights
 $base-font-weight: 400;
@@ -32,6 +34,7 @@ $base-z-index: 0;
 
 // Colors
 $green: $oc-lime-6;
+$red: $oc-red-6;
 $dark-gray: $oc-gray-9;
 $medium-gray: $oc-gray-6;
 $light-gray: $oc-gray-3;
