@@ -96,16 +96,18 @@ export default function InfinitelyScrollable(WrappedComponent) {
 
     trackAutoScroll() {
       let { offset, dragging } = this.state
-      let { velocity, timestamp, frame } = dragging
+      if (dragging) {
+        let { velocity, timestamp, frame } = dragging
 
-      let now = Date.now()
-      let elapsed = now - timestamp
-      let delta = offset - frame
-      dragging.timestamp = now
-      dragging.frame = offset
-      dragging.velocity = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * velocity
-      dragging.ticker = setTimeout(this.trackAutoScroll, 100)
-      this.setState({ offset, dragging })
+        let now = Date.now()
+        let elapsed = now - timestamp
+        let delta = offset - frame
+        dragging.timestamp = now
+        dragging.frame = offset
+        dragging.velocity = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * velocity
+        dragging.ticker = setTimeout(this.trackAutoScroll, 100)
+        this.setState({ offset, dragging })
+      }
     }
 
     autoScroll() {
@@ -122,11 +124,18 @@ export default function InfinitelyScrollable(WrappedComponent) {
         }
       } else if (duration) {
         let elapsed = Date.now() - timestamp
-        let d = Math.min(1, elapsed / duration)
-        let smooth = d * d * d * (d * (d * 6 - 15) + 10)
-        this.setState({ offset: Math.round(origin + smooth * (target - origin)) })
-        if (d < 1) requestAnimationFrame(this.autoScroll)
+        this.setState({ offset: Math.round(this.ease(elapsed, origin, target - origin, duration)) })
+        if (elapsed < duration) requestAnimationFrame(this.autoScroll)
       }
+    }
+
+    // exponential ease in/out
+    // http://gizma.com/easing/
+    ease(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+      t--;
+      return c / 2 * (-Math.pow(2, -10 * t) + 2) + b;
     }
 
     cancelDrag() {
@@ -151,7 +160,8 @@ export default function InfinitelyScrollable(WrappedComponent) {
           origin: offset,
           target,
           timestamp: Date.now(),
-          duration: Math.abs(target - offset) / 2
+          amplitude: 0,
+          duration: Math.sqrt(Math.abs(target - offset)) * 10
         }
       })
       requestAnimationFrame(this.autoScroll)
