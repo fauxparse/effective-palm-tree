@@ -67,6 +67,7 @@ class Calendar extends React.Component {
         timezone={this.props.timezone}
         style={this.transform(month.top)}
         offset={this.props.offset}
+        onHeaderClicked={() => this.props.scrollTo(month.top)}
       />
     )
   }

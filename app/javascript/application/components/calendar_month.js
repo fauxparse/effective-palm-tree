@@ -10,14 +10,17 @@ export default class CalendarMonth extends React.Component {
   }
 
   render() {
-    const { month, style, timezone, offset } = this.props
+    const { month, style, timezone, offset, onHeaderClicked } = this.props
     const { loaded } = month
     const floating = Math.max(0, Math.min(month.height - 48, offset - month.top))
     return (
       <section
         className={classNames('month', { loaded })}
         style={style}>
-        <h3 className={classNames({ floating })} style={{ top: `${floating}px` }}>
+        <h3
+          className={classNames({ floating })}
+          style={{ top: `${floating}px` }}
+          onClick={(e) => onHeaderClicked && onHeaderClicked(e)}>
           {month.start.format('MMMM YYYY')}
         </h3>
         {month.days.map(this.day.bind(this))}
