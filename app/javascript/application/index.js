@@ -9,8 +9,10 @@ class Application extends React.Component {
     return (
       <div className="application">
         <Sidebar/>
-        <Header title="Hello world"/>
-        <Calendar/>
+        <main>
+          <Header title="Hello world"/>
+          <Calendar/>
+        </main>
       </div>
     )
   }

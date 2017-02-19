@@ -3,9 +3,13 @@ body {
 }
 
 .application {
-  @include position(fixed, 0 0 0 0);
-  display: flex;
-  flex-direction: column;
+  main {
+    @include position(fixed, 0 0 0 0);
+    background: $base-background-color;
+    display: flex;
+    flex-direction: column;
+    transition: transform $medium-duration $base-timing;
+  }
 }
 
 .infinitely-scrollable {

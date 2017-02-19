@@ -2,7 +2,6 @@ $calendar-gutter-size: 4.5rem;
 
 .calendar {
   @include position(absolute, 0 0 0 0);
-  background: $base-background-color;
   overflow: hidden;
   padding: 1rem;
 
