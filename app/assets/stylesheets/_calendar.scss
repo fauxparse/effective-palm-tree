@@ -17,7 +17,7 @@ $calendar-gutter-size: 4.5em;
   .bookmark {
     @include position(absolute, 0 1em null null);
     background: none;
-    border: .5em solid $red;
+    border: .5em solid $accent-color;
     border-bottom-color: transparent;
     border-radius: 0;
     border-width: 2em 0.5em 0.5em;
@@ -97,20 +97,25 @@ $calendar-gutter-size: 4.5em;
       padding: 0 1em 0 0.5em;
       text-align: center;
       width: $calendar-gutter-size;
+      color: $secondary-font-color;
 
       .date {
         display: block;
         font-size: 1.5em;
         font-weight: $light-font-weight;
         line-height: 1;
+
+        &.today {
+          color: $accent-color;
+        }
       }
 
       .day {
-        color: $secondary-font-color;
         display: block;
         font-size: $tiny-font-size;
         line-height: ($base-font-size / $tiny-font-size);
         text-transform: uppercase;
+        opacity: 0.5;
       }
     }
 

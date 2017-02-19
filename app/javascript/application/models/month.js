@@ -1,4 +1,5 @@
 import { last, sortBy, sum } from 'lodash'
+import Event from './event'
 
 export default class Month {
   constructor(date, index = 0) {
@@ -7,7 +8,7 @@ export default class Month {
     this.loaded = false
     this._events = []
 
-    setTimeout(this.populate.bind(this), 100)
+    setTimeout(this.populate.bind(this), 1000)
   }
 
   get name() {
@@ -23,7 +24,7 @@ export default class Month {
   }
 
   set events(events) {
-    this._events = sortBy(events, event => event.unix())
+    this._events = sortBy(events, event => event.start.unix())
     delete this._grouped
     if (this.onChange) this.onChange(this)
   }
@@ -44,18 +45,18 @@ export default class Month {
   }
 
   populate() {
-    let tuesdays = this.fillDays(2, 18)
-    let fridays = this.fillDays(5, 21)
+    let tuesdays = this.fillDays(2, 18, 'Family Time').concat(this.fillDays(2, 20.5, 'Burgers'))
+    let fridays = this.fillDays(5, 21, 'PlayShop LIVE!')
     this.loaded = true
     this.events = tuesdays.slice(0).concat(fridays)
   }
 
-  fillDays(weekday, hour) {
+  fillDays(weekday, hour, name) {
     let results = []
     let d = this.start.clone().startOf('week').add(weekday, 'days').add(hour, 'hours')
     while (d.isBefore(this.start)) d.add(1, 'week')
     while (d.isBefore(this.end)) {
-      results.push(d)
+      results.push(new Event({ start: d, name }))
       d = d.clone().add(1, 'week')
     }
     return results
@@ -63,7 +64,7 @@ export default class Month {
 }
 
 function groupEvents(groups, event) {
-  if (groups.length && last(groups)[0].isSame(event, 'day')) {
+  if (groups.length && last(groups)[0].start.isSame(event.start, 'day')) {
     last(groups).push(event)
   } else {
     groups.push([event])

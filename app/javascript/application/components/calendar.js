@@ -5,7 +5,7 @@ import { sortBy } from 'lodash'
 import InfinitelyScrollable from './infinitely_scrollable'
 import Month from '../models/month'
 import Event from '../models/event'
-import CalendarMonth from './month'
+import CalendarMonth from './calendar_month'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class Calendar extends React.Component {
     this.fillMonths = this.fillMonths.bind(this)
     this.onResize = this.onResize.bind(this)
     this.state = {
-      now: moment().tz('Pacific/Auckland'),
+      now: moment().tz(this.props.timezone),
       months: {},
       min: 0,
       max: 0
@@ -63,9 +63,8 @@ class Calendar extends React.Component {
     return (
       <CalendarMonth
         key={month.index}
-        date={month.start}
-        events={month.days}
-        loaded={month.loaded}
+        month={month}
+        timezone={this.props.timezone}
         style={this.transform(month.top)}/>
     )
   }
@@ -180,11 +179,13 @@ class Calendar extends React.Component {
 }
 
 Calendar.propTypes = {
-  offset: React.PropTypes.number.isRequired
+  offset: React.PropTypes.number.isRequired,
+  timezone: React.PropTypes.string.isRequired
 }
 
 Calendar.defaultProps = {
-  offset: 0
+  offset: 0,
+  timezone: 'Pacific/Auckland'
 }
 
 export default InfinitelyScrollable(Calendar)
