@@ -65,7 +65,9 @@ class Calendar extends React.Component {
         key={month.index}
         month={month}
         timezone={this.props.timezone}
-        style={this.transform(month.top)}/>
+        style={this.transform(month.top)}
+        offset={this.props.offset}
+      />
     )
   }
 

@@ -41,7 +41,7 @@ export default class Month {
   }
 
   get height() {
-    return 56 + Math.max(sum(this.days.map(day => day.length * 48)), 32)
+    return 48 + Math.max(sum(this.days.map(day => day.length * 48)), 48)
   }
 
   populate() {

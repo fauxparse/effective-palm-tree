@@ -1,4 +1,4 @@
-$calendar-gutter-size: 4.5em;
+$calendar-gutter-size: 4.5rem;
 
 .calendar {
   @include position(absolute, 0 0 0 0);
@@ -49,17 +49,26 @@ $calendar-gutter-size: 4.5em;
 
   .month {
     min-height: 8em;
-    padding: 0.5em 0 0.5em $calendar-gutter-size;
 
     h3 {
       @include ellipsis;
+      border-bottom: 1px solid transparent;
       color: $secondary-font-color;
+      display: block;
       font-size: $small-font-size;
       font-weight: $base-font-weight;
       letter-spacing: 0.1em;
       line-height: 1.5rem;
-      margin: 0 1rem 0.5rem 1.5rem;
+      margin: 0 0 0.5rem;
+      padding: 0.5rem 0 0.4375rem ($calendar-gutter-size + 1.5rem);
       text-transform: uppercase;
+
+      &.floating {
+        background: rgba(white, 0.95);
+        border-bottom-color: $base-border-color;
+        position: relative;
+        z-index: 1;
+      }
     }
 
     &::before {
@@ -86,7 +95,7 @@ $calendar-gutter-size: 4.5em;
 
     section {
       position: relative;
-      margin: 0 0 0.5rem;
+      margin: 0 1em 0.5em $calendar-gutter-size;
     }
 
     h4 {

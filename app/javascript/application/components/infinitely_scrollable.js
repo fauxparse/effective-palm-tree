@@ -25,7 +25,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
           onMouseDown={this.onTouchStart}
           onWheel={this.onWheel}>
           <WrappedComponent
-            offset={this.state.offset}
+            offset={Math.round(this.state.offset)}
             scrollTo={this.scrollTo}
             {...this.props}/>
         </div>
