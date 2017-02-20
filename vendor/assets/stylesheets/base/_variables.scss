@@ -59,6 +59,9 @@ $form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($action-color, $l
 
 // Animations
 $base-duration: 150ms;
-$medium-duration: $base-duration * 2;
-$slow-duration: $base-duration * 4;
-$base-timing: $ease-out-cubic;
+$medium-duration: 225ms;
+$slow-duration: 375ms;
+$base-timing: cubic-bezier(0.4, 0, 0.2, 1);
+$sharp-timing: cubic-bezier(0.4, 0, 0.6, 1);
+$acceleration-timing: cubic-bezier(0.4, 0, 1, 1);
+$deceleration-timing: cubic-bezier(0, 0, 0.2, 1);

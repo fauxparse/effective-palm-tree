@@ -8,7 +8,7 @@ body {
     background: $base-background-color;
     display: flex;
     flex-direction: column;
-    transition: transform $medium-duration $base-timing;
+    transition: transform $slow-duration $base-timing;
   }
 }
 

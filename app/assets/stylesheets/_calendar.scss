@@ -1,12 +1,13 @@
 $calendar-gutter-size: 4.5rem;
+$large-calendar-gutter-size: $sizing-increment * 4;
 
 .calendar {
   @include position(absolute, 0 0 0 0);
   overflow: hidden;
   padding: 1rem;
 
-  .content {
-    @include position(absolute, 0 0 0 0);
+  .timeline {
+    @include position(absolute, 0 0 null 0);
 
     > section {
       @include position(absolute, 0 0 null 0);
@@ -53,6 +54,7 @@ $calendar-gutter-size: 4.5rem;
       @include ellipsis;
       border-bottom: 1px solid transparent;
       color: $secondary-font-color;
+      cursor: pointer;
       display: block;
       font-size: $small-font-size;
       font-weight: $base-font-weight;
@@ -186,6 +188,23 @@ $calendar-gutter-size: 4.5rem;
         font-size: $small-font-size;
         font-weight: $light-font-weight;
         line-height: ($base-line-height * (1em / $small-font-size));
+      }
+    }
+  }
+
+  @include media($medium-screen) {
+    .month {
+      &::before {
+        left: $large-calendar-gutter-size;
+      }
+
+      h3 {
+        padding-left: $large-calendar-gutter-size + 1.5rem;
+      }
+
+      section {
+        margin-left: $large-calendar-gutter-size;
+        margin-right: $large-calendar-gutter-size;
       }
     }
   }

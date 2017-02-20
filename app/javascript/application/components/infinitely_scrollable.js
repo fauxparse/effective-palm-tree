@@ -125,7 +125,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
       } else if (duration) {
         let elapsed = Date.now() - timestamp
         this.setState({ offset: Math.round(this.ease(elapsed, origin, target - origin, duration)) })
-        if (elapsed < duration) requestAnimationFrame(this.autoScroll)
+        if (elapsed <= duration) requestAnimationFrame(this.autoScroll)
       }
     }
 

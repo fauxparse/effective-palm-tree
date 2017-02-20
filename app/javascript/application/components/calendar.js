@@ -42,17 +42,17 @@ class Calendar extends React.Component {
     const className = classNames('calendar', { 'show-bookmark': Math.abs(offset) > height })
     return (
       <div className={className} ref={(el) => this.container = el}>
-        {this.content()}
+        {this.timeline()}
         <button className="bookmark" onClick={() => scrollTo(0)}/>
       </div>
     )
   }
 
-  content() {
+  timeline() {
     if (this.container) {
       const { offset } = this.props
       return (
-        <div className="content" style={this.transform(-offset)}>
+        <div className="timeline" style={this.transform(-offset)}>
           {this.visibleMonths().map(this.renderMonth.bind(this))}
         </div>
       )

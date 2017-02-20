@@ -8,11 +8,11 @@
   nav {
     @include position(fixed, 0 null 0 0);
     background: $base-background-color;
-    box-shadow: 0 0 .5rem rgba(0, 0, 0, 0);
+    box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.25);
     max-width: calc(100% - #{$sizing-increment});
     padding: 1rem;
-    transform: translateX(-100%);
-    transition: all $medium-duration $base-timing;
+    transform: translateX(-110%);
+    transition: transform $slow-duration $sharp-timing;
     width: $sizing-increment * 6;
     z-index: 100;
   }
@@ -44,14 +44,14 @@
     margin: 0;
     opacity: 0;
     pointer-events: none;
-    transition: opacity $medium-duration $base-timing;
+    transition: opacity $slow-duration $base-timing;
     z-index: 1;
   }
 
   #show-sidebar:checked {
     ~ nav {
-      box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.25);
       transform: translateX(0);
+      transition-timing-function: $base-timing;
     }
 
     ~ .shim {
