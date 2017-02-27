@@ -6,6 +6,7 @@ import InfinitelyScrollable from './infinitely_scrollable'
 import Month from '../models/month'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
+import Modal from './modal'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -36,13 +37,16 @@ class Calendar extends React.Component {
   }
 
   render() {
-    const { offset, scrollTo } = this.props
+    const { offset, scrollTo, children, params } = this.props
     const { height } = this.state
     const className = classNames('calendar', { 'show-bookmark': Math.abs(offset) > height })
     return (
       <div className={className} ref={(el) => this.container = el}>
         {this.timeline()}
         <button className="bookmark" onClick={() => scrollTo(-1)}/>
+        <Modal.Container>
+          {children && React.cloneElement(children, { key: params.id })}
+        </Modal.Container>
       </div>
     )
   }

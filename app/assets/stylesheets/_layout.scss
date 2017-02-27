@@ -2,13 +2,15 @@ body {
   overflow: hidden;
 }
 
-.application {
-  main {
+main {
+  transition: transform $slow-duration $base-timing;
+  @include position(fixed, 0 0 0 0);
+
+  .page {
     @include position(fixed, 0 0 0 0);
     background: $base-background-color;
     display: flex;
     flex-direction: column;
-    transition: transform $slow-duration $base-timing;
   }
 }
 
