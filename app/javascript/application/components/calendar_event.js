@@ -13,7 +13,7 @@ export default class CalendarEvent extends React.Component {
         </svg>
         <a href={`#/events/${event.id}`}>
           <b>{event.name}</b>
-          <small>{event.start.format('h:mmA')}</small>
+          <small>{event.startsAt.format('h:mmA')}</small>
         </a>
       </li>
     )

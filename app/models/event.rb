@@ -2,27 +2,28 @@ class Event < ApplicationRecord
   include Sluggable
   include TimeRanges
 
-  serialize :recurrence_options, JSON
-  composed_of :recurrence,
-    class_name: 'Montrose::Recurrence',
-    mapping: %w(recurrence_options to_h)
+  has_many :occurrences, dependent: :destroy
 
-  before_validation :cache_time_boundaries, if: :recurrence?
+  serialize :schedule_options, JSON
+  composed_of :schedule,
+    class_name: 'IceCube::Schedule',
+    mapping: %w(schedule_options to_hash),
+    constructor: :from_hash
+
+  before_validation :cache_time_boundaries, if: :schedule?
 
   validates :name, :starts_at, presence: true
 
-  def recurrence?
-    recurrence.present?
-  end
+  delegate :duration, to: :schedule
 
-  def finite?
-    recurrence.finite?
+  def schedule?
+    schedule.present?
   end
 
   private
 
   def cache_time_boundaries
-    self.starts_at = recurrence.events.first
-    self.ends_at = recurrence.events.to_a.last + duration.seconds if finite?
+    self.starts_at = schedule.first
+    self.ends_at = schedule.last.end_time if schedule.terminating?
   end
 end

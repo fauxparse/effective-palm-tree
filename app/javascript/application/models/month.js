@@ -7,8 +7,16 @@ export default class Month {
     this.start = date.clone().startOf('month')
     this.loaded = false
     this._events = []
+    this.load()
+  }
 
-    setTimeout(this.populate.bind(this), 1000)
+  static getMonth(date, index) {
+    const key = date.format('YYYY-MM')
+    if (!this._all) this._all = {}
+    if (!this._all[key]) {
+      this._all[key] = new Month(date, index)
+    }
+    return this._all[key]
   }
 
   get name() {
@@ -19,12 +27,12 @@ export default class Month {
   }
 
   get end() {
-    if (!this._end) this._end = this.start.clone().endOf('month')
+    if (!this._end) this._end = this.start.clone().add(1, 'month')
     return this._end
   }
 
   set events(events) {
-    this._events = sortBy(events, event => event.start.unix())
+    this._events = sortBy(events, event => event.startsAt.unix())
     delete this._grouped
     if (this.onChange) this.onChange(this)
   }
@@ -44,27 +52,23 @@ export default class Month {
     return 48 + Math.max(sum(this.days.map(day => day.length * 48)), 48)
   }
 
-  populate() {
-    let tuesdays = this.fillDays(2, 18, 'Family Time').concat(this.fillDays(2, 20.5, 'Burgers'))
-    let fridays = this.fillDays(5, 21, 'PlayShop LIVE!')
-    this.loaded = true
-    this.events = tuesdays.slice(0).concat(fridays)
+  load() {
+    const start = this.start.format('YYYY-MM-DD')
+    const stop = this.end.format('YYYY-MM-DD')
+    const url = `/events.json?start=${start}&stop=${stop}`
+    fetch(url)
+      .then(response => response.json())
+      .then(events => this.populate(events))
   }
 
-  fillDays(weekday, hour, name) {
-    let results = []
-    let d = this.start.clone().startOf('week').add(weekday, 'days').add(hour, 'hours')
-    while (d.isBefore(this.start)) d.add(1, 'week')
-    while (d.isBefore(this.end)) {
-      results.push(new Event({ start: d, name }))
-      d = d.clone().add(1, 'week')
-    }
-    return results
+  populate(events) {
+    this.loaded = true
+    this.events = events.map(attrs => new Event(attrs))
   }
 }
 
 function groupEvents(groups, event) {
-  if (groups.length && last(groups)[0].start.isSame(event.start, 'day')) {
+  if (groups.length && last(groups)[0].startsAt.isSame(event.startsAt, 'day')) {
     last(groups).push(event)
   } else {
     groups.push([event])

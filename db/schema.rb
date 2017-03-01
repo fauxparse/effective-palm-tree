@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222200810) do
+ActiveRecord::Schema.define(version: 20170301024907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,8 +21,7 @@ ActiveRecord::Schema.define(version: 20170222200810) do
     t.string "slug", limit: 128
     t.datetime "starts_at"
     t.datetime "ends_at"
-    t.integer "duration", default: 3600
-    t.text "recurrence_options", default: "{}"
+    t.text "schedule_options", default: "{}"
     t.string "timezone", default: "Wellington"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -30,4 +29,16 @@ ActiveRecord::Schema.define(version: 20170222200810) do
     t.index ["starts_at", "ends_at"], name: "index_events_on_starts_at_and_ends_at"
   end
 
+  create_table "occurrences", force: :cascade do |t|
+    t.bigint "event_id"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.boolean "deleted", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "starts_at", "ends_at"], name: "index_occurrences_on_event_id_and_starts_at_and_ends_at", unique: true
+    t.index ["event_id"], name: "index_occurrences_on_event_id"
+  end
+
+  add_foreign_key "occurrences", "events", on_delete: :cascade
 end

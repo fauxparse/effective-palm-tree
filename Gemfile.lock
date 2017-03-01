@@ -142,6 +142,7 @@ GEM
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     i18n (0.8.0)
+    ice_cube (0.14.0)
     jbuilder (2.6.1)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -164,8 +165,6 @@ GEM
     mime-types-data (3.2016.0521)
     mini_portile2 (2.1.0)
     minitest (5.10.1)
-    montrose (0.6.0)
-      activesupport (>= 4.1, < 5.1)
     multi_json (1.12.1)
     neat (1.8.0)
       sass (>= 3.3)
@@ -242,9 +241,9 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.2)
   factory_girl_rails
+  ice_cube
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
-  montrose
   neat
   normalize-rails
   pg (~> 0.18)
