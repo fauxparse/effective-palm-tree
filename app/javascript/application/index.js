@@ -1,16 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, IndexRoute, IndexRedirect, hashHistory } from 'react-router'
+import { Router, Route, IndexRoute, IndexRedirect } from 'react-router'
+import history from './lib/history'
 import Layout from './components/layout'
 import Events from './components/events'
 import EventDetails from './components/event_details'
 
 document.addEventListener("DOMContentLoaded", e => {
   ReactDOM.render((
-    <Router history={hashHistory}>
+    <Router history={history}>
       <Route path="/" component={Layout}>
         <Route path="events" component={Events}>
-          <Route path=":id" component={EventDetails}/>
+          <Route path=":id/:date" component={EventDetails}/>
         </Route>
         <IndexRedirect to="/events"/>
       </Route>

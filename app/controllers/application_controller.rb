@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   private
 
   def render_application
-    render text: '', layout: true
+    render html: '', layout: true
   end
 
   def try_to_render_application(exception)

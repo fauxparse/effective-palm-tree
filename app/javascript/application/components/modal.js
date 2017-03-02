@@ -4,7 +4,7 @@ import CSSTransitionGroup from 'react-addons-css-transition-group'
 
 const Dialog = ({ children }) => {
   return (
-    <div className="modal-dialog">
+    <div className={classNames('modal-dialog')}>
       {children}
     </div>
   )
@@ -20,8 +20,6 @@ class Container extends React.Component {
         component="div"
         className={classNames('modal-container', { open })}
         transitionName="modal"
-        transitionAppear={true}
-        transitionAppearTimeout={375}
         transitionEnterTimeout={375}
         transitionLeaveTimeout={375}>
         {this.renderChildren(children)}

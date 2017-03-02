@@ -1,12 +1,19 @@
 import { forOwn } from 'lodash'
 import moment from 'moment-timezone'
 
-let id = 1
-
-export default class Event {
+class Event {
   constructor(attributes = {}) {
-    this.id = id++
+    this.id = attributes.id || Event._id++
     forOwn(attributes, (value, key) => this[key] = value)
+    Event._all[this.id] = this
+  }
+
+  static async find(id) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(Event._all[id])
+      }, 1000)
+    })
   }
 
   set startsAt(value) {
@@ -25,3 +32,8 @@ export default class Event {
     return this._endsAt
   }
 }
+
+Event._id = 1
+Event._all = []
+
+export default Event

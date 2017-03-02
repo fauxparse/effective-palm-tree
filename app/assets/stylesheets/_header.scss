@@ -20,12 +20,14 @@ $main-menu-item-count: 4;
     }
   }
 
+  button,
   label[for="show-sidebar"] {
     @include size($button-size);
-    background: $oc-gray-1;
+    background: none;
     border-radius: 50%;
     font-weight: $base-font-weight;
     margin: 0;
+    outline: none;
     position: relative;
     padding: (($button-size - $icon-size) / 2);
 

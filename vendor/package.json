@@ -2,6 +2,7 @@
   "name": "playtime",
   "private": true,
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "moment-timezone": "^0.5.11",
