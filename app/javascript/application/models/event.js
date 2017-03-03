@@ -3,17 +3,8 @@ import moment from 'moment-timezone'
 
 class Event {
   constructor(attributes = {}) {
-    this.id = attributes.id || Event._id++
     forOwn(attributes, (value, key) => this[key] = value)
-    Event._all[this.id] = this
-  }
-
-  static async find(id) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(Event._all[id])
-      }, 1000)
-    })
+    if (this.url) Event._all[this.url] = this
   }
 
   set startsAt(value) {
@@ -33,7 +24,6 @@ class Event {
   }
 }
 
-Event._id = 1
 Event._all = []
 
 export default Event
