@@ -1,4 +1,5 @@
 import { last, sortBy, sum } from 'lodash'
+import fetch from '../lib/fetch'
 import Event from './event'
 
 export default class Month {
