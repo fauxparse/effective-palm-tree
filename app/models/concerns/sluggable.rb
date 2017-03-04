@@ -17,7 +17,7 @@ module Sluggable
     end
 
     def sluggable_options
-      options = {
+      {
         url_attribute: :slug,
         limit: 128,
         only_when_blank: true,
