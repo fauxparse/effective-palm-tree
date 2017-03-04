@@ -9,6 +9,8 @@ export default function fetchWithCSRF(path, options = {}) {
       .getAttribute('content')
   }
   const headers = extend({}, {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     'X-CSRF-Token': token
   }, options.headers)

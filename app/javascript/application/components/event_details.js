@@ -7,10 +7,10 @@ import CloseButton from './close_button'
 
 export default class EventDetails extends React.Component {
   constructor(props) {
-    const { id } = props.params
+    const { group, event, date } = props.params
     super(props)
     this.state = {}
-    if (id) this.loadEvent(id)
+    if (group && event && date) this.loadEvent(group, event, date)
   }
 
   render() {
@@ -43,8 +43,8 @@ export default class EventDetails extends React.Component {
     history.push('/events')
   }
 
-  async loadEvent() {
-    const { location } = this.props
+  async loadEvent(groupId, eventId, date) {
+    const url = `/events/${groupId}/${eventId}/${date}`
     fetch(location.pathname)
       .then(response => response.json())
       .then(attrs => this.setState({ event: new Event(attrs) }))

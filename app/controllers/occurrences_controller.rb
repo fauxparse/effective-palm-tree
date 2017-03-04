@@ -13,8 +13,12 @@ class OccurrencesController < ApplicationController
 
   private
 
+  def group
+    @group ||= Group.find_by!(slug: params[:group_id])
+  end
+
   def event
-    @event ||= Event.where(slug: params[:event_id]).first!
+    @event ||= group.events.find_by!(slug: params[:event_id])
   end
 
   def occurrence

@@ -1,19 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  subject(:event) { create(:event) }
+  subject(:event) { create(:event, group: group) }
+  let(:group) { create(:group) }
 
   it { is_expected.to be_valid }
 
-  describe '#slug' do
-    subject(:slug) { event.slug }
+  describe '#to_param' do
+    subject(:slug) { event.to_param }
 
     it { is_expected.to eq 'playshop-live' }
 
     context 'when an event exists with the same name' do
-      before { create(:event) }
+      before { create(:event, group: another_group) }
+      let(:another_group) { group }
 
       it { is_expected.to match(/\Aplayshop-live-\d+\z/) }
+
+      context 'in another group' do
+        let(:another_group) { create(:group, name: 'The Others') }
+
+        it { is_expected.to eq 'playshop-live' }
+      end
     end
   end
 

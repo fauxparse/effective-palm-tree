@@ -8,5 +8,6 @@ schedule.add_recurrence_rule(IceCube::Rule.weekly)
 
 playshop.events.create(
   name: 'PlayShop LIVE',
+  slug: 'live',
   schedule: schedule
 )

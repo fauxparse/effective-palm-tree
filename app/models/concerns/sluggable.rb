@@ -2,7 +2,6 @@ module Sluggable
   extend ActiveSupport::Concern
 
   included do
-    puts sluggable_options.inspect
     acts_as_url :name, sluggable_options
 
     validates :name,
@@ -21,11 +20,10 @@ module Sluggable
       options = {
         url_attribute: :slug,
         limit: 128,
-        duplicate_sequence: random_deduplicator
+        only_when_blank: true,
+        duplicate_sequence: random_deduplicator,
+        scope: column_names.include?('group_id') && :group_id
       }
-      options[:scope] = const_get(:SLUGGABLE_SCOPE) \
-        if const_defined?(:SLUGGABLE_SCOPE)
-      options
     end
   end
 end

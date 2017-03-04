@@ -6,8 +6,8 @@ class OccurrenceSerializer < ActiveModel::Serializer
   end
 
   def url
-    view_context.event_occurrence_path(event, object)
+    view_context.event_occurrence_path(group, event, object)
   end
 
-  delegate :event, to: :object
+  delegate :group, :event, to: :object
 end

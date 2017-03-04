@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", e => {
     <Router history={history}>
       <Route path="/" component={Layout}>
         <Route path="events" component={Events}>
-          <Route path=":id/:date" component={EventDetails}/>
+          <Route path=":group/:event/:date" component={EventDetails}/>
         </Route>
         <IndexRedirect to="/events"/>
       </Route>
