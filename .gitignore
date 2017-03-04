@@ -12,6 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/coverage
 
 /vendor/node_modules
 /vendor/yarn-error.log

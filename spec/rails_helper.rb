@@ -21,6 +21,7 @@ require 'rspec/rails'
 # require only the support files necessary.
 #
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+require Rails.root.join('spec/support/coverage.rb')
 require Rails.root.join('spec/support/factory_girl.rb')
 
 # Checks for pending migration and applies them before tests are run.
