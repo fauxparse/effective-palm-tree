@@ -1,7 +1,10 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+schedule = IceCube::Schedule.new(
+  Time.zone.local(2017, 3, 10, 21),
+  duration: 1.hour
+)
+schedule.add_recurrence_rule(IceCube::Rule.weekly)
+
+Event.create(
+  name: 'PlayShop LIVE',
+  schedule: schedule
+)
