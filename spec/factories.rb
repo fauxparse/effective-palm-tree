@@ -1,4 +1,13 @@
 FactoryGirl.define do
+  factory :member do
+    name 'Matt'
+    group
+
+    trait :admin do
+      admin true
+    end
+  end
+
   factory :group do
     name 'PlayShop'
   end
