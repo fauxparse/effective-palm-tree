@@ -12,19 +12,21 @@ class Event < ApplicationRecord
 
     def at(time)
       time = schedule.occurrences_between(time, time + 1.day).first
-      if time.present?
-        existing = if loaded?
-                     detect { |o| o.start_time == time }
-                   else
-                     where(starts_at: time).first
-                   end
-
-        existing || build(starts_at: time.start_time, ends_at: time.end_time)
-      end
+      existing_occurrence_at(time) if time.present?
     end
 
     def schedule
       proxy_association.owner.schedule
+    end
+
+    def existing_occurrence_at(time)
+      existing = if loaded?
+                   detect { |o| o.start_time == time }
+                 else
+                   where(starts_at: time).first
+                 end
+
+      existing || build(starts_at: time.start_time, ends_at: time.end_time)
     end
   end
 

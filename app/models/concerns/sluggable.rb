@@ -16,7 +16,7 @@ module Sluggable
 
   module ClassMethods
     def random_deduplicator
-      Enumerator.new { |enum| loop { enum.yield rand(10000..99999) } }
+      Enumerator.new { |enum| loop { enum.yield rand(10_000..99_999) } }
     end
   end
 end

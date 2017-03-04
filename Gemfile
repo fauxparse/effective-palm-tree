@@ -5,8 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', github: 'rails/rails'
 gem 'arel', github: 'rails/arel'
+gem 'rails', github: 'rails/rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
@@ -35,14 +35,14 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'auto_strip_attributes', '~> 2.1'
 gem 'autoprefixer-rails'
-gem 'active_model_serializers', '~> 0.10.0'
 gem 'bitters', github: 'thoughtbot/bitters'
 gem 'bourbon', '>= 5.0.0.beta.7'
 gem 'ice_cube'
-gem 'normalize-rails'
 gem 'neat'
+gem 'normalize-rails'
 gem 'stringex', '>= 2.7.1'
 
 group :development, :test do
@@ -54,10 +54,11 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console', github: 'rails/web-console'
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'rubocop', require: false
   gem 'spring'
   gem 'spring-commands-rspec'
+  gem 'web-console', github: 'rails/web-console'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -12,10 +12,6 @@ class ApplicationController < ActionController::Base
   end
 
   def try_to_render_application(exception)
-    if request.format.html?
-      render_application
-    else
-      raise exception
-    end
+    request.format.html? ? render_application : raise(exception)
   end
 end

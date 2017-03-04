@@ -13,7 +13,7 @@ RSpec.describe Event, type: :model do
     context 'when an event exists with the same name' do
       before { create(:event) }
 
-      it { is_expected.to match /\Aplayshop-live-\d+\z/ }
+      it { is_expected.to match(/\Aplayshop-live-\d+\z/) }
     end
   end
 

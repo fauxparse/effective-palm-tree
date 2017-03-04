@@ -1,0 +1,33 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/migrate/*'
+     
+Metrics/LineLength:
+  Exclude:
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'config/**/*'
+    - 'spec/rails_helper.rb'
+    - 'spec/spec_helper.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'db/migrate/*'
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/BlockComments:
+  Exclude:
+    - 'spec/spec_helper.rb'
+
+Style/Documentation:
+  Enabled: false

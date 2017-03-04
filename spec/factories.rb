@@ -3,7 +3,7 @@ FactoryGirl.define do
     name 'PlayShop LIVE'
 
     transient do
-      start Time.zone.local(2017, 3, 10, 21, 00)
+      start Time.zone.local(2017, 3, 10, 21, 0)
       duration 3600
     end
 
@@ -13,7 +13,7 @@ FactoryGirl.define do
 
     trait :old do
       transient do
-        start Time.zone.local(2016, 3, 10, 21, 00)
+        start Time.zone.local(2016, 3, 10, 21, 0)
       end
     end
 
