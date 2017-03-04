@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301024907) do
+ActiveRecord::Schema.define(version: 20170304015711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,8 +25,21 @@ ActiveRecord::Schema.define(version: 20170301024907) do
     t.string "timezone", default: "Wellington"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "group_id"
+    t.index ["group_id", "slug"], name: "index_events_on_group_id_and_slug", unique: true
+    t.index ["group_id", "starts_at", "ends_at"], name: "index_events_on_group_id_and_starts_at_and_ends_at"
+    t.index ["group_id"], name: "index_events_on_group_id"
     t.index ["slug"], name: "index_events_on_slug"
     t.index ["starts_at", "ends_at"], name: "index_events_on_starts_at_and_ends_at"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name", limit: 128
+    t.string "slug", limit: 160
+    t.integer "members_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_groups_on_slug", unique: true
   end
 
   create_table "occurrences", force: :cascade do |t|
@@ -40,5 +53,6 @@ ActiveRecord::Schema.define(version: 20170301024907) do
     t.index ["event_id"], name: "index_occurrences_on_event_id"
   end
 
+  add_foreign_key "events", "groups", on_delete: :cascade
   add_foreign_key "occurrences", "events", on_delete: :cascade
 end

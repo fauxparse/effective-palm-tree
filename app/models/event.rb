@@ -2,6 +2,8 @@ class Event < ApplicationRecord
   include Sluggable
   include TimeRanges
 
+  belongs_to :group
+
   has_many :occurrences, dependent: :destroy do
     def on(date)
       start = date.beginning_of_day

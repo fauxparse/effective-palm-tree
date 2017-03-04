@@ -1,6 +1,11 @@
 FactoryGirl.define do
+  factory :group do
+    name 'PlayShop'
+  end
+
   factory :event do
     name 'PlayShop LIVE'
+    group
 
     transient do
       start Time.zone.local(2017, 3, 10, 21, 0)
