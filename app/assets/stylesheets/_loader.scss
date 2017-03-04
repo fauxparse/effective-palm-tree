@@ -1,0 +1,21 @@
+.loader {
+  circle, path {
+    fill: none;
+    stroke-width: 1px;
+  }
+
+  circle {
+    stroke: $base-border-color;
+  }
+
+  path {
+    stroke: $accent-color;
+    transform-origin: 0% 100%;
+    animation: loading-spinner $slow-duration infinite linear;
+  }
+}
+
+@keyframes loading-spinner {
+  0% { transform: rotateZ(0deg); }
+  100% { transform: rotateZ(360deg); }
+}

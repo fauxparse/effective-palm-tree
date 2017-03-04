@@ -6,6 +6,7 @@ import InfinitelyScrollable from './infinitely_scrollable'
 import Month from '../models/month'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
+import Modal from './modal'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -18,7 +19,6 @@ class Calendar extends React.Component {
       min: 0,
       max: 0
     }
-    this.loaders = {}
   }
 
   componentDidMount() {
@@ -37,13 +37,16 @@ class Calendar extends React.Component {
   }
 
   render() {
-    const { offset, scrollTo } = this.props
+    const { offset, scrollTo, children, params } = this.props
     const { height } = this.state
     const className = classNames('calendar', { 'show-bookmark': Math.abs(offset) > height })
     return (
       <div className={className} ref={(el) => this.container = el}>
         {this.timeline()}
-        <button className="bookmark" onClick={() => scrollTo(0)}/>
+        <button className="bookmark" onClick={() => scrollTo(-1)}/>
+        <Modal.Container>
+          {children && React.cloneElement(children, { key: params.id })}
+        </Modal.Container>
       </div>
     )
   }
@@ -67,7 +70,7 @@ class Calendar extends React.Component {
         timezone={this.props.timezone}
         style={this.transform(month.top)}
         offset={this.props.offset}
-        onHeaderClicked={() => this.props.scrollTo(month.top)}
+        onHeaderClicked={() => this.props.scrollTo(month.top - 1)}
       />
     )
   }
@@ -124,7 +127,7 @@ class Calendar extends React.Component {
 
     if (!month) {
       const date = now.clone().startOf('month').add(index, 'months')
-      month = new Month(date, index)
+      month = Month.getMonth(date, index)
       month.top = options.top === undefined ? options.bottom - month.height : options.top
       month.onChange = () => this.refreshOffsetsFrom(index)
     }

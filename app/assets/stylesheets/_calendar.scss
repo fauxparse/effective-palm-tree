@@ -29,7 +29,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
     padding: 0;
     top: -1em;
     transform: translateY(-100%);
-    transition: transform $medium-duration $ease-in-back;
+    transition: transform $medium-duration $ease-in-back $medium-duration;
     width: 1em;
     -webkit-tap-highlight-color: rgba(black, 0);
 
@@ -190,6 +190,38 @@ $large-calendar-gutter-size: $sizing-increment * 4;
         line-height: ($base-line-height * (1em / $small-font-size));
       }
     }
+
+    .loading,
+    .empty {
+      color: $disabled-font-color;
+      font-size: $small-font-size;
+      line-height: 1.5rem;
+      margin-left: $calendar-gutter-size;
+      padding-left: 1.5rem;
+      position: relative;
+
+      svg {
+        @include position(absolute, 50% null null 0);
+        @include size(2.4375rem);
+        margin: -1.21875rem;
+
+        circle {
+          fill: $base-background-color;
+          stroke: $base-border-color;
+          stroke-width: 1px;
+        }
+      }
+    }
+
+    .empty {
+      font-weight: $light-font-weight;
+
+      path {
+        fill: none;
+        stroke: $base-border-color;
+        stroke-width: 1px;
+      }
+    }
   }
 
   @include media($medium-screen) {
@@ -202,10 +234,17 @@ $large-calendar-gutter-size: $sizing-increment * 4;
         padding-left: $large-calendar-gutter-size + 1.5rem;
       }
 
-      section {
+      section,
+      .loading,
+      .empty {
         margin-left: $large-calendar-gutter-size;
-        margin-right: $large-calendar-gutter-size;
       }
+    }
+  }
+
+  @include media($large-screen) {
+    .month section {
+      margin-right: $large-calendar-gutter-size;
     }
   }
 }

@@ -1,0 +1,77 @@
+.event-details {
+  header {
+    display: flex;
+    align-items: flex-start;
+    height: 2 * $sizing-increment;
+    padding-bottom: 0;
+    padding-right: 0;
+
+    > div {
+      align-self: stretch;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    h2 {
+      font-size: $base-font-size;
+      font-weight: $base-font-weight;
+      margin: 0 1.5em;
+      padding: 0.5em 0;
+
+      b {
+        @include ellipsis;
+        display: block;
+        font-size: $large-font-size;
+        font-weight: $light-font-weight;
+        line-height: 1.5rem;
+      }
+
+      small {
+        @include ellipsis;
+        color: $secondary-font-color;
+        display: block;
+        font-size: $small-font-size;
+        line-height: 1.5rem;
+        text-transform: uppercase;
+      }
+    }
+
+    [role="tablist"] {
+      align-items: flex-end;
+      display: flex;
+      justify-content: space-between;
+      margin: 0 0 -1px 0.5em;
+      padding-right: $sizing-increment;
+
+      li {
+        border-bottom: 0.25em solid rgba($accent-color, 0);
+        flex: 0 0 3.5em;
+        mix-blend-mode: multiply;
+        padding: 0.25em 1em 0.5em;
+        transition: border-bottom-color $base-duration $base-timing;
+
+        svg {
+          display: block;
+          opacity: 0.5;
+          transition: opacity $base-duration $base-timing;
+        }
+
+        path, circle {
+          fill: none;
+          stroke: $base-font-color;
+          stroke-width: 1px;
+        }
+
+        &[aria-selected="true"] {
+          border-bottom-color: $accent-color;
+
+          svg {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}

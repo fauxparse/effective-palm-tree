@@ -26,5 +26,7 @@ module Playtime
       generate.assets false
       generate.view_specs false
     end
+
+    Time.zone = 'Wellington'
   end
 end

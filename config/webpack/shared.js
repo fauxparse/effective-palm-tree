@@ -8,7 +8,7 @@ module.exports = {
   entry: glob.sync(path.join('..', 'app', 'javascript', 'packs', '*.js*')).reduce(
     function(map, entry) {
       var basename = path.basename(entry, extname(entry))
-      map[basename] = entry
+      map[basename] = ['babel-polyfill', entry]
       return map
     }, {}
   ),
