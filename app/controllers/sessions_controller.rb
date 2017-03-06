@@ -31,4 +31,12 @@ class SessionsController < Clearance::SessionsController
       end
     end
   end
+
+  def destroy
+    sign_out
+    respond_to do |format|
+      format.html { redirect_to url_after_destroy }
+      format.json { head :ok }
+    end
+  end
 end

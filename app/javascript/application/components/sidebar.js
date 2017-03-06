@@ -1,24 +1,29 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import classNames from 'classnames'
+import { actions as userActions } from '../actions/user'
 
-const NavigationItem = ({ active, children }) => (
+const NavigationItem = ({ active, children, onClick }) => (
   <li aria-selected={active}>
-    <a href="#">
+    <a href="#" onClick={onClick}>
       <span>{children}</span>
     </a>
   </li>
 )
 
-const PrimaryNavigation = () => (
+const sidebarActions = (dispatch) => ({
+  logOut: () => dispatch(userActions.logOut())
+})
+const PrimaryNavigation = connect(undefined, sidebarActions)((props) => (
   <nav>
     <ul>
       <NavigationItem active="true">Events</NavigationItem>
       <NavigationItem>People</NavigationItem>
       <NavigationItem>Settings</NavigationItem>
-      <NavigationItem>Log out</NavigationItem>
+      <NavigationItem onClick={props.logOut}>Log out</NavigationItem>
     </ul>
   </nav>
-)
+))
 
 export default class Sidebar extends React.Component {
   constructor(props) {
