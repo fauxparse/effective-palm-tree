@@ -1,7 +1,9 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import fetch from '../lib/fetch'
 import Layout from './layout'
 import Modal from './modal'
+import { actions as userActions } from '../actions/user'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -74,7 +76,7 @@ class Security extends React.Component {
   constructor(props) {
     super(props)
     this.handleLogin = this.handleLogin.bind(this)
-    this.state = { loaded: false, user: false, loading: true, errors: {} }
+    this.state = { loaded: false, loading: true, errors: {} }
   }
 
   componentDidMount() {
@@ -82,8 +84,8 @@ class Security extends React.Component {
   }
 
   render() {
-    const { children } = this.props
-    const { errors, loaded, loading, user } = this.state
+    const { children, user } = this.props
+    const { errors, loaded, loading } = this.state
 
     if (user) {
       return <Layout>{children}</Layout>
@@ -115,7 +117,10 @@ class Security extends React.Component {
   handleLogin(response) {
     this.setState({ loaded: true, loading: false })
     if (response.ok) {
-      response.json().then(user => this.setState({ user, errors: {} }))
+      response.json().then(user => {
+        this.setState({ errors: {} })
+        this.props.logInAs(user)
+      })
     } else {
       response.json()
         .then(({ error }) => this.setState({ errors: { 'log-in': [error] } }))
@@ -124,4 +129,7 @@ class Security extends React.Component {
   }
 }
 
-export default Security
+const mapStateToProps = ({ user }) => ({ user })
+const mapDispatchToProps = (dispatch) => ({ logInAs: (user) => dispatch(userActions.logIn(user)) })
+
+export default connect(mapStateToProps, mapDispatchToProps)(Security)
