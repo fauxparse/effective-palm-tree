@@ -26,7 +26,12 @@ playshop = Group.create(name: 'PlayShop')
   'Sabrina' => false,
   'Barney' => false,
   'Zoe' => false
-}.each { |name, admin| playshop.members.create(name: name, admin: admin) }
+}.each { |name, admin| playshop.members.create!(name: name, admin: admin) }
+
+User.create!(
+  email: 'fauxparse@gmail.com',
+  password: 'p4$$w0rd'
+)
 
 schedule = IceCube::Schedule.new(
   Time.zone.local(2017, 3, 10, 21),

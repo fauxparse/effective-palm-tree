@@ -1,4 +1,4 @@
-import { extend } from 'lodash'
+import { extend, isObject } from 'lodash'
 
 var token
 
@@ -15,5 +15,6 @@ export default function fetchWithCSRF(path, options = {}) {
     'X-CSRF-Token': token
   }, options.headers)
   options = extend({}, { credentials: 'same-origin' }, options, { headers })
+  if (isObject(options.body)) options.body = JSON.stringify(options.body)
   return fetch(path, options)
 }

@@ -7,7 +7,7 @@ import { Router, Route, IndexRoute, IndexRedirect } from 'react-router'
 import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 import history from './lib/history'
 import reducer from './reducers'
-import Layout from './components/layout'
+import Security from './components/security'
 import Events from './components/events'
 import EventDetails from './components/event_details'
 
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", e => {
   ReactDOM.render((
     <Provider store={store}>
       <Router history={syncHistoryWithStore(history, store)}>
-        <Route path="/" component={Layout}>
+        <Route path="/" component={Security}>
           <Route path="events" component={Events}>
             <Route path=":group/:event/:date" component={EventDetails}/>
           </Route>

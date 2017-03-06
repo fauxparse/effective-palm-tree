@@ -1,0 +1,46 @@
+.login-dialog {
+  background: $base-background-color;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  [role="tablist"] {
+    border-bottom: $base-border;
+    display: flex;
+    height: $sizing-increment;
+  }
+
+  [role="tab"] {
+    flex: 1 1 0;
+
+    a {
+      border-bottom: 0.25em solid rgba($accent-color, 0);
+      color: $secondary-font-color;
+      display: block;
+      line-height: 1.5em;
+      margin: 0 0 -1px;
+      padding: 1em 1em 0.75em;
+      text-align: center;
+      transition: all $base-duration $base-timing;
+    }
+
+    &[aria-selected="true"] a {
+      border-bottom-color: $accent-color;
+      color: $base-font-color;
+    }
+  }
+
+  [role="tabpanel"] {
+    flex: 1 1 0;
+    padding: 1em;
+
+    &[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  @include media($medium-screen) {
+    min-height: 50vh;
+    min-width: 22em;
+  }
+}
