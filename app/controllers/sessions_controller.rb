@@ -3,7 +3,7 @@ class SessionsController < Clearance::SessionsController
     respond_to do |format|
       format.json do
         if signed_in?
-          render json: current_user
+          render json: current_user, include: { memberships: :group }
         else
           head :unauthorized
         end

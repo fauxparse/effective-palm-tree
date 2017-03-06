@@ -1,37 +1,13 @@
 playshop = Group.create(name: 'PlayShop')
 
-{
-  'Matt' => true,
-  'Jen' => false,
-  'Ryan' => false,
-  'Sam' => true,
-  'Lori' => true,
-  'Christine' => false,
-  'Maddy' => true,
-  'Janaye' => false,
-  'Aaron' => false,
-  'George' => false,
-  'Maria' => false,
-  'Jed' => false,
-  'Harriet' => false,
-  'Stevie' => false,
-  'Liam' => false,
-  'Gabby' => false,
-  'Pippa' => false,
-  'Oli' => false,
-  'Tom' => false,
-  'Austin' => false,
-  'Karin' => false,
-  'Callum' => false,
-  'Sabrina' => false,
-  'Barney' => false,
-  'Zoe' => false
-}.each { |name, admin| playshop.members.create!(name: name, admin: admin) }
+%w(
+  Matt Jen Ryan Sam Lori Christine Maddy Janaye Aaron George Maria Jed Harriet
+  Stevie Liam Gabby Pippa Oli Tom Austin Karin Callum Sabrina Barney Zoe
+).each { |name, admin| playshop.members.create!(name: name, admin: admin) }
 
-User.create!(
-  email: 'fauxparse@gmail.com',
-  password: 'p4$$w0rd'
-)
+User.create!(email: 'fauxparse@gmail.com', password: 'p4$$w0rd').tap do |matt|
+  playshop.members.find_by(name: 'Matt').update!(user: matt, admin: true)
+end
 
 schedule = IceCube::Schedule.new(
   Time.zone.local(2017, 3, 10, 21),
