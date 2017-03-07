@@ -67,6 +67,49 @@ RSpec.describe Event, type: :model do
     end
   end
 
+  describe '#occurrences' do
+    subject(:occurrences) { event.occurrences }
+    let(:event) { create(:event, :weekly) }
+    let(:start_date) { event.schedule.first.to_date }
+
+    describe '#on' do
+      subject(:occurrence) { occurrences.on(date) }
+
+      context 'the start date' do
+        let(:date) { start_date }
+        it { is_expected.to be_an_instance_of Occurrence }
+
+        context 'when the occurrence already exists' do
+          before do
+            event.schedule.first.tap do |times|
+              event.occurrences.create!(
+                starts_at: times.start_time,
+                ends_at: times.end_time
+              )
+            end
+          end
+
+          it { is_expected.to be_an_instance_of Occurrence }
+
+          context 'and the occurrences are loaded' do
+            before { event.occurrences.load }
+            it { is_expected.to be_an_instance_of Occurrence }
+          end
+        end
+      end
+
+      context 'a week after the start date' do
+        let(:date) { start_date + 1.week }
+        it { is_expected.to be_an_instance_of Occurrence }
+      end
+
+      context 'the day before the start date' do
+        let(:date) { start_date - 1.day }
+        it { is_expected.to be_nil }
+      end
+    end
+  end
+
   describe '::between' do
     subject(:range) { Event.between(range_start, range_end) }
     let(:range_start) do

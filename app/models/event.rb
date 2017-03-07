@@ -23,7 +23,7 @@ class Event < ApplicationRecord
 
     def existing_occurrence_at(time)
       existing = if loaded?
-                   detect { |o| o.start_time == time }
+                   detect { |o| o.starts_at == time }
                  else
                    where(starts_at: time).first
                  end
