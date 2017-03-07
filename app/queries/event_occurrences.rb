@@ -1,7 +1,7 @@
 class EventOccurrences
   attr_reader :start, :stop
 
-  def initialize(scope: Event, start:, stop:)
+  def initialize(scope: Event, start: nil, stop: nil)
     @start = parse_time(start || Time.zone.now)
     @stop = parse_time(stop || (@start + 1.month))
     @event_scope = scope.between(@start, @stop)
