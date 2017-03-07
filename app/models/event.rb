@@ -48,6 +48,10 @@ class Event < ApplicationRecord
     schedule.present?
   end
 
+  def self.for_user(user)
+    joins(group: [:members]).where('members.user_id = ?', user.id)
+  end
+
   private
 
   def cache_time_boundaries

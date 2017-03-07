@@ -67,6 +67,7 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'shoulda-matchers', '~> 3.1'
   gem 'simplecov'
+  gem 'timecop'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

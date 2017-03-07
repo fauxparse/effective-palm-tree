@@ -8,6 +8,14 @@ class EventsController < ApplicationController
   private
 
   def events
-    @events = EventOccurrences.new(start: params[:start], stop: params[:stop])
+    @events ||= EventOccurrences.new(
+      scope: event_scope,
+      start: params[:start],
+      stop: params[:stop]
+    )
+  end
+
+  def event_scope
+    @event_scope ||= Event.for_user(current_user)
   end
 end

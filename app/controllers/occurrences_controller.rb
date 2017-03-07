@@ -14,15 +14,15 @@ class OccurrencesController < ApplicationController
   private
 
   def group
-    @group ||= Group.find_by!(slug: params[:group_id])
+    @group ||= current_user.groups.find_by(slug: params[:group_id])
   end
 
   def event
-    @event ||= group.events.find_by!(slug: params[:event_id])
+    @event ||= group.events.find_by(slug: params[:event_id]) if group
   end
 
   def occurrence
-    @occurrence ||= event.occurrences.on(date)
+    @occurrence ||= event.occurrences.on(date) if event
   end
 
   def date

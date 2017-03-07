@@ -12,7 +12,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def create
-    sleep 1
+    sleep 1 unless Rails.env.test?
     @user = authenticate(params)
 
     respond_to do |format|
@@ -22,10 +22,7 @@ class SessionsController < Clearance::SessionsController
           format.json { render json: current_user }
         else
           message = status.failure_message
-          format.html do
-            flash.now = message
-            render template: 'sessions/new', status: :unauthorized
-          end
+          format.html { render html: '', layout: true, status: :unauthorized }
           format.json { render json: { error: message }, status: :unauthorized }
         end
       end
@@ -35,7 +32,7 @@ class SessionsController < Clearance::SessionsController
   def destroy
     sign_out
     respond_to do |format|
-      format.html { redirect_to url_after_destroy }
+      format.html { redirect_to root_path }
       format.json { head :ok }
     end
   end

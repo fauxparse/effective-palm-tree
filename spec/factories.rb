@@ -5,9 +5,12 @@ FactoryGirl.define do
     name 'Matt'
     group
 
-    trait :admin do
-      admin true
+    trait :verified do
       user
+    end
+
+    trait admin: :verified do
+      admin true
     end
   end
 
