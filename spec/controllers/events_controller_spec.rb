@@ -40,9 +40,10 @@ RSpec.describe EventsController, type: :request do
           it { is_expected.to have_exactly(4).items }
 
           it 'lists all the occurrences in the period' do
-            expected_times = events.first.schedule
-              .next_occurrences(4)
-              .map { |t| a_hash_including(startsAt: t.as_json) }
+            occurrences = events.first.schedule.next_occurrences(4)
+            expected_times = occurrences.map do |t|
+              a_hash_including(startsAt: t.as_json)
+            end
 
             expect(json).to match expected_times
           end

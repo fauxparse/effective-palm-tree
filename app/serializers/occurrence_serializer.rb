@@ -1,6 +1,6 @@
 class OccurrenceSerializer < ActiveModel::Serializer
   attributes :name, :starts_at, :ends_at
-  attribute :url, if: :has_url?
+  attribute :url, if: :url?
 
   def name
     event.name
@@ -10,9 +10,9 @@ class OccurrenceSerializer < ActiveModel::Serializer
     scope.event_occurrence_path(group, event, object)
   end
 
-  delegate :group, :event, to: :object
-
-  def has_url?
+  def url?
     scope.respond_to?(:event_occurrence_path)
   end
+
+  delegate :group, :event, to: :object
 end

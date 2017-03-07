@@ -6,7 +6,7 @@ RSpec.describe OccurrencesController, type: :request do
   let(:member) { create(:member, :verified, group: group) }
   let(:user_id) { member.user.try(:to_param) }
   let(:event) { create(:event, :weekly, group: group) }
-  let(:params) { [ group.to_param, event.to_param, date.to_param ] }
+  let(:params) { [group.to_param, event.to_param, date.to_param] }
 
   describe 'GET #show' do
     context 'as JSON' do

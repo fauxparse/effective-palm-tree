@@ -15,16 +15,11 @@ class SessionsController < Clearance::SessionsController
     sleep 1 unless Rails.env.test?
     @user = authenticate(params)
 
-    respond_to do |format|
-      sign_in(@user) do |status|
-        if status.success?
-          format.html { redirect_back_or url_after_create }
-          format.json { render json: current_user }
-        else
-          message = status.failure_message
-          format.html { render html: '', layout: true, status: :unauthorized }
-          format.json { render json: { error: message }, status: :unauthorized }
-        end
+    sign_in(@user) do |status|
+      if status.success?
+        sign_in_was_successful
+      else
+        sign_in_failed(status.failure_message)
       end
     end
   end
@@ -34,6 +29,22 @@ class SessionsController < Clearance::SessionsController
     respond_to do |format|
       format.html { redirect_to root_path }
       format.json { head :ok }
+    end
+  end
+
+  private
+
+  def sign_in_was_successful
+    respond_to do |format|
+      format.html { redirect_back_or url_after_create }
+      format.json { render json: current_user }
+    end
+  end
+
+  def sign_in_failed(message)
+    respond_to do |format|
+      format.html { render html: '', layout: true, status: :unauthorized }
+      format.json { render json: { error: message }, status: :unauthorized }
     end
   end
 end
