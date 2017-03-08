@@ -33,7 +33,7 @@ class EventOccurrences
     @existing ||= Hash.new { [] }.merge(
       Occurrence
         .where(event: events)
-        .includes(:event, :availabilities)
+        .includes(:event, :availability)
         .between(start, stop)
         .group_by(&:event)
     )

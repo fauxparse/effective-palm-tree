@@ -15,7 +15,7 @@ class OccurrenceSerializer < ActiveModel::Serializer
   end
 
   def availability
-    object.availabilities.inject({}) do |result, availability|
+    object.availability.inject({}) do |result, availability|
       result[availability.member_id] = availability.available?
     end
   end
