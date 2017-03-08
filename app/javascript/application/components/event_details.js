@@ -5,6 +5,49 @@ import Header from './header'
 import Event from '../models/event'
 import CloseButton from './close_button'
 
+class MyAvailability extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { availability: undefined }
+  }
+
+  render() {
+    const { availability } = this.state
+    return (
+      <div className="my-availability" data-availability={availability}>
+        <p className="instructions">Are you available?</p>
+        <div className="buttons">
+          <button rel="yes" onClick={() => this.setState({ availability: true })}>
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <g transform="translate(.5 .5)">
+                <circle cx="16" cy="16" r="15"/>
+                <path d="M9 17l4 4 10-10"/>
+              </g>
+            </svg>
+          </button>
+          <button rel="no" onClick={() => this.setState({ availability: false })}>
+            <svg width="32" height="32" viewBox="0 0 32 32">
+              <g transform="translate(.5 .5)">
+                <circle cx="16" cy="16" r="15"/>
+                <path d="M22 10L10 22M22 22L10 10"/>
+              </g>
+            </svg>
+          </button>
+        </div>
+        <p className="status">
+          <span>{this.statusMessage()}</span>
+          <button rel="change" onClick={() => this.setState({ availability: undefined })}>Change</button>
+        </p>
+      </div>
+    )
+  }
+
+  statusMessage() {
+    const { availability } = this.state
+    return `You’re ${!availability ? 'un' : ''}available`
+  }
+}
+
 export default class EventDetails extends React.Component {
   constructor(props) {
     const { group, event, date } = props.params
@@ -33,6 +76,9 @@ export default class EventDetails extends React.Component {
             </ul>
           </div>
         </header>
+        <section role="tabpanel">
+          <MyAvailability/>
+        </section>
       </section>
     )
   }

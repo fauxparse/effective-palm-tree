@@ -74,4 +74,153 @@
       }
     }
   }
+
+  [role="tabpanel"] {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .my-availability {
+    background: $oc-yellow-0;
+    margin: 0;
+    padding: 0.5em 0;
+    position: relative;
+    transition: all $base-duration $base-timing;
+
+    p {
+      font-size: $small-font-size;
+      line-height: 1.5rem;
+      margin: 0;
+      transition: all $medium-duration $base-timing;
+    }
+
+    .instructions {
+      text-align: center;
+      transition-delay: $medium-duration;
+    }
+
+    .buttons {
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      transition: all $medium-duration $base-timing;
+
+      button {
+        @include size(2rem);
+        background: none;
+        border-radius: 50%;
+        margin: 0.5rem;
+        outline: none;
+        padding: 0;
+        position: relative;
+        transition: all $base-duration $base-timing $base-duration;
+
+        svg {
+          display: block;
+
+          circle,
+          path {
+            fill: none;
+            stroke: $secondary-font-color;
+            stroke-width: 1px;
+          }
+
+          circle {
+            fill: white;
+            transition: opacity $base-duration $base-timing $base-duration;
+          }
+        }
+
+        &[rel="yes"] path {
+          stroke: $green;
+        }
+
+        &[rel="no"] path {
+          stroke: $red;
+        }
+
+        &::after {
+          @include size(3rem);
+          @include position(absolute, -0.5rem -0.5rem -0.5rem -0.5rem);
+          border-radius: 50%;
+          content: "";
+        }
+      }
+    }
+
+    .status {
+      @include position(absolute, 1.5rem 0 null 4.5rem);
+      align-items: center;
+      display: flex;
+      height: 4rem;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(50%);
+
+      button {
+        background: none;
+        color: $secondary-font-color;
+        font-weight: $base-font-weight;
+        outline: none;
+        padding: 1rem;
+        text-transform: uppercase;
+      }
+    }
+
+    &[data-availability="true"],
+    &[data-availability="false"] {
+      // background: rgba($oc-yellow-0, 0);
+      margin-bottom: -1.5rem;
+      transform: translateY(-1.5rem);
+      transition-delay: $base-duration;
+
+      .buttons {
+        pointer-events: none;
+        transition-delay: $base-duration;
+
+        button {
+          circle {
+            opacity: 0;
+          }
+        }
+      }
+
+      .instructions {
+        opacity: 0;
+        transform: translateY(-100%);
+        transition-delay: 0;
+      }
+
+      .status {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0%);
+        transition-delay: $medium-duration;
+      }
+    }
+
+    &[data-availability="true"] {
+      .buttons {
+        transform: translateX(calc(3.25rem - 50%));
+      }
+
+      [rel="no"] {
+        opacity: 0;
+        transform: translateX(-3rem);
+      }
+    }
+
+    &[data-availability="false"] {
+      .buttons {
+        transform: translateX(calc(0.25rem - 50%));
+      }
+
+      [rel="yes"] {
+        opacity: 0;
+        transform: translateX(3rem);
+      }
+    }
+  }
 }
