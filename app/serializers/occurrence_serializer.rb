@@ -1,5 +1,5 @@
 class OccurrenceSerializer < ActiveModel::Serializer
-  attributes :name, :starts_at, :ends_at
+  attributes :name, :starts_at, :ends_at, :availability
   attribute :url, if: :url?
 
   def name
@@ -12,6 +12,12 @@ class OccurrenceSerializer < ActiveModel::Serializer
 
   def url?
     scope.respond_to?(:event_occurrence_path)
+  end
+
+  def availability
+    object.availabilities.inject({}) do |result, availability|
+      result[availability.member_id] = availability.available?
+    end
   end
 
   delegate :group, :event, to: :object
