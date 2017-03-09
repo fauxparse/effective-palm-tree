@@ -38,10 +38,17 @@
 
   @include media($medium-screen) {
     @include size(auto);
+    max-width: calc(100vw - 4rem);
+    min-width: 50vw;
 
     > .page {
       position: relative;
+      max-height: calc(100vh - 4rem);
     }
+  }
+
+  @include media($large-screen) {
+    min-width: 30vw;
   }
 }
 
