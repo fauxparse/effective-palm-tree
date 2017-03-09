@@ -46,5 +46,8 @@ class Event {
 }
 
 Event._all = []
+Event.AVAILABLE = true
+Event.UNAVAILABLE = false
+Event.UNKNOWN = null
 
 export default Event

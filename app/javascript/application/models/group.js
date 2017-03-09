@@ -1,4 +1,4 @@
-import { find, forOwn } from 'lodash'
+import { find, forOwn, sortBy } from 'lodash'
 import Member from './member'
 
 class Group {
@@ -19,6 +19,10 @@ class Group {
 
   get currentMember() {
     return find(this.members, ({ id }) => id == this.memberId)
+  }
+
+  sort() {
+    return sortBy(this.members, [member => member.name.toLocaleLowerCase()])
   }
 }
 
