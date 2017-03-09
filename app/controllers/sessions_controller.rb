@@ -3,7 +3,7 @@ class SessionsController < Clearance::SessionsController
     respond_to do |format|
       format.json do
         if signed_in?
-          render json: current_user, include: { memberships: :group }
+          render_current_user
         else
           head :unauthorized
         end
@@ -37,7 +37,7 @@ class SessionsController < Clearance::SessionsController
   def sign_in_was_successful
     respond_to do |format|
       format.html { redirect_back_or url_after_create }
-      format.json { render json: current_user }
+      format.json { render_current_user }
     end
   end
 
@@ -46,5 +46,9 @@ class SessionsController < Clearance::SessionsController
       format.html { render html: '', layout: true, status: :unauthorized }
       format.json { render json: { error: message }, status: :unauthorized }
     end
+  end
+
+  def render_current_user
+    render json: current_user, include: { memberships: { group: :members } }
   end
 end

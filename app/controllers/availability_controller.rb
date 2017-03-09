@@ -12,7 +12,7 @@ class AvailabilityController < ApplicationController
 
   def render_availability
     availability = occurrence.availability.inject({}) do |hash, a|
-      hash[a.member_id] = a.available
+      hash.update(a.member_id => a.available)
     end
     render json: availability
   end

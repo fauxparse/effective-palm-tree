@@ -1,5 +1,6 @@
 import { forOwn } from 'lodash'
 import moment from 'moment-timezone'
+import fetch from '../lib/fetch'
 
 class Event {
   constructor(attributes = {}) {
@@ -21,6 +22,26 @@ class Event {
 
   get endsAt() {
     return this._endsAt
+  }
+
+  set availability(values) {
+    this._availability = values
+  }
+
+  get availability() {
+    return this._availability
+  }
+
+  availabilityFor(member, value) {
+    const id = member.id || member
+    if (arguments.length == 2) {
+      this.availability[id] = value
+      fetch(this.url + '/availability', {
+        method: 'PATCH',
+        body: { availability: { [id]: value } }
+      })
+    }
+    return this.availability[id]
   }
 }
 

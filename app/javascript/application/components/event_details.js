@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import history from '../lib/history'
 import fetch from '../lib/fetch'
 import Header from './header'
@@ -6,18 +7,13 @@ import Event from '../models/event'
 import CloseButton from './close_button'
 
 class MyAvailability extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { availability: undefined }
-  }
-
   render() {
-    const { availability } = this.state
+    const { availability, onChange } = this.props
     return (
       <div className="my-availability" data-availability={availability}>
         <p className="instructions">Are you available?</p>
         <div className="buttons">
-          <button rel="yes" onClick={() => this.setState({ availability: true })}>
+          <button rel="yes" onClick={() => onChange(true)}>
             <svg width="32" height="32" viewBox="0 0 32 32">
               <g transform="translate(.5 .5)">
                 <circle cx="16" cy="16" r="15"/>
@@ -25,7 +21,7 @@ class MyAvailability extends React.Component {
               </g>
             </svg>
           </button>
-          <button rel="no" onClick={() => this.setState({ availability: false })}>
+          <button rel="no" onClick={() => onChange(false)}>
             <svg width="32" height="32" viewBox="0 0 32 32">
               <g transform="translate(.5 .5)">
                 <circle cx="16" cy="16" r="15"/>
@@ -36,19 +32,19 @@ class MyAvailability extends React.Component {
         </div>
         <p className="status">
           <span>{this.statusMessage()}</span>
-          <button rel="change" onClick={() => this.setState({ availability: undefined })}>Change</button>
+          <button rel="change" onClick={() => onChange(null)}>Change</button>
         </p>
       </div>
     )
   }
 
   statusMessage() {
-    const { availability } = this.state
+    const { availability } = this.props
     return `You’re ${!availability ? 'un' : ''}available`
   }
 }
 
-export default class EventDetails extends React.Component {
+class EventDetails extends React.Component {
   constructor(props) {
     const { group, event, date } = props.params
     super(props)
@@ -57,7 +53,7 @@ export default class EventDetails extends React.Component {
   }
 
   render() {
-    const { params } = this.props
+    const { group } = this.props
     const { event } = this.state
     const loading = !event
     return (
@@ -76,11 +72,28 @@ export default class EventDetails extends React.Component {
             </ul>
           </div>
         </header>
-        <section role="tabpanel">
-          <MyAvailability/>
-        </section>
+        {event && this.contents()}
       </section>
     )
+  }
+
+  contents() {
+    const { group } = this.props
+    const { event } = this.state
+    return (
+      <section role="tabpanel">
+        <MyAvailability
+          availability={event.availabilityFor(group.currentMember)}
+          onChange={(value) => this.setAvailability(group.currentMember, value)}/>
+      </section>
+    )
+  }
+
+  setAvailability(member, value) {
+    const { group } = this.props
+    const { event } = this.state
+    event.availabilityFor(group.currentMember, value)
+    this.setState({ event })
   }
 
   close(e) {
@@ -96,3 +109,11 @@ export default class EventDetails extends React.Component {
       .then(attrs => this.setState({ event: new Event(attrs) }))
   }
 }
+
+const mapStateToProps = ({ groups }, { params }) => {
+  return {
+    group: groups[params.group]
+  }
+}
+
+export default connect(mapStateToProps)(EventDetails)
