@@ -1,12 +1,8 @@
-import { find, forOwn, sortBy } from 'lodash'
+import { find, sortBy } from 'lodash'
+import Model from './model'
 import Member from './member'
 
-class Group {
-  constructor(attributes = {}) {
-    forOwn(attributes, (value, key) => this[key] = value)
-    if (this.url) Event._all[this.url] = this
-  }
-
+class Group extends Model {
   set members(values) {
     this._members = values.map(
       attrs => attrs instanceof Member ? attrs : new Member(attrs)

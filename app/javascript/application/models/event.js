@@ -1,10 +1,10 @@
-import { forOwn } from 'lodash'
 import moment from 'moment-timezone'
 import fetch from '../lib/fetch'
+import Model from './model'
 
-class Event {
+class Event extends Model {
   constructor(attributes = {}) {
-    forOwn(attributes, (value, key) => this[key] = value)
+    super(attributes)
     if (this.url) Event._all[this.url] = this
   }
 

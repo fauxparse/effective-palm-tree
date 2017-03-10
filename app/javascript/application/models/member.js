@@ -1,8 +1,4 @@
-import { forOwn } from 'lodash'
+import Model from './model'
 
-export default class Member {
-  constructor(attributes = {}) {
-    forOwn(attributes, (value, key) => this[key] = value)
-    if (this.url) Event._all[this.url] = this
-  }
+export default class Member extends Model {
 }
