@@ -1,0 +1,48 @@
+header [role="tablist"] {
+  align-items: flex-end;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 0 -1px 0.5em;
+  padding-right: $sizing-increment;
+  position: relative;
+
+  [role="tab"] {
+    cursor: pointer;
+    flex: 0 0 $sizing-increment;
+    padding: 0.25em 1em 0.75em;
+    transition: border-bottom-color $base-duration $base-timing;
+
+    svg {
+      display: block;
+      opacity: 0.5;
+      transition: opacity $base-duration $base-timing;
+    }
+
+    path, circle {
+      fill: none;
+      stroke: $base-font-color;
+      stroke-width: 1px;
+    }
+
+    &[aria-selected="true"] {
+      svg {
+        opacity: 1;
+      }
+    }
+  }
+
+  hr {
+    @include position(absolute, null null 0 0);
+    border-bottom: 0.25em solid $accent-color;
+    margin: 0;
+    mix-blend-mode: multiply;
+    transition: transform $base-duration $ease-in-out-back;
+    width: $sizing-increment;
+  }
+
+  @for $i from 1 through 10 {
+    [role="tab"]:nth-child(#{$i})[aria-selected="true"] ~ hr {
+      transform: translateX(($i - 1) * $sizing-increment);
+    }
+  }
+}

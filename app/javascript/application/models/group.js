@@ -1,6 +1,7 @@
 import { find, sortBy } from 'lodash'
 import Model from './model'
 import Member from './member'
+import Role from './role'
 
 class Group extends Model {
   set members(values) {
@@ -11,6 +12,16 @@ class Group extends Model {
 
   get members() {
     return this._members
+  }
+
+  set roles(values) {
+    this._roles = values.map(
+      attrs => attrs instanceof Role ? attrs : new Role(attrs)
+    )
+  }
+
+  get roles() {
+    return this._roles
   }
 
   get currentMember() {

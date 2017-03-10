@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment-timezone'
 import classNames from 'classnames'
 import Event from '../models/event'
 
@@ -68,14 +69,12 @@ class MemberAvailability extends React.Component {
   }
 }
 
-export default class Availability extends React.Component {
+export default class EventAvailability extends React.Component {
   render() {
     const { event, group } = this.props
     return (
       <section className="event-availability" role="tabpanel">
-        <MyAvailability
-          availability={event.availabilityFor(group.currentMember)}
-          onChange={(value) => this.setAvailability(group.currentMember, value)}/>
+        {this.myAvailability()}
         <ul className="members">
           {group.sort().map(
             member =>
@@ -91,9 +90,27 @@ export default class Availability extends React.Component {
     )
   }
 
+  myAvailability() {
+    const { event, group } = this.props
+    if (this.beforeEvent()) {
+      return (
+        <MyAvailability
+          availability={event.availabilityFor(group.currentMember)}
+          onChange={(value) => this.setAvailability(group.currentMember, value)}/>
+      )
+    }
+  }
+
   setAvailability(member, value) {
     const { event, group } = this.props
-    event.availabilityFor(member, value)
-    this.props.onChange(event)
+    const current = group.currentMember
+    if (current.admin || (current.id == member.id && this.beforeEvent())) {
+      event.availabilityFor(member, value)
+      this.props.onChange(event)
+    }
+  }
+
+  beforeEvent() {
+    return moment().isBefore(this.props.event.startsAt)
   }
 }
