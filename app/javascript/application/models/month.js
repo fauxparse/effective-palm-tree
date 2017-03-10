@@ -35,7 +35,7 @@ export default class Month {
   set events(events) {
     this._events = sortBy(events, event => event.startsAt.unix())
     delete this._grouped
-    if (this.onChange) this.onChange(this)
+    this.changed()
   }
 
   get events() {
@@ -65,6 +65,10 @@ export default class Month {
   populate(events) {
     this.loaded = true
     this.events = events.map(attrs => new Event(attrs))
+  }
+
+  changed() {
+    if (this.onChange) this.onChange(this)
   }
 }
 

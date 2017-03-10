@@ -139,9 +139,17 @@ $large-calendar-gutter-size: $sizing-increment * 4;
       padding: 0 1em 0 1.5em;
       position: relative;
 
-      svg {
+      button {
         @include position(absolute, -0.5em null null -1.21875em);
         @include size(2.4375em);
+        background: none;
+        border-radius: 50%;
+        padding: 0;
+        outline: none;
+      }
+
+      svg {
+        display: block;
 
         circle {
           fill: $base-background-color;
@@ -155,20 +163,36 @@ $large-calendar-gutter-size: $sizing-increment * 4;
           stroke-width: 1px;
         }
 
-        .check {
-          display: none;
+        .check path {
           stroke: $green;
+          stroke-dasharray: 17;
+          stroke-dashoffset: 17;
         }
 
-        .cross {
-          display: none;
+        .cross path {
           stroke: $red;
+          stroke-dasharray: 12;
+          stroke-dashoffset: 12;
         }
 
-        .question {
+        .question path {
           stroke: $medium-gray;
+          stroke-dasharray: 14;
+          stroke-dashoffset: -14;
         }
       }
+
+      &.available .check path,
+      &.unavailable .cross path,
+      &.unknown .question path {
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset $medium-duration $base-timing;
+
+        &:nth-child(2) {
+          transition-delay: $medium-duration;
+        }
+      }
+
 
       a {
         color: $base-font-color;

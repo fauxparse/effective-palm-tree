@@ -1,9 +1,13 @@
 class OccurrenceSerializer < ActiveModel::Serializer
-  attributes :name, :starts_at, :ends_at, :availability
+  attributes :name, :group_id, :starts_at, :ends_at, :availability
   attribute :url, if: :url?
 
   def name
     event.name
+  end
+
+  def group_id
+    group.to_param
   end
 
   def url

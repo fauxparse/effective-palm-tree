@@ -58,14 +58,7 @@ class MemberAvailability extends React.Component {
   }
 
   cycle(availability) {
-    const { onChange } = this.props
-    if (availability === Event.AVAILABLE) {
-      onChange(false)
-    } else if (availability === Event.UNAVAILABLE) {
-      onChange(null)
-    } else {
-      onChange(true)
-    }
+    this.props.onChange(Event.cycleAvailability(availability))
   }
 }
 

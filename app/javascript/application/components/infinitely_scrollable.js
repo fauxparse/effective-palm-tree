@@ -42,6 +42,8 @@ export default function InfinitelyScrollable(WrappedComponent) {
     }
 
     onTouchStart(e) {
+      if (e.button) return
+
       let dragging = {
         reference: this.yPosition(e),
         velocity: 0,
