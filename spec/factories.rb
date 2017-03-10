@@ -57,6 +57,11 @@ FactoryGirl.define do
     ends_at { starts_at + event.duration }
   end
 
+  factory :role do
+    name 'player'
+    group
+  end
+
   factory :user do
     email { generate(:email) }
     password 'p4$$w0rd'

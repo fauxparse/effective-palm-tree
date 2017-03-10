@@ -15,6 +15,10 @@ schedule = IceCube::Schedule.new(
 )
 schedule.add_recurrence_rule(IceCube::Rule.weekly)
 
+playshop.roles.create(name: 'MC', plural: 'MCs')
+playshop.roles.create(name: 'player')
+playshop.roles.create(name: 'muso')
+
 playshop.events.create(
   name: 'PlayShop LIVE',
   slug: 'live',

@@ -8,6 +8,7 @@ class Group < ApplicationRecord
       detect { |member| member.user_id == user_id }
     end
   end
+  has_many :roles
 
   scope :with_members, -> { includes(members: :user) }
 end
