@@ -49,6 +49,9 @@ class SessionsController < Clearance::SessionsController
   end
 
   def render_current_user
-    render json: current_user, include: { memberships: { group: :members } }
+    render(
+      json: current_user,
+      include: { memberships: { group: [:members, :roles] } }
+    )
   end
 end
