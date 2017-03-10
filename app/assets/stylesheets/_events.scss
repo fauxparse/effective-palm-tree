@@ -1,4 +1,6 @@
 .event-details {
+  height: 100vh;
+
   header {
     align-items: flex-start;
     display: flex;
@@ -36,42 +38,6 @@
         font-size: $small-font-size;
         line-height: 1.5rem;
         text-transform: uppercase;
-      }
-    }
-
-    [role="tablist"] {
-      align-items: flex-end;
-      display: flex;
-      justify-content: space-between;
-      margin: 0 0 -1px 0.5em;
-      padding-right: $sizing-increment;
-
-      li {
-        border-bottom: 0.25em solid rgba($accent-color, 0);
-        flex: 0 0 3.5em;
-        mix-blend-mode: multiply;
-        padding: 0.25em 1em 0.5em;
-        transition: border-bottom-color $base-duration $base-timing;
-
-        svg {
-          display: block;
-          opacity: 0.5;
-          transition: opacity $base-duration $base-timing;
-        }
-
-        path, circle {
-          fill: none;
-          stroke: $base-font-color;
-          stroke-width: 1px;
-        }
-
-        &[aria-selected="true"] {
-          border-bottom-color: $accent-color;
-
-          svg {
-            opacity: 1;
-          }
-        }
       }
     }
   }

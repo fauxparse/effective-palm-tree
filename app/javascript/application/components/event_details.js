@@ -5,7 +5,8 @@ import fetch from '../lib/fetch'
 import Header from './header'
 import Event from '../models/event'
 import CloseButton from './close_button'
-import Availability from './availability'
+import EventAvailability from './event_availability'
+import { Tab, TabList } from './tabs'
 
 class EventDetails extends React.Component {
   constructor(props) {
@@ -28,11 +29,14 @@ class EventDetails extends React.Component {
               <b>{event && event.name}</b>
               <small>{event && event.startsAt.format('dddd D MMMM, YYYY')}</small>
             </h2>
-            <ul role="tablist">
-              <li role="tab" aria-selected={tab == 'availability'} onClick={() => this.setState({ tab: 'availability' })}>
+            <TabList selected={tab} onSwitch={this.switchTab.bind(this)}>
+              <Tab name="availability">
                 <svg width="24" height="24" viewBox="0 0 24 24"><g transform="translate(.5 .5)"><path d="M9 5l2 2 5-5"/><path d="M10 21.836c0-.604-.265-1.179-.738-1.554C8.539 19.708 7.285 19 5.5 19s-3.039.708-3.762 1.282c-.473.375-.738.95-.738 1.554V23h9v-1.164z"/><circle cx="5.5" cy="13.5" r="2.5"/><path d="M23 21.836c0-.604-.265-1.179-.738-1.554C21.539 19.708 20.285 19 18.5 19s-3.039.708-3.762 1.282c-.473.375-.738.95-.738 1.554V23h9v-1.164z"/><circle cx="18.5" cy="13.5" r="2.5"/></g></svg>
-              </li>
-            </ul>
+              </Tab>
+              <Tab name="roles">
+                <svg width="24" height="24" viewBox="0 0 24 24"><g transform="translate(.5 .5)"><path d="M14 4h9M1 4h3"/><path d="M22 12h1M1 12h11"/><path d="M14 20h9M1 20h3"/><circle cx="7" cy="4" r="3"/><circle cx="15" cy="12" r="3"/><circle cx="7" cy="20" r="3"/></g></svg>
+              </Tab>
+            </TabList>
           </div>
         </header>
         {event && this.contents()}
@@ -45,10 +49,14 @@ class EventDetails extends React.Component {
     const { event, tab } = this.state
     if (tab == 'availability') {
       return (
-        <Availability event={event} group={group}
+        <EventAvailability event={event} group={group}
           onChange={event => this.setState({ event })} />
       )
     }
+  }
+
+  switchTab(tab) {
+    this.setState({ tab })
   }
 
   close(e) {
