@@ -4,7 +4,7 @@ class EventOccurrences
   def initialize(scope: Event, start: nil, stop: nil)
     @start = parse_time(start || Time.zone.now)
     @stop = parse_time(stop || (@start + 1.month))
-    @event_scope = scope.between(@start, @stop)
+    @event_scope = scope.between(@start, @stop).includes(:group)
   end
 
   def all

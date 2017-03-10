@@ -7,6 +7,7 @@ import Loader from './loader'
 export default class CalendarMonth extends React.Component {
   constructor(props) {
     super(props)
+    this.changeEventAvailability = this.changeEventAvailability.bind(this)
     this.state = { today: moment().tz(props.timezone) }
   }
 
@@ -57,9 +58,16 @@ export default class CalendarMonth extends React.Component {
           <span className="day">{date.format('ddd')}</span>
         </h4>
         <ul>
-          {events.map((event, i) => <CalendarEvent key={i} event={event}/>)}
+          {events.map((event, i) => <CalendarEvent key={i} event={event} onChange={this.changeEventAvailability}/>)}
         </ul>
       </section>
     )
+  }
+
+  changeEventAvailability(event, member, value) {
+    const { month } = this.props
+    event.availabilityFor(member, value)
+    month.changed()
+    this.setState({})
   }
 }

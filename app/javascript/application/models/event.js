@@ -43,6 +43,16 @@ class Event extends Model {
     }
     return this.availability[id]
   }
+
+  static cycleAvailability(availability) {
+    if (availability == Event.AVAILABLE) {
+      return Event.UNAVAILABLE
+    } else if (availability == Event.UNAVAILABLE) {
+      return Event.UNKNOWN
+    } else {
+      return Event.AVAILABLE
+    }
+  }
 }
 
 Event._all = []
