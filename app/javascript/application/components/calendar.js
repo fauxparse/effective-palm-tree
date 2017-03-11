@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import { sortBy } from 'lodash'
@@ -7,6 +8,7 @@ import Month from '../models/month'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
 import Modal from './modal'
+import { actions as eventActions } from '../actions/events'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -32,7 +34,7 @@ class Calendar extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.offset) {
-      requestAnimationFrame(() => this.fillMonths(nextProps.offset))
+      this.fillMonths(nextProps.offset)
     }
   }
 
@@ -129,9 +131,16 @@ class Calendar extends React.Component {
       const date = now.clone().startOf('month').add(index, 'months')
       month = Month.getMonth(date, index)
       month.top = options.top === undefined ? options.bottom - month.height : options.top
-      month.onChange = () => this.refreshOffsetsFrom(index)
+      month.onChange = (m) => this.monthChanged(m, index)
     }
     return month
+  }
+
+  monthChanged(month, index) {
+    const { months } = this.state
+    this.props.refreshEvents(month.events)
+    this.setState({ months })
+    this.refreshOffsetsFrom(index)
   }
 
   indexAt(offset) {
@@ -194,4 +203,12 @@ Calendar.defaultProps = {
   timezone: 'Pacific/Auckland'
 }
 
-export default InfinitelyScrollable(Calendar)
+const mapStateToProps = ({ events }) => ({
+  events
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  refreshEvents: events => dispatch(eventActions.refresh(events))
+})
+
+export default InfinitelyScrollable(connect(mapStateToProps, mapDispatchToProps)(Calendar))
