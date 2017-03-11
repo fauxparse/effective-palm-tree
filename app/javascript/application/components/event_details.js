@@ -7,6 +7,7 @@ import Event from '../models/event'
 import CloseButton from './close_button'
 import EventAvailability from './event_availability'
 import { Tab, TabList } from './tabs'
+import { actions as eventActions } from '../actions/events'
 
 class EventDetails extends React.Component {
   constructor(props) {
@@ -17,8 +18,8 @@ class EventDetails extends React.Component {
   }
 
   render() {
-    const { group } = this.props
-    const { event, tab } = this.state
+    const { event, group } = this.props
+    const { tab } = this.state
     const loading = !event
     return (
       <section className="event-details page">
@@ -45,12 +46,11 @@ class EventDetails extends React.Component {
   }
 
   contents() {
-    const { group } = this.props
-    const { event, tab } = this.state
+    const { event, group, refreshEvent } = this.props
+    const { tab } = this.state
     if (tab == 'availability') {
       return (
-        <EventAvailability event={event} group={group}
-          onChange={event => this.setState({ event })} />
+        <EventAvailability event={event} group={group} onChange={refreshEvent}/>
       )
     }
   }
@@ -73,10 +73,15 @@ class EventDetails extends React.Component {
   }
 }
 
-const mapStateToProps = ({ groups }, { params }) => {
+const mapStateToProps = ({ events, groups }, { location, params }) => {
   return {
+    event: events[location.pathname],
     group: groups[params.group]
   }
 }
 
-export default connect(mapStateToProps)(EventDetails)
+const mapDispatchToProps = (dispatch) => ({
+  refreshEvent: (event) => dispatch(eventActions.refresh(event))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(EventDetails)
