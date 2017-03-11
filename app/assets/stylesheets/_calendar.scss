@@ -75,6 +75,13 @@ $large-calendar-gutter-size: $sizing-increment * 4;
     &::before {
       @include position(absolute, 0 null 0 $calendar-gutter-size);
       background: $base-border-color;
+      content: "";
+      pointer-events: none;
+      width: 1px;
+      z-index: -1;
+    }
+
+    &.loading::before {
       background: repeating-linear-gradient(
         0deg,
         transparent,
@@ -84,14 +91,6 @@ $large-calendar-gutter-size: $sizing-increment * 4;
         transparent 0.375em,
         transparent 0.5em
       );
-      content: "";
-      pointer-events: none;
-      width: 1px;
-      z-index: -1;
-    }
-
-    &.loaded::before {
-      background: $base-border-color;
     }
 
     section {
