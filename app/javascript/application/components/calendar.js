@@ -65,16 +65,25 @@ class Calendar extends React.Component {
   }
 
   renderMonth(month) {
+    const { offset, timezone, events, refreshEvents } = this.props
     return (
       <CalendarMonth
         key={month.index}
-        month={month}
-        timezone={this.props.timezone}
+        loading={!month.loaded}
+        events={this.eventsByMonth(month.index)}
+        start={month.start}
         style={this.transform(month.top)}
-        offset={this.props.offset}
+        headerOffset={Math.max(0, Math.min(month.height - 48, offset - month.top))}
         onHeaderClicked={() => this.props.scrollTo(month.top - 1)}
+        refreshEvent={refreshEvents}
       />
     )
+  }
+
+  eventsByMonth(index) {
+    const { events, eventsByMonth } = this.props
+    const { key } = this.state.months[index]
+    return (eventsByMonth[key] || []).map(url => events[url])
   }
 
   visibleMonths() {
@@ -203,9 +212,7 @@ Calendar.defaultProps = {
   timezone: 'Pacific/Auckland'
 }
 
-const mapStateToProps = ({ events }) => ({
-  events
-})
+const mapStateToProps = ({ events, calendar: eventsByMonth }) => ({ events, eventsByMonth })
 
 const mapDispatchToProps = (dispatch) => ({
   refreshEvents: events => dispatch(eventActions.refresh(events))

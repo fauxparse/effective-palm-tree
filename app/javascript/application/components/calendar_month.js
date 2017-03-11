@@ -1,10 +1,13 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { last, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import CalendarEvent from './calendar_event'
 import Loader from './loader'
+import { actions as eventActions } from '../actions/events'
 
-export default class CalendarMonth extends React.Component {
+class CalendarMonth extends React.Component {
   constructor(props) {
     super(props)
     this.changeEventAvailability = this.changeEventAvailability.bind(this)
@@ -12,29 +15,29 @@ export default class CalendarMonth extends React.Component {
   }
 
   render() {
-    const { month, style, timezone, offset, onHeaderClicked } = this.props
-    const { loaded } = month
-    const floating = Math.max(0, Math.min(month.height - 48, offset - month.top))
+    const { loading, style, start, headerOffset, onHeaderClicked } = this.props
     return (
       <section
-        className={classNames('month', { loaded })}
+        className={classNames('month', { loading })}
         style={style}>
         <h3
-          className={classNames({ floating })}
-          style={{ top: `${floating}px` }}
+          className={classNames({ floating: headerOffset })}
+          style={{ top: `${headerOffset}px` }}
           onClick={(e) => onHeaderClicked && onHeaderClicked(e)}>
-          {month.start.format('MMMM YYYY')}
+          {start.format('MMMM YYYY')}
         </h3>
-        {this.days(month)}
+        {this.days()}
       </section>
     )
   }
 
-  days(month) {
-    if (!month.loaded) {
+  days() {
+    const { loading, events } = this.props
+    if (loading) {
       return <p className="loading"><Loader/><span>Loading…</span></p>
-    } else if (month.days.length) {
-      return month.days.map(this.day.bind(this))
+    } else if (events.length) {
+      const days = sortBy(events, e => e.startsAt.unix).reduce(groupEvents, [])
+      return days.map(this.day.bind(this))
     } else {
       return (
         <p className="empty">
@@ -65,9 +68,19 @@ export default class CalendarMonth extends React.Component {
   }
 
   changeEventAvailability(event, member, value) {
-    const { month } = this.props
+    const { refreshEvent } = this.props
     event.availabilityFor(member, value)
-    month.changed()
-    this.setState({})
+    refreshEvent(event)
   }
 }
+
+function groupEvents(groups, event) {
+  if (groups.length && last(groups)[0].startsAt.isSame(event.startsAt, 'day')) {
+    last(groups).push(event)
+  } else {
+    groups.push([event])
+  }
+  return groups
+}
+
+export default CalendarMonth

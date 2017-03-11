@@ -6,6 +6,7 @@ export default class Month {
   constructor(date, index = 0) {
     this.index = index
     this.start = date.clone().startOf('month')
+    this.key = this.start.format('YYYY-MM')
     this.loaded = false
     this._events = []
     this.load()
@@ -50,16 +51,17 @@ export default class Month {
   }
 
   get height() {
-    return 48 + Math.max(sum(this.days.map(day => day.length * 48)), 48)
+    return Math.max(2, this.events.length + 1) * 48
   }
 
   load() {
     const start = this.start.format('YYYY-MM-DD')
     const stop = this.end.format('YYYY-MM-DD')
     const url = `/events.json?start=${start}&stop=${stop}`
-    fetch(url)
-      .then(response => response.json())
-      .then(events => this.populate(events))
+
+    if (!Month._loaders) Month._loaders = {}
+    if (!Month._loaders[url]) Month._loaders[url] = fetch(url).then(response => response.json())
+    Month._loaders[url].then(events => this.populate(events))
   }
 
   populate(events) {
@@ -70,13 +72,4 @@ export default class Month {
   changed() {
     if (this.onChange) this.onChange(this)
   }
-}
-
-function groupEvents(groups, event) {
-  if (groups.length && last(groups)[0].startsAt.isSame(event.startsAt, 'day')) {
-    last(groups).push(event)
-  } else {
-    groups.push([event])
-  }
-  return groups
 }
