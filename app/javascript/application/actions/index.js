@@ -1,3 +1,4 @@
+import events from './events'
 import user from './user'
 
-export default { user }
+export default { events, user }
