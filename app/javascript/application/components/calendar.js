@@ -212,7 +212,9 @@ Calendar.defaultProps = {
   timezone: 'Pacific/Auckland'
 }
 
-const mapStateToProps = ({ events, calendar: eventsByMonth }) => ({ events, eventsByMonth })
+const mapStateToProps = ({ events, calendar: eventsByMonth }) => {
+  return { events, eventsByMonth }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   refreshEvents: events => dispatch(eventActions.refresh(events))
