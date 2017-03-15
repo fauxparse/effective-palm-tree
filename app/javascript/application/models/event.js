@@ -5,7 +5,14 @@ import Model from './model'
 class Event extends Model {
   constructor(attributes = {}) {
     super(attributes)
-    if (this.url) Event._all[this.url] = this
+  }
+
+  clone() {
+    return new Event(this.attributeHash())
+  }
+
+  attributes() {
+    return ['name', 'startsAt', 'endsAt', 'url', 'availability', 'groupId']
   }
 
   set startsAt(value) {
@@ -55,7 +62,6 @@ class Event extends Model {
   }
 }
 
-Event._all = []
 Event.AVAILABLE = true
 Event.UNAVAILABLE = false
 Event.UNKNOWN = null

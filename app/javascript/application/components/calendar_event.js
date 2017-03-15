@@ -9,12 +9,11 @@ class CalendarEvent extends React.Component {
   constructor(props) {
     super(props)
     const { event, member } = props
-    this.state = { availability: event.availabilityFor(member) }
   }
 
   render() {
     const { event, member } = this.props
-    const { availability } = this.state
+    const availability = event.availabilityFor(member)
     const classes = {
       available: availability == Event.AVAILABLE,
       unavailable: availability == Event.UNAVAILABLE,
