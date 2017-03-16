@@ -6,6 +6,7 @@ import Header from './header'
 import Event from '../models/event'
 import CloseButton from './close_button'
 import EventAvailability from './event_availability'
+import EventRoles from './event_roles'
 import { Tab, TabList } from './tabs'
 import { actions as eventActions } from '../actions/events'
 
@@ -13,7 +14,7 @@ class EventDetails extends React.Component {
   constructor(props) {
     const { group, event, date } = props.params
     super(props)
-    this.state = { tab: 'availability' }
+    this.state = { tab: 'roles' }
     if (group && event && date) this.loadEvent(group, event, date)
   }
 
@@ -51,6 +52,10 @@ class EventDetails extends React.Component {
     if (tab == 'availability') {
       return (
         <EventAvailability event={event} group={group} onChange={refreshEvent}/>
+      )
+    } else if (tab == 'roles') {
+      return (
+        <EventRoles event={event} group={group} onChange={refreshEvent}/>
       )
     }
   }

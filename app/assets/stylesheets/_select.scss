@@ -1,0 +1,63 @@
+.select {
+  color: $base-font-color;
+  display: inline-block;
+}
+
+.select-trigger {
+  @include ellipsis;
+  border-bottom: $base-border;
+  color: $base-font-color;
+  display: block;
+  line-height: 1.5rem;
+  padding: 0.5em 2.5em calc(0.5em - 1px) 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
+  &:hover, &:active, &:focus {
+    color: inherit;
+  }
+}
+
+.select-options {
+  position: fixed;
+  z-index: 100;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    background: $base-background-color;
+    box-shadow: 0 0 1em rgba(black, 0.15);
+    max-height: 10.5em;
+    opacity: 0;
+    overflow-y: auto;
+    transform: scaleY(0);
+    transition: transform $base-duration $base-timing,
+      opacity $base-duration $base-timing;
+  }
+
+  &.open ul {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+
+  li {
+    display: block;
+    margin: 0;
+    padding: 0;
+
+    a {
+      @include ellipsis;
+      color: $base-font-color;
+      display: block;
+      padding: 0.5em 1em;
+
+      &:hover {
+        background: $base-border-color;
+      }
+    }
+
+    &:not(:last-child) a {
+      padding-bottom: calc(0.5em - 1px);
+      border-bottom: $base-border;
+    }
+  }
+}
