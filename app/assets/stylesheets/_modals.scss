@@ -52,6 +52,12 @@
     }
   }
 
+  @media screen and (min-height: 40em) {
+    > .page {
+      max-height: 36em;
+    }
+  }
+
   @include media($large-screen) {
     min-width: 30vw;
   }
