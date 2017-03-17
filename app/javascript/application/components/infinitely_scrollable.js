@@ -93,7 +93,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
 
     yPosition(e) {
       if (e.targetTouches && e.targetTouches.length) e = e.targetTouches[0]
-        return e.clientY
+      return e.clientY
     }
 
     trackAutoScroll() {
