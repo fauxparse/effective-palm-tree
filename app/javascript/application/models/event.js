@@ -1,6 +1,7 @@
 import moment from 'moment-timezone'
 import fetch from '../lib/fetch'
 import Model from './model'
+import Allocation from './allocation'
 
 class Event extends Model {
   constructor(attributes = {}) {
@@ -12,7 +13,7 @@ class Event extends Model {
   }
 
   attributes() {
-    return ['name', 'startsAt', 'endsAt', 'url', 'availability', 'groupId']
+    return ['name', 'startsAt', 'endsAt', 'url', 'availability', 'groupId', 'allocations']
   }
 
   set startsAt(value) {
@@ -59,6 +60,17 @@ class Event extends Model {
     } else {
       return Event.AVAILABLE
     }
+  }
+
+  set allocations(values) {
+    this._allocations = values.map(
+      attrs => attrs instanceof Allocation ? attrs : new Allocation(attrs)
+    )
+  }
+
+  get allocations() {
+    if (!this._allocations) this._allocations = []
+    return this._allocations
   }
 }
 

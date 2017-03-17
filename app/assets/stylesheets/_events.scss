@@ -270,9 +270,97 @@
 }
 
 .event-roles {
-  padding: 4em 2em;
+  padding: 1em;
 
-  .select-trigger {
-    button { width: 10em; }
+  .allocation {
+    display: flex;
+    margin: 0 0 1em;
+
+    .select {
+      &:not(:last-child) {
+        flex-shrink: 1;
+        margin-right: 1em;
+      }
+
+      &:last-child {
+        flex: 1;
+      }
+    }
+  }
+}
+
+.allocation-range {
+  padding: 1em 2em;
+
+  .slider {
+    position: relative;
+    width: 16em;
+
+    .track {
+      display: block;
+      height: 2em;
+
+      .range,
+      &:before {
+        @include position(absolute, 50% 0 null 0);
+        border: none;
+        border-top: 2px solid $base-border-color;
+        content: "";
+        height: 0;
+        margin: -1px 0;
+      }
+
+      .range {
+        border-top-color: $accent-color;
+        transition: all $base-duration $base-timing;
+      }
+    }
+
+    .selection {
+      @include position(absolute, 0 0 0 0);
+      filter: url('#goo');
+      transform: translate3d(0, 0, 0);
+    }
+
+    .thumb {
+      @include position(absolute, 50% null null null);
+      cursor: pointer;
+      z-index: 1;
+
+      &::before,
+      &::after {
+        @include position(absolute, 50% null null 50%);
+        border-radius: 50%;
+        content: "";
+      }
+
+      &::before {
+        @include size($button-size);
+        margin: ($button-size / -2);
+        z-index: 1;
+      }
+
+      &::after {
+        @include size(1em);
+        background: $accent-color;
+        margin: -0.5em;
+        transform: scale(0.75);
+        transition: transform $base-duration $ease-in-back;
+        z-index: 2;
+      }
+
+      &.pressed::after {
+        transform: scale(1);
+        transition-timing-function: $ease-out-back;
+      }
+
+      &:not(.pressed) {
+        transition: left $base-duration $base-timing;
+      }
+
+      &.pressed ~ .range {
+        transition: none;
+      }
+    }
   }
 }

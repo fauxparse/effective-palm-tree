@@ -86,7 +86,9 @@ const mapStateToProps = ({ events, groups }, { location, params }) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  refreshEvent: (event) => dispatch(eventActions.refresh(event))
+  refreshEvent: (event) => {
+    dispatch(eventActions.refresh(event))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(EventDetails)

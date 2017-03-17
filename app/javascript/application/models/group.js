@@ -11,7 +11,8 @@ class Group extends Model {
   }
 
   get members() {
-    return this._members
+    if (!this._members) this._members = []
+    return this._members || []
   }
 
   set roles(values) {
@@ -21,7 +22,8 @@ class Group extends Model {
   }
 
   get roles() {
-    return this._roles
+    if (!this._roles) this._roles = []
+    return this._roles || []
   }
 
   get currentMember() {
