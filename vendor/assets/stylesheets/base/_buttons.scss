@@ -36,3 +36,28 @@
     }
   }
 }
+
+.icon-button {
+  @include size($button-size);
+  background: none;
+  border-radius: 50%;
+  color: $base-font-color;
+  padding: 0.5em;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: none;
+    color: inherit;
+  }
+
+  svg {
+    display: block;
+
+    path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1px;
+    }
+  }
+}

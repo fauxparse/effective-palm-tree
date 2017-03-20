@@ -20,7 +20,7 @@ class Allocation extends Model {
       }
     } else {
       if (this.max == Allocation.UNLIMITED) {
-        return `Any number of`
+        return `Some`
       } else {
         return `Up to ${this.max}`
       }
