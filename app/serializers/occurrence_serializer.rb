@@ -1,5 +1,5 @@
 class OccurrenceSerializer < ActiveModel::Serializer
-  attributes :name, :group_id, :starts_at, :ends_at, :availability
+  attributes :name, :group_id, :starts_at, :ends_at, :availability, :allocations
   attribute :url, if: :url?
 
   def name
@@ -21,6 +21,12 @@ class OccurrenceSerializer < ActiveModel::Serializer
   def availability
     object.availability.inject({}) do |result, availability|
       result.update(availability.member_id => availability.available?)
+    end
+  end
+
+  def allocations
+    event.allocations.sort_by(&:position).map do |allocation|
+      AllocationSerializer.new(allocation).as_json
     end
   end
 

@@ -1,12 +1,13 @@
 import React from 'react'
 import { forOwn, range, sortBy } from 'lodash'
 import Tether from 'tether'
+import fetch from '../lib/fetch'
 import Select from './select'
 import RangeSlider from './range_slider'
 import Allocation from '../models/allocation'
 
 const ICONS = {
-  DRAG: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M1.5 5.5h22M1.5 12.5h22M1.5 19.5h22"/></svg>,
+  DRAG: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M16.5 16.5l-4 4-4-4M8.5 8.5l4-4 4 4"/></svg>,
   DELETE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.5 5.5l-14 14M19.5 19.5l-14-14"/></svg>
 }
 
@@ -161,8 +162,13 @@ export default class EventRoles extends React.Component {
     const { allocations, dirty } = this.state
     if (dirty) {
       event.allocations = allocations
-      onChange(event)
       this.setState({ dirty: false })
+      fetch(event.url + '/roles', {
+        method: 'PATCH',
+        body: { roles: event.allocations }
+      })
+      .then(response => response.json)
+      .then(attrs => onChange(event.update({ allocations: attrs })))
     }
   }
 
@@ -225,6 +231,7 @@ export default class EventRoles extends React.Component {
       })
       this.setState({
         dragging: false,
+        dirty: true,
         allocations: sorted.map(i => allocations[i])
       })
     } else {
