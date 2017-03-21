@@ -1,6 +1,11 @@
 FactoryGirl.define do
   sequence(:email) { |n| "user#{n}@example.com" }
 
+  factory :allocation do
+    event
+    role { create(:role, group: event.group) }
+  end
+
   factory :availability do
     member
     occurrence

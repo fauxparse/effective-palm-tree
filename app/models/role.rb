@@ -2,6 +2,7 @@ class Role < ApplicationRecord
   include Sluggable
 
   belongs_to :group
+  has_many :allocations, dependent: :destroy
 
   validates :name, uniqueness: { scope: :group_id, case_sensitive: false }
 

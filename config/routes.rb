@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     resources :occurrences, path: '', param: :date, date: /\d{4}-\d{2}-\d{2}/ do
       resource :availability, only: [:show, :update]
     end
+    patch 'roles' => 'events#roles'
   end
 
   root to: 'events#index'

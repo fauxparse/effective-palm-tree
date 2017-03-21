@@ -3,6 +3,10 @@ class Event < ApplicationRecord
   include TimeRanges
 
   belongs_to :group
+  has_many :allocations,
+    -> { order(position: :asc) },
+    autosave: true,
+    dependent: :destroy
 
   has_many :occurrences, dependent: :destroy do
     def on(date)

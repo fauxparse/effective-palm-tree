@@ -61,4 +61,41 @@ RSpec.describe EventsController, type: :request do
       end
     end
   end
+
+  describe 'PATCH #roles' do
+    let(:event) { create(:event, group: group) }
+    let(:role) { create(:role, group: group) }
+    let(:roles) do
+      [{ role_id: role.id, min: 1, max: 4 }]
+    end
+
+    def patch!
+      patch event_roles_path(group, event, as: user_id),
+        params: { roles: roles },
+        as: :json
+    end
+
+    it 'updates the roles' do
+      expect { patch! }.to change { event.allocations.count }.by(1)
+    end
+
+    describe 'response' do
+      before { patch! }
+
+      let(:expected_response) do
+        [
+          {
+            'roleId' => role.id,
+            'id' => event.allocations.first.id,
+            'min' => 1,
+            'max' => 4
+          }
+        ]
+      end
+
+      it 'renders the allocations' do
+        expect(json).to eq expected_response
+      end
+    end
+  end
 end
