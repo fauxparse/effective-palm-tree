@@ -270,10 +270,13 @@
 }
 
 .event-roles {
-  padding: 1em;
+  display: flex;
+  flex-direction: column;
 
   > ul {
-    margin: 0 -1em 0.5em;
+    flex: 1;
+    margin: 0;
+    overflow-y: auto;
 
     &.settling .allocation {
       transition-property: opacity, box-shadow;
@@ -284,10 +287,17 @@
     }
   }
 
+  footer {
+    border-top: $base-border;
+    flex: 0 0 $sizing-increment;
+    justify-content: space-between;
+    padding: 0.5em 1em;
+  }
+
   .allocation {
     display: flex;
     margin: 0;
-    padding: 0.5em 1em;
+    padding: 0.5em;
     position: relative;
     transition: all $base-duration $base-timing;
 
@@ -303,7 +313,7 @@
     .drag-handle {
       @include size($button-size);
       cursor: ns-resize;
-      margin: 0 0.5em 0 -0.5em;
+      margin: 0 0.5em 0 0;
       padding: 0.5em;
 
       svg {
@@ -324,7 +334,7 @@
     }
 
     .icon-button {
-      margin: 0 -0.5em;
+      margin: 0 0 0 -0.5em;
       color: $secondary-font-color;
     }
 
@@ -337,15 +347,15 @@
 }
 
 .allocation-range {
-  padding: 1em 2em;
+  padding: 0.5em 1em;
 
   .slider {
     position: relative;
-    width: 16em;
+    width: 12em;
 
     .track {
       display: block;
-      height: 2em;
+      height: 1.5em;
 
       .range,
       &:before {
