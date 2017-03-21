@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class UpdateEventRoles
   attr_reader :event, :attributes
 
@@ -34,7 +35,7 @@ class UpdateEventRoles
   end
 
   def allocation_with_id(id)
-    if id && id > 0
+    if id.try!(&:positive?)
       allocations.detect { |a| a.id == id }
     else
       allocations.build

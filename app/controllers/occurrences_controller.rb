@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OccurrencesController < ApplicationController
   def show
     respond_to do |format|

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OccurrenceSerializer < ActiveModel::Serializer
   attributes :name, :group_id, :starts_at, :ends_at, :availability, :allocations
   attribute :url, if: :url?

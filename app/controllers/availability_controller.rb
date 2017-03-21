@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AvailabilityController < ApplicationController
   def show
     render_availability

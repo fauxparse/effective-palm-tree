@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class EventOccurrences
   attr_reader :start, :stop
 
