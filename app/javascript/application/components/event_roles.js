@@ -7,8 +7,10 @@ import RangeSlider from './range_slider'
 import Allocation from '../models/allocation'
 
 const ICONS = {
+  ADD: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12.5 2.5v20M22.5 12.5h-20"/></svg>,
   DRAG: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M16.5 16.5l-4 4-4-4M8.5 8.5l4-4 4 4"/></svg>,
-  DELETE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.5 5.5l-14 14M19.5 19.5l-14-14"/></svg>
+  DELETE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.5 5.5l-14 14M19.5 19.5l-14-14"/></svg>,
+  SAVE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
 }
 
 class AllocationRange extends Select {
@@ -23,6 +25,7 @@ class AllocationRange extends Select {
     return (
       <div className="select-options">
         <div className="allocation-range list">
+          <p>{allocation.countString()}</p>
           <RangeSlider min={this.positionFromValue(min)} max={this.positionFromValue(max)} onDragStart={() => this.setState({ dragging: true })} onDragStop={() => this.setState({ dragging: false })} onChange={this.onChange.bind(this)}/>
         </div>
       </div>
@@ -41,10 +44,10 @@ class AllocationRange extends Select {
       target: trigger,
       attachment: 'top left',
       targetAttachment: 'top left',
-      targetOffset: '40px -16px',
+      targetOffset: '0px -16px',
       constraints: [{ to: 'scrollParent', pin: true }]
     })
-    list.style.transformOrigin = '0% 0%'
+    list.style.transformOrigin = '0% 20px'
     this.setState({ tether })
   }
 
@@ -118,8 +121,16 @@ export default class EventRoles extends React.Component {
         <ul ref="list">
           {allocations.map((allocation, i) => <EventRole key={allocation.id} allocation={allocation} group={group} offset={dragging ? dragging.offsets[i] : 0} onChange={a => this.changeRole(a, i)} onDelete={() => this.deleteRole(allocation)} onDragStart={(e) => this.dragStart(i, e)}/>)}
         </ul>
-        <button onClick={this.addRole.bind(this)}>Add a role</button>
-        <button onClick={this.saveChanges.bind(this)} disabled={!dirty}>Save changes</button>
+        <footer className="buttons">
+          <button onClick={this.addRole.bind(this)}>
+            {ICONS.ADD}
+            <span>Add a role</span>
+          </button>
+          <button onClick={this.saveChanges.bind(this)} disabled={!dirty}>
+            {ICONS.SAVE}
+            <span>Save changes</span>
+          </button>
+        </footer>
       </section>
     )
   }

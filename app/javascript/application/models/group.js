@@ -16,9 +16,9 @@ class Group extends Model {
   }
 
   set roles(values) {
-    this._roles = values.map(
+    this._roles = sortBy(values.map(
       attrs => attrs instanceof Role ? attrs : new Role(attrs)
-    )
+    ), r => r.name.toLocaleLowerCase())
   }
 
   get roles() {
