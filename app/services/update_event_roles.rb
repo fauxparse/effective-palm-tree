@@ -7,10 +7,12 @@ class UpdateEventRoles
   end
 
   def call
-    event.with_lock do
-      delete_old_allocations
-      add_or_update_allocations
-      event.save!
+    Allocation.acts_as_list_no_update do
+      event.with_lock do
+        delete_old_allocations
+        add_or_update_allocations
+        event.save!
+      end
     end
   end
 

@@ -5,6 +5,11 @@ describe OccurrenceSerializer do
   let(:occurrence) { event.occurrences.at(event.schedule.first) }
   let(:event) { create(:event) }
 
+  before do
+    event.allocations.create!(role: create(:role, group: event.group))
+    occurrence.availability.build(member: create(:member, group: event.group))
+  end
+
   describe 'as JSON' do
     subject(:json) { serializer.as_json }
 

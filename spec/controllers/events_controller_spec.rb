@@ -64,13 +64,14 @@ RSpec.describe EventsController, type: :request do
 
   describe 'PATCH #roles' do
     let(:event) { create(:event, group: group) }
+    let(:date) { event.starts_at.to_date }
     let(:role) { create(:role, group: group) }
     let(:roles) do
       [{ role_id: role.id, min: 1, max: 4 }]
     end
 
     def patch!
-      patch event_roles_path(group, event, as: user_id),
+      patch event_occurrence_roles_path(group, event, date, as: user_id),
         params: { roles: roles },
         as: :json
     end
