@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 playshop = Group.create(name: 'PlayShop')
 
 %w(

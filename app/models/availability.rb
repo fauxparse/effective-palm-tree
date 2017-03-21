@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Availability < ApplicationRecord
   belongs_to :member, inverse_of: :availability
   belongs_to :occurrence, inverse_of: :availability

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class EventsController < ApplicationController
   def index
     respond_to do |format|

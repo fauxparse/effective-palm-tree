@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddUserIdToMembers < ActiveRecord::Migration[5.1]
   def change
     change_table :members do |t|
