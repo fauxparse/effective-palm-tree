@@ -36,6 +36,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 gem 'active_model_serializers', '~> 0.10.0'
+gem 'acts_as_list'
 gem 'auto_strip_attributes', '~> 2.1'
 gem 'autoprefixer-rails'
 gem 'bitters', github: 'thoughtbot/bitters'

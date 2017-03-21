@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170309223338) do
+ActiveRecord::Schema.define(version: 20170321000755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "allocations", force: :cascade do |t|
+    t.bigint "event_id"
+    t.bigint "role_id"
+    t.integer "min", default: 0
+    t.integer "max"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "role_id"], name: "index_allocations_on_event_id_and_role_id"
+    t.index ["event_id"], name: "index_allocations_on_event_id"
+    t.index ["role_id"], name: "index_allocations_on_role_id"
+  end
 
   create_table "availability", force: :cascade do |t|
     t.bigint "member_id"
@@ -99,6 +112,8 @@ ActiveRecord::Schema.define(version: 20170309223338) do
     t.index ["remember_token"], name: "index_users_on_remember_token"
   end
 
+  add_foreign_key "allocations", "events", on_delete: :cascade
+  add_foreign_key "allocations", "roles", on_delete: :cascade
   add_foreign_key "availability", "members", on_delete: :cascade
   add_foreign_key "availability", "occurrences", on_delete: :cascade
   add_foreign_key "events", "groups", on_delete: :cascade

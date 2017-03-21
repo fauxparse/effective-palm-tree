@@ -110,6 +110,8 @@ GEM
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
       jsonapi (= 0.1.1.beta6)
+    acts_as_list (0.9.4)
+      activerecord (>= 3.0)
     ast (2.3.0)
     auto_strip_attributes (2.1.0)
       activerecord (>= 3.0)
@@ -267,6 +269,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
+  acts_as_list
   arel!
   auto_strip_attributes (~> 2.1)
   autoprefixer-rails

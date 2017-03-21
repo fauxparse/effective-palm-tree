@@ -5,6 +5,15 @@ class EventsController < ApplicationController
     end
   end
 
+  def roles
+    respond_to do |format|
+      format.json do
+        UpdateEventRoles.new(event, role_params).call
+        render json: event.allocations.sort_by(&:position)
+      end
+    end
+  end
+
   private
 
   def events
@@ -17,5 +26,9 @@ class EventsController < ApplicationController
 
   def event_scope
     @event_scope ||= Event.for_user(current_user)
+  end
+
+  def role_params
+    params.permit(roles: [:id, :min, :max, :role_id])[:roles]
   end
 end
