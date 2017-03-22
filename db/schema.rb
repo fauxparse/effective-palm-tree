@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170321000755) do
+ActiveRecord::Schema.define(version: 20170322010509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,20 @@ ActiveRecord::Schema.define(version: 20170321000755) do
     t.index ["event_id", "role_id"], name: "index_allocations_on_event_id_and_role_id"
     t.index ["event_id"], name: "index_allocations_on_event_id"
     t.index ["role_id"], name: "index_allocations_on_role_id"
+  end
+
+  create_table "assignments", force: :cascade do |t|
+    t.bigint "member_id"
+    t.bigint "occurrence_id"
+    t.bigint "allocation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "confirmed_at"
+    t.index ["allocation_id"], name: "index_assignments_on_allocation_id"
+    t.index ["member_id", "occurrence_id"], name: "index_assignments_on_member_id_and_occurrence_id"
+    t.index ["member_id"], name: "index_assignments_on_member_id"
+    t.index ["occurrence_id", "allocation_id", "member_id"], name: "index_assignments_per_occurrence", unique: true
+    t.index ["occurrence_id"], name: "index_assignments_on_occurrence_id"
   end
 
   create_table "availability", force: :cascade do |t|
@@ -114,6 +128,9 @@ ActiveRecord::Schema.define(version: 20170321000755) do
 
   add_foreign_key "allocations", "events", on_delete: :cascade
   add_foreign_key "allocations", "roles", on_delete: :cascade
+  add_foreign_key "assignments", "allocations", on_delete: :cascade
+  add_foreign_key "assignments", "members", on_delete: :cascade
+  add_foreign_key "assignments", "occurrences", on_delete: :cascade
   add_foreign_key "availability", "members", on_delete: :cascade
   add_foreign_key "availability", "occurrences", on_delete: :cascade
   add_foreign_key "events", "groups", on_delete: :cascade

@@ -7,6 +7,14 @@ FactoryGirl.define do
     role { create(:role, group: event.group) }
   end
 
+  factory :assignment do
+    allocation
+    occurrence do
+      create(:occurrence, event: create(:event, group: allocation.role.group))
+    end
+    member { create(:member, group: allocation.role.group) }
+  end
+
   factory :availability do
     member
     occurrence
