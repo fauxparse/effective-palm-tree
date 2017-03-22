@@ -22,7 +22,7 @@ class CalendarEvent extends React.Component {
     return (
       <li className={classNames(classes)}>
         <button onClick={this.cycle.bind(this)}>
-          <svg width="39" height="39" viewBox="0 0 39 39">
+          <svg width="40" height="40" viewBox="0 0 40 40">
             <circle cx="19.5" cy="19.5" r="11"/>
             <g className="check"><path d="M13.5 19.5l4 4 8-8"/></g>
             <g className="cross"><path d="M15.5 15.5l8 8"/><path d="M23.5 15.5l-8 8"/></g>

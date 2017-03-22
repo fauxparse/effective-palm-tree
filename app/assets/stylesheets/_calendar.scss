@@ -140,7 +140,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
 
       button {
         @include position(absolute, -0.5em null null -1.21875em);
-        @include size(2.4375em);
+        @include size(2.5em);
         background: none;
         border-radius: 50%;
         padding: 0;
@@ -148,6 +148,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
       }
 
       svg {
+        @include size(2.5em);
         display: block;
 
         circle {

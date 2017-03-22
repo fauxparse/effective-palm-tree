@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 playshop = Group.create(name: 'PlayShop')
-
-%w(
+NAMES = %w(
   Matt Jen Ryan Sam Lori Christine Maddy Janaye Aaron George Maria Jed Harriet
-  Stevie Liam Gabby Pippa Oli Tom Austin Karin Callum Sabrina Barney Zoe
-).each { |name, admin| playshop.members.create!(name: name, admin: admin) }
+  Stevie Liam Gabby Pippa Oli Tom Austin Callum Sabrina Barney Zoe
+)
+
+NAMES.each.with_index(23) do |name, i|
+  playshop.members.create!(
+    name: name,
+    avatar_url: "http://unsplash.it/64/64?image=#{i}"
+  )
+end
 
 User.create!(email: 'fauxparse@gmail.com', password: 'p4$$w0rd').tap do |matt|
   playshop.members.find_by(name: 'Matt').update!(user: matt, admin: true)

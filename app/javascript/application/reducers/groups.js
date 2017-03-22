@@ -9,7 +9,7 @@ export default function groups(state = {}, action) {
         const group = new Group(membership.group)
         group.admin = membership.admin || false
         group.memberId = membership.id
-        return assign(groups, { [group.slug]: group })
+        return assign({}, groups, { [group.slug]: group })
       },
       {}
     )

@@ -14,7 +14,7 @@ class EventDetails extends React.Component {
   constructor(props) {
     const { group, event, date } = props.params
     super(props)
-    this.state = { tab: 'roles' }
+    this.state = { tab: 'availability' }
     if (group && event && date) this.loadEvent(group, event, date)
   }
 
@@ -91,4 +91,4 @@ const mapDispatchToProps = (dispatch) => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(EventDetails)
+export default connect(mapStateToProps, mapDispatchToProps)(EventDetails)
