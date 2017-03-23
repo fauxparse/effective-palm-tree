@@ -5,8 +5,8 @@ const ICONS = {
   ADMIN: <svg className="icon-admin" width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5.5"/><path d="M6 2l1.236 2.505L10 4.906l-2 1.95.472 2.753L6 8.309l-2.472 1.3L4 6.856l-2-1.95 2.764-.401z"/></svg>
 }
 
-export default ({ member }) => (
-  <span className="avatar">
+export default ({ member, onMouseDown, onTouchStart }) => (
+  <span className="avatar" onMouseDown={onMouseDown} onTouchStart={onTouchStart}>
     {member.avatarUrl ? <span className="image"><img src={member.avatarUrl}/></span> : ICONS.AVATAR}
     {member.admin && ICONS.ADMIN}
   </span>

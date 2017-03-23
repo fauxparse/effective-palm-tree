@@ -1,8 +1,10 @@
+import { assign, some } from 'lodash'
 import Model from './model'
+import Member from './member'
 
 class Allocation extends Model {
   attributes() {
-    return ['id', 'position', 'roleId', 'min', 'max']
+    return ['id', 'position', 'roleId', 'min', 'max', 'assignments']
   }
 
   clone() {
@@ -25,6 +27,19 @@ class Allocation extends Model {
         return `Up to ${this.max}`
       }
     }
+  }
+
+  isAssigned(member) {
+    member = member.id || member
+    return some(this.assignments, a => a.memberId == member)
+  }
+
+  set assignments(values) {
+    this._assignments = values.map(a => assign(a, { allocation: this }))
+  }
+
+  get assignments() {
+    return this._assignments
   }
 }
 

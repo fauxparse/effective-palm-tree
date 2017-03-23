@@ -1,4 +1,5 @@
 import moment from 'moment-timezone'
+import { some } from 'lodash'
 import fetch from '../lib/fetch'
 import Model from './model'
 import Allocation from './allocation'
@@ -71,6 +72,10 @@ class Event extends Model {
   get allocations() {
     if (!this._allocations) this._allocations = []
     return this._allocations
+  }
+
+  isAssigned(member) {
+    return some(this.allocations, a => a.isAssigned(member))
   }
 }
 
