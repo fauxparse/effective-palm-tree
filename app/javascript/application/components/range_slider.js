@@ -12,19 +12,30 @@ export default class RangeSlider extends React.Component {
     const { min, max } = newProps
     const [p1, p2] = this.state.positions
     this.setState({
-      positions: (p2 < p1) ? [max, min] : [min, max]
+      positions: p2 < p1 ? [max, min] : [min, max]
     })
   }
 
   render() {
     const { positions } = this.state
     const [p1, p2] = positions.slice(0).sort()
-    return(
+    return (
       <div className="slider">
         <div className="track" ref="track">
           <div className="selection">
-            {positions.map((p, i) => <div className="thumb" key={i} style={{ left: `${p * 100}%`}} onMouseDown={(e) => this.dragStart(i, e)} onTouchStart={(e) => this.dragStart(i, e)}/>)}
-            <hr className="range" style={{ left: `${p1 * 100}%`, right: `${100 - p2 * 100}%` }}/>
+            {positions.map((p, i) => (
+              <div
+                className="thumb"
+                key={i}
+                style={{ left: `${p * 100}%` }}
+                onMouseDown={e => this.dragStart(i, e)}
+                onTouchStart={e => this.dragStart(i, e)}
+              />
+            ))}
+            <hr
+              className="range"
+              style={{ left: `${p1 * 100}%`, right: `${100 - p2 * 100}%` }}
+            />
           </div>
         </div>
       </div>
@@ -51,7 +62,15 @@ export default class RangeSlider extends React.Component {
   dragMove(e) {
     const { dragging, positions } = this.state
     const trackRect = this.refs.track.getBoundingClientRect()
-    positions[dragging.index] = Math.max(0, Math.min(1, (this.xPosition(e) - trackRect.left - dragging.offset) * 1.0 / trackRect.width))
+    positions[dragging.index] = Math.max(
+      0,
+      Math.min(
+        1,
+        (this.xPosition(e) - trackRect.left - dragging.offset) *
+          1.0 /
+          trackRect.width
+      )
+    )
     this.props.onChange(...positions.slice(0).sort())
     this.setState({ positions })
   }
@@ -67,7 +86,8 @@ export default class RangeSlider extends React.Component {
     body.removeEventListener('touchend', this.dragStop)
     this.setState({ dragging: false })
     this.props.onDragStop()
-    setTimeout(() => this.props.onChange(...this.state.positions.slice(0).sort()))
+    setTimeout(() =>
+      this.props.onChange(...this.state.positions.slice(0).sort()))
   }
 
   xPosition(e) {
@@ -75,4 +95,3 @@ export default class RangeSlider extends React.Component {
     return e.clientX
   }
 }
-

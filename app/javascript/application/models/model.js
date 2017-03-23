@@ -14,7 +14,9 @@ export default class Model {
   }
 
   update(attributes = {}) {
-    forOwn(attributes, (value, key) => { this[key] = value })
+    forOwn(attributes, (value, key) => {
+      this[key] = value
+    })
     return this
   }
 }

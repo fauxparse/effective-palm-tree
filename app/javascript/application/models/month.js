@@ -60,7 +60,8 @@ export default class Month {
     const url = `/events.json?start=${start}&stop=${stop}`
 
     if (!Month._loaders) Month._loaders = {}
-    if (!Month._loaders[url]) Month._loaders[url] = fetch(url).then(response => response.json())
+    if (!Month._loaders[url])
+      Month._loaders[url] = fetch(url).then(response => response.json())
     Month._loaders[url].then(events => this.populate(events))
   }
 

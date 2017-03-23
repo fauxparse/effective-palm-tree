@@ -14,7 +14,15 @@ class Event extends Model {
   }
 
   attributes() {
-    return ['name', 'startsAt', 'endsAt', 'url', 'availability', 'groupId', 'allocations']
+    return [
+      'name',
+      'startsAt',
+      'endsAt',
+      'url',
+      'availability',
+      'groupId',
+      'allocations'
+    ]
   }
 
   set startsAt(value) {

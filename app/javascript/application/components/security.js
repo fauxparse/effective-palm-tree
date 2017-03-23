@@ -18,10 +18,29 @@ class LoginForm extends React.Component {
     return (
       <div className="login-dialog">
         <ul role="tablist">
-          <li id="login-tab-log-in" role="tab" aria-controls="login-log-in" aria-selected={mode == 'log-in'}><a href="#login-log-in" onClick={this.switchTab}>Log in</a></li>
-          <li id="login-tab-sign-up" role="tab" aria-controls="login-sign-up" aria-selected={mode == 'sign-up'}><a href="#login-sign-up" onClick={this.switchTab}>Sign up</a></li>
+          <li
+            id="login-tab-log-in"
+            role="tab"
+            aria-controls="login-log-in"
+            aria-selected={mode == 'log-in'}
+          >
+            <a href="#login-log-in" onClick={this.switchTab}>Log in</a>
+          </li>
+          <li
+            id="login-tab-sign-up"
+            role="tab"
+            aria-controls="login-sign-up"
+            aria-selected={mode == 'sign-up'}
+          >
+            <a href="#login-sign-up" onClick={this.switchTab}>Sign up</a>
+          </li>
         </ul>
-        <div id="login-log-in" role="tabpanel" aria-labelledby="login-tab-log-in" aria-hidden={mode != 'log-in'}>
+        <div
+          id="login-log-in"
+          role="tabpanel"
+          aria-labelledby="login-tab-log-in"
+          aria-hidden={mode != 'log-in'}
+        >
           <form onSubmit={this.onLoginSubmit.bind(this)}>
             {this.errors()}
             <fieldset disabled={loading}>
@@ -31,8 +50,12 @@ class LoginForm extends React.Component {
             </fieldset>
           </form>
         </div>
-        <div id="login-sign-up" role="tabpanel" aria-labelledby="login-tab-sign-up" aria-hidden={mode != 'sign-up'}>
-        </div>
+        <div
+          id="login-sign-up"
+          role="tabpanel"
+          aria-labelledby="login-tab-sign-up"
+          aria-hidden={mode != 'sign-up'}
+        />
       </div>
     )
   }
@@ -42,7 +65,13 @@ class LoginForm extends React.Component {
     return (
       <div className="field">
         <label htmlFor={id}>{label}</label>
-        <input id={id} type={type || name} name={name} value={this.state[name]} onInput={(e) => this.setState({[name]: e.target.value})}/>
+        <input
+          id={id}
+          type={type || name}
+          name={name}
+          value={this.state[name]}
+          onInput={e => this.setState({ [name]: e.target.value })}
+        />
       </div>
     )
   }
@@ -96,8 +125,8 @@ class Security extends React.Component {
             <LoginForm
               loading={loading}
               errors={errors}
-              tryLogin={this.tryLogin.bind(this)}/>
-          }
+              tryLogin={this.tryLogin.bind(this)}
+            />}
         </Modal.Container>
       )
     }
@@ -110,8 +139,7 @@ class Security extends React.Component {
     fetch('/session', {
       method: 'post',
       body: { session }
-    })
-    .then(this.handleLogin)
+    }).then(this.handleLogin)
   }
 
   handleLogin(response) {
@@ -122,7 +150,8 @@ class Security extends React.Component {
         this.props.logInAs(user)
       })
     } else {
-      response.json()
+      response
+        .json()
         .then(({ error }) => this.setState({ errors: { 'log-in': [error] } }))
         .catch(() => this.setState({ errors: {} }))
     }
@@ -130,6 +159,8 @@ class Security extends React.Component {
 }
 
 const mapStateToProps = ({ user }) => ({ user })
-const mapDispatchToProps = (dispatch) => ({ logInAs: (user) => dispatch(userActions.logIn(user)) })
+const mapDispatchToProps = dispatch => ({
+  logInAs: user => dispatch(userActions.logIn(user))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Security)

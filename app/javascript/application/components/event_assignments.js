@@ -4,6 +4,7 @@ import { find, findIndex, keyBy, some, sortBy } from 'lodash'
 import Event from '../models/event'
 import Avatar from './avatar'
 
+// prettier-ignore
 const ICONS = {
   AVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M9 17l4 4 10-10"/></g></svg>,
   UNAVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M22 10L10 22M22 22L10 10"/></g></svg>,
@@ -13,11 +14,23 @@ const ICONS = {
 
 class MemberItem extends React.Component {
   render() {
-    const { event, member, assignment, className, children, avatar, onDragStart } = this.props
-    const startDrag = (e) => onDragStart(e, member, assignment)
+    const {
+      event,
+      member,
+      assignment,
+      className,
+      children,
+      avatar,
+      onDragStart
+    } = this.props
+    const startDrag = e => onDragStart(e, member, assignment)
     return (
       <li className={classNames('member', className, { assigned: assignment })}>
-        <span className="action" onMouseDown={startDrag} onTouchStart={startDrag}>
+        <span
+          className="action"
+          onMouseDown={startDrag}
+          onTouchStart={startDrag}
+        >
           {this.avatar()}
         </span>
         <span className="name">{member.name}</span>
@@ -29,23 +42,43 @@ class MemberItem extends React.Component {
   avatar() {
     const { selected, selecting, avatar, member } = this.props
     if (selecting) {
-      return React.cloneElement(ICONS.CHECKBOX, { className: classNames('checkbox', { checked: selected }) })
+      return React.cloneElement(ICONS.CHECKBOX, {
+        className: classNames('checkbox', { checked: selected })
+      })
     } else {
-      return avatar || <Avatar member={member}/>
+      return avatar || <Avatar member={member} />
     }
   }
 }
 
 class RoleGroup extends React.Component {
   render() {
-    const { allocation, event, role, members, selections, onDragStart } = this.props
-    const assignments = sortBy(allocation.assignments, a => members[a.memberId].name.toLocaleLowerCase())
+    const {
+      allocation,
+      event,
+      role,
+      members,
+      selections,
+      onDragStart
+    } = this.props
+    const assignments = sortBy(allocation.assignments, a =>
+      members[a.memberId].name.toLocaleLowerCase())
 
     return (
       <section className="role">
         <h4>{allocation.max == 1 ? role.name : role.plural}</h4>
         <ul>
-          {assignments.map((assignment) => <MemberItem key={assignment.memberId} assignment={assignment} event={event} member={members[assignment.memberId]} selected={isSelected(selections, assignment.memberId, allocation)} selecting={selections.length > 0} onDragStart={onDragStart}/>)}
+          {assignments.map(assignment => (
+            <MemberItem
+              key={assignment.memberId}
+              assignment={assignment}
+              event={event}
+              member={members[assignment.memberId]}
+              selected={isSelected(selections, assignment.memberId, allocation)}
+              selecting={selections.length > 0}
+              onDragStart={onDragStart}
+            />
+          ))}
         </ul>
       </section>
     )
@@ -87,7 +120,8 @@ export default class EventAssignments extends React.Component {
         role={find(roles, r => r.id == allocation.roleId)}
         members={members}
         selections={selections}
-        onDragStart={(e, member, assignment) => this.dragStart(e, member, assignment)}
+        onDragStart={(e, member, assignment) =>
+          this.dragStart(e, member, assignment)}
       />
     ))
   }
@@ -104,7 +138,9 @@ export default class EventAssignments extends React.Component {
           </small>
         </h4>
         <ul>
-          {group.sort().map(m => this.availableMemberItem(event, m, selections))}
+          {group
+            .sort()
+            .map(m => this.availableMemberItem(event, m, selections))}
         </ul>
       </section>
     )
@@ -112,18 +148,32 @@ export default class EventAssignments extends React.Component {
 
   availableMemberItem(event, member, selections) {
     let availability = event.availabilityFor(member)
-    availability = (availability == Event.AVAILABLE) ? 'available' : (availability == Event.UNAVAILABLE) ? 'unavailable' : 'unknown'
+    availability = availability == Event.AVAILABLE
+      ? 'available'
+      : availability == Event.UNAVAILABLE ? 'unavailable' : 'unknown'
     const icon = ICONS[availability.toUpperCase()]
-    const avatar = event.isAssigned(member) ? false : <span className={classNames('avatar', availability)}>{icon}</span>
+    const avatar = event.isAssigned(member)
+      ? false
+      : <span className={classNames('avatar', availability)}>{icon}</span>
     return (
-      <MemberItem key={member.id} className={availability} event={event} member={member} avatar={avatar} selected={isSelected(selections, member, undefined)} selecting={selections.length > 0} onDragStart={(e, member) => this.dragStart(e, member)}/>
+      <MemberItem
+        key={member.id}
+        className={availability}
+        event={event}
+        member={member}
+        avatar={avatar}
+        selected={isSelected(selections, member, undefined)}
+        selecting={selections.length > 0}
+        onDragStart={(e, member) => this.dragStart(e, member)}
+      />
     )
   }
 
   dragStart(e, member, assignment) {
     e.stopPropagation()
     let item = e.target
-    while (!item.classList || !item.classList.contains('member')) item = item.parentNode
+    while (!item.classList || !item.classList.contains('member'))
+      item = item.parentNode
     const dragging = {
       item,
       member,
@@ -156,7 +206,10 @@ export default class EventAssignments extends React.Component {
     const allocation = assignment && assignment.allocation
     const allocationId = allocation && allocation.id
 
-    const index = findIndex(selections, ([m, a]) => m == member.id && a == allocationId)
+    const index = findIndex(
+      selections,
+      ([m, a]) => m == member.id && a == allocationId
+    )
     if (index > -1) {
       selections.splice(index, 1)
     } else {

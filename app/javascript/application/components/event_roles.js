@@ -6,6 +6,7 @@ import Select from './select'
 import RangeSlider from './range_slider'
 import Allocation from '../models/allocation'
 
+// prettier-ignore
 const ICONS = {
   ADD: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12.5 2.5v20M22.5 12.5h-20"/></svg>,
   DRAG: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M16.5 16.5l-4 4-4-4M8.5 8.5l4-4 4 4"/></svg>,
@@ -26,7 +27,13 @@ class AllocationRange extends Select {
       <div className="select-options">
         <div className="allocation-range list">
           <p>{allocation.countString()}</p>
-          <RangeSlider min={this.positionFromValue(min)} max={this.positionFromValue(max)} onDragStart={() => this.setState({ dragging: true })} onDragStop={() => this.setState({ dragging: false })} onChange={this.onChange.bind(this)}/>
+          <RangeSlider
+            min={this.positionFromValue(min)}
+            max={this.positionFromValue(max)}
+            onDragStart={() => this.setState({ dragging: true })}
+            onDragStop={() => this.setState({ dragging: false })}
+            onChange={this.onChange.bind(this)}
+          />
         </div>
       </div>
     )
@@ -61,15 +68,15 @@ class AllocationRange extends Select {
     const { group } = this.props
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
-    const value = Math.round(Math.exp(position * (maxl))) - 1
-    return (value == maximum) ? Allocation.UNLIMITED : value
+    const value = Math.round(Math.exp(position * maxl)) - 1
+    return value == maximum ? Allocation.UNLIMITED : value
   }
 
   positionFromValue(value) {
     const { group } = this.props
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
-    return (value == Allocation.UNLIMITED) ? 1.0 : (Math.log(value + 1)) / maxl
+    return value == Allocation.UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
   }
 }
 
@@ -80,16 +87,42 @@ class EventRole extends React.Component {
   }
 
   render() {
-    const { allocation, group, onChange, onDragStart, onDelete, offset } = this.props
+    const {
+      allocation,
+      group,
+      onChange,
+      onDragStart,
+      onDelete,
+      offset
+    } = this.props
     return (
-      <li className="allocation" style={{transform: `translateY(${offset}px)`}}>
-        <span className="drag-handle" onMouseDown={onDragStart} onTouchStart={onDragStart}>{ICONS.DRAG}</span>
-        <AllocationRange allocation={allocation} group={group} onChange={(min, max) => this.change({ min, max })}/>
+      <li
+        className="allocation"
+        style={{ transform: `translateY(${offset}px)` }}
+      >
+        <span
+          className="drag-handle"
+          onMouseDown={onDragStart}
+          onTouchStart={onDragStart}
+        >
+          {ICONS.DRAG}
+        </span>
+        <AllocationRange
+          allocation={allocation}
+          group={group}
+          onChange={(min, max) => this.change({ min, max })}
+        />
         <Select
           selected={allocation.roleId || group.roles[0].id}
-          options={group.roles.map(({ id, name, plural }) => [id, allocation.max == 1 ? name : plural])}
-          onChange={(roleId) => this.change({ roleId })}/>
-        <button className="icon-button" onClick={onDelete}>{ICONS.DELETE}</button>
+          options={group.roles.map(({ id, name, plural }) => [
+            id,
+            allocation.max == 1 ? name : plural
+          ])}
+          onChange={roleId => this.change({ roleId })}
+        />
+        <button className="icon-button" onClick={onDelete}>
+          {ICONS.DELETE}
+        </button>
       </li>
     )
   }
@@ -119,7 +152,17 @@ export default class EventRoles extends React.Component {
     return (
       <section className="event-roles">
         <ul ref="list">
-          {allocations.map((allocation, i) => <EventRole key={allocation.id} allocation={allocation} group={group} offset={dragging ? dragging.offsets[i] : 0} onChange={a => this.changeRole(a, i)} onDelete={() => this.deleteRole(allocation)} onDragStart={(e) => this.dragStart(i, e)}/>)}
+          {allocations.map((allocation, i) => (
+            <EventRole
+              key={allocation.id}
+              allocation={allocation}
+              group={group}
+              offset={dragging ? dragging.offsets[i] : 0}
+              onChange={a => this.changeRole(a, i)}
+              onDelete={() => this.deleteRole(allocation)}
+              onDragStart={e => this.dragStart(i, e)}
+            />
+          ))}
         </ul>
         <footer className="buttons">
           <button onClick={this.addRole.bind(this)}>
@@ -139,7 +182,8 @@ export default class EventRoles extends React.Component {
     const { event, group, onChange } = this.props
     const { allocations } = this.state
     const ids = allocations.map(a => a.roleId)
-    const roleId = ((group.roles.filter(r => ids.indexOf(r.id) == -1))[0] || group.roles[0] || {}).id
+    const roleId = (group.roles.filter(r => ids.indexOf(r.id) == -1)[0] ||
+    group.roles[0] || {}).id
     if (roleId) {
       const allocation = new Allocation({
         roleId,
@@ -174,9 +218,8 @@ export default class EventRoles extends React.Component {
     if (dirty) {
       event.allocations = allocations
       this.setState({ dirty: false })
-      roles = event.allocations.map(allocation => (
-        pick(allocation, ['id', 'roleId', 'min', 'max'])
-      ))
+      roles = event.allocations.map(allocation =>
+        pick(allocation, ['id', 'roleId', 'min', 'max']))
       fetch(event.url + '/roles', { method: 'PATCH', body: { roles } })
         .then(response => response.json)
         .then(attrs => onChange(event.update({ allocations: attrs })))
@@ -187,7 +230,10 @@ export default class EventRoles extends React.Component {
     const { allocations } = this.state
     const body = document.querySelector('body')
     const y = this.yPosition(e)
-    const items = Array.prototype.map.call(this.refs.list.querySelectorAll('.allocation'), a => a)
+    const items = Array.prototype.map.call(
+      this.refs.list.querySelectorAll('.allocation'),
+      a => a
+    )
     const item = items[index]
 
     item.classList.add('dragging')
@@ -235,10 +281,13 @@ export default class EventRoles extends React.Component {
     if (moved) {
       setTimeout(() => {
         this.refs.list.classList.add('settling')
-        setTimeout(() => {
-          this.refs.list.classList.remove('settling')
-          dragging.item.classList.remove('dragging')
-        }, 300)
+        setTimeout(
+          () => {
+            this.refs.list.classList.remove('settling')
+            dragging.item.classList.remove('dragging')
+          },
+          300
+        )
       })
       this.setState({
         dragging: false,

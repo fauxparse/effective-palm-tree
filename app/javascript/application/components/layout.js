@@ -4,7 +4,7 @@ import Sidebar from './sidebar'
 
 const Layout = ({ children }) => (
   <div className="application">
-    <Sidebar/>
+    <Sidebar />
     <main>
       {children}
     </main>

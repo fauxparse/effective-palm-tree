@@ -5,7 +5,10 @@ const constants = {
 }
 
 const actions = {
-  refresh: (events) => ({ type: constants.REFRESH, events: isArray(events) ? events : [events] })
+  refresh: events => ({
+    type: constants.REFRESH,
+    events: isArray(events) ? events : [events]
+  })
 }
 
 export { actions, constants }

@@ -5,7 +5,9 @@ import Event from '../models/event'
 
 export default function events(state = {}, action) {
   if (action.type == EVENTS.REFRESH) {
-    const events = action.events.map(event => event instanceof Event ? event.clone() : new Event(event))
+    const events = action.events.map(
+      event => event instanceof Event ? event.clone() : new Event(event)
+    )
     return defaults({}, keyBy(events, event => event.url), state)
   } else if (action.type == USER.LOG_OUT) {
     return {}

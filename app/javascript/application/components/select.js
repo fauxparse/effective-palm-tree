@@ -4,7 +4,11 @@ import classNames from 'classnames'
 import Portal from 'react-portal'
 import Tether from 'tether'
 
-const CARET = <svg width="24px" height="24px" viewBox="0 0 24 24"><path d="M8 10 L12 14 L16 10" transform="translate(0.5, 0.5)"/></svg>
+const CARET = (
+  <svg width="24px" height="24px" viewBox="0 0 24 24">
+    <path d="M8 10 L12 14 L16 10" transform="translate(0.5, 0.5)" />
+  </svg>
+)
 
 export default class Select extends React.Component {
   constructor(props) {
@@ -19,7 +23,12 @@ export default class Select extends React.Component {
 
     return (
       <div className={classNames('select', { open })}>
-        <a href="#" className="select-trigger" ref="trigger" onClick={(e) => this.triggerClicked(e)}>
+        <a
+          href="#"
+          className="select-trigger"
+          ref="trigger"
+          onClick={e => this.triggerClicked(e)}
+        >
           <span>{this.selectedLabel()}</span>
           {CARET}
         </a>
@@ -28,7 +37,8 @@ export default class Select extends React.Component {
           closeOnEsc
           closeOnOutsideClick
           beforeClose={this.beforeClose.bind(this)}
-          onOpen={this.openPopup}>
+          onOpen={this.openPopup}
+        >
           {this.renderDropdown()}
         </Portal>
       </div>
@@ -46,12 +56,11 @@ export default class Select extends React.Component {
     return (
       <div className="select-options">
         <ul className="list">
-          {options.map(
-          ([id, label]) =>
-          <li key={id} aria-selected={id == selectedId}>
-            <a href="#" onClick={(e) => this.select(e, id)}>{label}</a>
-          </li>
-          )}
+          {options.map(([id, label]) => (
+            <li key={id} aria-selected={id == selectedId}>
+              <a href="#" onClick={e => this.select(e, id)}>{label}</a>
+            </li>
+          ))}
         </ul>
       </div>
     )
@@ -107,7 +116,7 @@ export default class Select extends React.Component {
       targetOffset: `-${offsetY}px -16px`,
       constraints: [{ to: 'scrollParent', pin: true }]
     })
-    dropdown.style.width = (trigger.clientWidth + 32) + 'px'
+    dropdown.style.width = trigger.clientWidth + 32 + 'px'
     list.style.transformOrigin = `50% ${offsetY + trigger.clientHeight / 2}px`
     this.setState({ tether })
   }

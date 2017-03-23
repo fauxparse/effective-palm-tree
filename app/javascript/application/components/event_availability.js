@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import Event from '../models/event'
 import Avatar from './avatar'
 
+// prettier-ignore
 const ICONS = {
   AVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M9 17l4 4 10-10"/></g></svg>,
   UNAVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M22 10L10 22M22 22L10 10"/></g></svg>,
@@ -18,12 +19,31 @@ class MyAvailability extends React.Component {
       <div className="my-availability" data-availability={availability}>
         <p className="instructions">Are you available?</p>
         <div className="buttons">
-          <button rel="yes" onClick={() => onChange(availability == Event.UNKNOWN ? Event.AVAILABLE : Event.UNKNOWN)}>{ICONS.AVAILABLE}</button>
-          <button rel="no" onClick={() => onChange(availability == Event.UNKNOWN ? Event.UNAVAILABLE : Event.UNKNOWN)}>{ICONS.UNAVAILABLE}</button>
+          <button
+            rel="yes"
+            onClick={() => this.changeAvailability(Event.AVAILABLE)}
+          >
+            {ICONS.AVAILABLE}
+          </button>
+          <button
+            rel="no"
+            onClick={() => this.changeAvailability(Event.UNAVAILABLE)}
+          >
+            {ICONS.UNAVAILABLE}
+          </button>
         </div>
         <p className="status">{this.statusMessage()}</p>
       </div>
     )
+  }
+
+  changeAvailability(value) {
+    const { availability, onChange } = this.props
+    if (availability == Event.UNKNOWN) {
+      onChange(value)
+    } else {
+      onChange(Event.UNKNOWN)
+    }
   }
 
   statusMessage() {
@@ -36,13 +56,17 @@ class MemberAvailability extends React.Component {
   render() {
     const { member, event, open } = this.props
     const availability = event.availabilityFor(member)
-    const className = classNames({ available: availability, unavailable: availability == Event.UNAVAILABLE, unknown: availability == Event.UNKNOWN })
+    const className = classNames({
+      available: availability,
+      unavailable: availability == Event.UNAVAILABLE,
+      unknown: availability == Event.UNKNOWN
+    })
 
     return (
-      <li className={className} aria-selected={ open }>
+      <li className={className} aria-selected={open}>
         <button onClick={() => this.cycle(availability)}>{ICONS.ALL}</button>
         <span className="name">{member.name}</span>
-        <Avatar member={member}/>
+        <Avatar member={member} />
       </li>
     )
   }
@@ -69,15 +93,16 @@ export default class EventAvailability extends React.Component {
       <section className="event-availability" role="tabpanel">
         {this.myAvailability()}
         <ul className="members">
-          {group.sort().map(
-            member =>
-            <MemberAvailability
-              key={member.id}
-              member={member}
-              event={event}
-              onChange={(value) => this.setAvailability(member, value)}
-            />
-          )}
+          {group
+            .sort()
+            .map(member => (
+              <MemberAvailability
+                key={member.id}
+                member={member}
+                event={event}
+                onChange={value => this.setAvailability(member, value)}
+              />
+            ))}
         </ul>
       </section>
     )
@@ -89,7 +114,8 @@ export default class EventAvailability extends React.Component {
       return (
         <MyAvailability
           availability={event.availabilityFor(group.currentMember)}
-          onChange={(value) => this.setAvailability(group.currentMember, value)}/>
+          onChange={value => this.setAvailability(group.currentMember, value)}
+        />
       )
     }
   }

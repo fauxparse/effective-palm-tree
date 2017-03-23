@@ -8,7 +8,7 @@ export default class Events extends React.Component {
     const { children, params } = this.props
     return (
       <section className="events page">
-        <EventList params={params}/>
+        <EventList params={params} />
         <Modal.Container>
           {children && React.cloneElement(children, { key: params.id })}
         </Modal.Container>

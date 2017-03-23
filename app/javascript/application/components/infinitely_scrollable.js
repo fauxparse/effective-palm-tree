@@ -20,14 +20,17 @@ export default function InfinitelyScrollable(WrappedComponent) {
 
     render() {
       return (
-        <div className="infinitely-scrollable"
+        <div
+          className="infinitely-scrollable"
           onTouchStart={this.onTouchStart}
           onMouseDown={this.onTouchStart}
-          onWheel={this.onWheel}>
+          onWheel={this.onWheel}
+        >
           <WrappedComponent
             offset={Math.round(this.state.offset)}
             scrollTo={this.scrollTo}
-            {...this.props}/>
+            {...this.props}
+          />
         </div>
       )
     }
@@ -37,7 +40,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
       this.cancelDrag()
       this.cancelAutoScroll()
       this.setState({
-        offset: this.state.offset + e.deltaY * (16 ** e.deltaMode)
+        offset: this.state.offset + e.deltaY * 16 ** e.deltaMode
       })
     }
 
@@ -106,14 +109,21 @@ export default function InfinitelyScrollable(WrappedComponent) {
         let delta = offset - frame
         dragging.timestamp = now
         dragging.frame = offset
-        dragging.velocity = 0.8 * (1000 * delta / (1 + elapsed)) + 0.2 * velocity
+        dragging.velocity = 0.8 * (1000 * delta / (1 + elapsed)) +
+          0.2 * velocity
         dragging.ticker = setTimeout(this.trackAutoScroll, 100)
         this.setState({ offset, dragging })
       }
     }
 
     autoScroll() {
-      let { amplitude, origin, target, timestamp, duration } = this.state.autoScroll || {}
+      let {
+        amplitude,
+        origin,
+        target,
+        timestamp,
+        duration
+      } = this.state.autoScroll || {}
 
       if (amplitude) {
         let elapsed = Date.now() - timestamp
@@ -126,7 +136,11 @@ export default function InfinitelyScrollable(WrappedComponent) {
         }
       } else if (duration) {
         let elapsed = Date.now() - timestamp
-        this.setState({ offset: Math.round(this.ease(elapsed, origin, target - origin, duration)) })
+        this.setState({
+          offset: Math.round(
+            this.ease(elapsed, origin, target - origin, duration)
+          )
+        })
         if (elapsed <= duration) requestAnimationFrame(this.autoScroll)
       }
     }
@@ -134,15 +148,15 @@ export default function InfinitelyScrollable(WrappedComponent) {
     // exponential ease in/out
     // http://gizma.com/easing/
     ease(t, b, c, d) {
-      t /= d / 2;
-      if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-      t--;
-      return c / 2 * (-Math.pow(2, -10 * t) + 2) + b;
+      t /= d / 2
+      if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b
+      t--
+      return c / 2 * (-Math.pow(2, -10 * t) + 2) + b
     }
 
     cancelDrag() {
       if (this.state.dragging) {
-        clearTimeout(this.state.dragging.ticker);
+        clearTimeout(this.state.dragging.ticker)
         this.setState({ dragging: false })
       }
     }

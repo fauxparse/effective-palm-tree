@@ -7,7 +7,7 @@ export default class EventList extends React.Component {
     const { children, params } = this.props
     return (
       <section className="event-list page">
-        <Header title="Events"/>
+        <Header title="Events" />
         <Calendar params={params}>
           {children}
         </Calendar>

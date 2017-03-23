@@ -41,11 +41,13 @@ class Calendar extends React.Component {
   render() {
     const { offset, scrollTo, children, params } = this.props
     const { height } = this.state
-    const className = classNames('calendar', { 'show-bookmark': Math.abs(offset) > height })
+    const className = classNames('calendar', {
+      'show-bookmark': Math.abs(offset) > height
+    })
     return (
-      <div className={className} ref={(el) => this.container = el}>
+      <div className={className} ref={el => this.container = el}>
         {this.timeline()}
-        <button className="bookmark" onClick={() => scrollTo(-1)}/>
+        <button className="bookmark" onClick={() => scrollTo(-1)} />
         <Modal.Container>
           {children && React.cloneElement(children, { key: params.id })}
         </Modal.Container>
@@ -73,7 +75,10 @@ class Calendar extends React.Component {
         events={this.eventsByMonth(month.index)}
         start={month.start}
         style={this.transform(month.top)}
-        headerOffset={Math.max(0, Math.min(month.height - 48, offset - month.top))}
+        headerOffset={Math.max(
+          0,
+          Math.min(month.height - 48, offset - month.top)
+        )}
         onHeaderClicked={() => this.props.scrollTo(month.top - 1)}
         refreshEvent={refreshEvents}
       />
@@ -124,7 +129,7 @@ class Calendar extends React.Component {
     index = start
     while (top > windowStart) {
       index -= 1
-      month = months[index] = this.month(index, { bottom: top })
+      month = (months[index] = this.month(index, { bottom: top }))
       top = month.top
       min = index
     }
@@ -139,8 +144,10 @@ class Calendar extends React.Component {
     if (!month) {
       const date = now.clone().startOf('month').add(index, 'months')
       month = Month.getMonth(date, index)
-      month.top = options.top === undefined ? options.bottom - month.height : options.top
-      month.onChange = (m) => this.monthChanged(m, index)
+      month.top = options.top === undefined
+        ? options.bottom - month.height
+        : options.top
+      month.onChange = m => this.monthChanged(m, index)
     }
     return month
   }
@@ -157,8 +164,10 @@ class Calendar extends React.Component {
     while (min < max) {
       let mid = Math.floor((min + max) / 2)
       let month = months[mid]
-      if (!month || (month.top <= offset && offset < month.top + month.height)) {
-        return mid;
+      if (!month) {
+        return mid
+      } else if (month.top <= offset && offset < month.top + month.height) {
+        return mid
       } else if (offset < month.top) {
         max = mid - 1
       } else {
@@ -173,14 +182,18 @@ class Calendar extends React.Component {
 
     if (index >= 0) {
       if (months[index]) {
-        for (let y = months[index].top; months[index]; y += months[index++].height) {
+        let y = months[index].top
+        while (months[index]) {
           months[index].top = y
+          y += months[index++].height
         }
       }
     } else {
       if (months[index + 1]) {
-        for (let y = months[index + 1].top; months[index]; index--) {
-          y = months[index].top = y - months[index].height
+        let y = months[index + 1].top
+        while (months[index]) {
+          y = (months[index].top = y - months[index].height)
+          index--
         }
       }
     }
@@ -212,12 +225,14 @@ Calendar.defaultProps = {
   timezone: 'Pacific/Auckland'
 }
 
-const mapStateToProps = ({ events, calendar: eventsByMonth }) => {
-  return { events, eventsByMonth }
-}
+const mapStateToProps = ({ events, calendar: eventsByMonth }) => ({
+  events, eventsByMonth
+})
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   refreshEvents: events => dispatch(eventActions.refresh(events))
 })
 
-export default InfinitelyScrollable(connect(mapStateToProps, mapDispatchToProps)(Calendar))
+export default InfinitelyScrollable(
+  connect(mapStateToProps, mapDispatchToProps)(Calendar)
+)

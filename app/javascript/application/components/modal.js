@@ -21,7 +21,8 @@ class Container extends React.Component {
         className={classNames('modal-container', { open })}
         transitionName="modal"
         transitionEnterTimeout={375}
-        transitionLeaveTimeout={375}>
+        transitionLeaveTimeout={375}
+      >
         {this.renderChildren(children)}
       </CSSTransitionGroup>
     )
@@ -29,7 +30,9 @@ class Container extends React.Component {
 
   renderChildren(children) {
     if (children) {
-      return Array(children).map((child, i) => <Dialog key={i}>{child}</Dialog>)
+      return Array(children).map((child, i) => (
+        <Dialog key={i}>{child}</Dialog>
+      ))
     }
   }
 }
