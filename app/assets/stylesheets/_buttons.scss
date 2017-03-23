@@ -12,9 +12,10 @@
     color: inherit;
   }
 
-  &:disabled {
+  &:disabled,
+  &:disabled:hover {
     background: none;
-    color: rgba($base-font-color, 0.07);
+    color: rgba($base-font-color, 0.26);
     opacity: 1;
   }
 

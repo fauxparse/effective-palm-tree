@@ -4,6 +4,7 @@ class Occurrence < ApplicationRecord
 
   belongs_to :event
   has_one :group, through: :event
+  has_many :assignments, dependent: :destroy, autosave: true
   has_many :availability, dependent: :destroy, autosave: true do
     def build(attrs = {})
       super.tap { |a| a.occurrence = proxy_association.owner }

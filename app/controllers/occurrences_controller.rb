@@ -4,7 +4,7 @@ class OccurrencesController < ApplicationController
     respond_to do |format|
       format.json do
         if occurrence.present?
-          render json: occurrence
+          render json: occurrence, include: [:assignments]
         else
           head :not_found
         end

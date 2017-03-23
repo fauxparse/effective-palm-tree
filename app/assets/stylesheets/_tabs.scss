@@ -11,6 +11,7 @@ header [role="tablist"] {
     flex: 0 0 $sizing-increment;
     padding: 0.25em 1em 0.75em;
     transition: border-bottom-color $base-duration $base-timing;
+    -webkit-tap-highlight-color: rgba(black, 0);
 
     svg {
       display: block;

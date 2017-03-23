@@ -1,5 +1,5 @@
 import React from 'react'
-import { forOwn, range, sortBy } from 'lodash'
+import { assign, forOwn, pick, range, sortBy } from 'lodash'
 import Tether from 'tether'
 import fetch from '../lib/fetch'
 import Select from './select'
@@ -174,12 +174,12 @@ export default class EventRoles extends React.Component {
     if (dirty) {
       event.allocations = allocations
       this.setState({ dirty: false })
-      fetch(event.url + '/roles', {
-        method: 'PATCH',
-        body: { roles: event.allocations }
-      })
-      .then(response => response.json)
-      .then(attrs => onChange(event.update({ allocations: attrs })))
+      roles = event.allocations.map(allocation => (
+        pick(allocation, ['id', 'roleId', 'min', 'max'])
+      ))
+      fetch(event.url + '/roles', { method: 'PATCH', body: { roles } })
+        .then(response => response.json)
+        .then(attrs => onChange(event.update({ allocations: attrs })))
     }
   }
 

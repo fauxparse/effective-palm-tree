@@ -22,12 +22,29 @@ schedule = IceCube::Schedule.new(
 )
 schedule.add_recurrence_rule(IceCube::Rule.weekly)
 
-playshop.roles.create(name: 'MC', plural: 'MCs')
-playshop.roles.create(name: 'player')
-playshop.roles.create(name: 'muso')
+mc = playshop.roles.create(name: 'MC', plural: 'MCs')
+player = playshop.roles.create(name: 'player')
+muso = playshop.roles.create(name: 'muso')
 
-playshop.events.create(
+live = playshop.events.create(
   name: 'PlayShop LIVE',
   slug: 'live',
   schedule: schedule
 )
+
+mcs = live.allocations.create!(role: mc, min: 1, max: 1)
+players = live.allocations.create!(role: player, min: 1, max: 4)
+musos = live.allocations.create!(role: muso, min: 0, max: 1)
+
+live.occurrences.on(Date.civil(2017, 3, 17)).tap do |show|
+  show.save!
+  {
+    mcs => %w(Matt),
+    players => %w(Jen Janaye Aaron Barney),
+    musos => %w(Oli)
+  }.each do |role, names|
+    names.map { |name| Member.find_by(name: name) }.each do |member|
+      show.assignments.create!(member: member, allocation: role)
+    end
+  end
+end

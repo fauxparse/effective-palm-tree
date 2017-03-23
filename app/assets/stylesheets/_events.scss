@@ -424,3 +424,50 @@
     }
   }
 }
+
+.event-assignments {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  .assignments {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: $sizing-increment;
+
+    section {
+      padding: 0.5em 0;
+
+      &:not(:first-child) {
+        border-top: $base-border;
+      }
+
+      h4 {
+        @include ellipsis;
+        color: $secondary-font-color;
+        display: block;
+        font-size: $small-font-size;
+        font-weight: $base-font-weight;
+        line-height: 1.5rem;
+        margin: 0 1rem 0.5rem $keyline;
+        text-transform: uppercase;
+      }
+
+      li {
+        align-items: center;
+        display: flex;
+        padding: 0.5em 1em;
+
+        .avatar {
+          flex: 0 0 2em;
+          margin-right: calc(#{$keyline} - 3em);
+        }
+
+        .name {
+          @include ellipsis;
+          flex: 1;
+        }
+      }
+    }
+  }
+}
