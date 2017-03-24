@@ -27,6 +27,10 @@ class Group extends Model {
     return this._roles || []
   }
 
+  role(id) {
+    return find(this.roles, role => id == role.id)
+  }
+
   get currentMember() {
     return find(this.members, ({ id }) => id == this.memberId)
   }

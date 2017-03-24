@@ -438,6 +438,7 @@
 
     section {
       padding: 0.5em 0;
+      user-select: none;
 
       &:not(:first-child) {
         border-top: $base-border;
@@ -536,6 +537,90 @@
         opacity: 0;
         transform: rotateX(90deg);
       }
+    }
+  }
+
+  .drop-targets {
+    @include position(fixed, 0 0 0 0);
+    align-items: stretch;
+    background: rgba(white, 0.85);
+    cursor: grabbing;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity $base-duration $base-timing;
+  }
+
+  &.dragging .drop-targets {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drop-targets::before,
+  .drop-targets::after {
+    content: "";
+    flex: 1;
+  }
+
+  .drop-target {
+    align-items: center;
+    display: flex;
+    flex: 1 0 $sizing-increment;
+    justify-content: center;
+    max-height: $sizing-increment * 3;
+    user-select: none;
+
+    h4 {
+      color: $base-font-color;
+      display: flex;
+      align-items: center;
+      font-weight: $light-font-weight;
+      letter-spacing: 0.2em;
+      margin: 0;
+      opacity: 0.75;
+      text-transform: uppercase;
+      transition: all $base-duration $base-timing;
+
+      svg + span {
+        margin-left: 1em;
+      }
+
+      span {
+        display: none;
+      }
+
+      @include media($medium-screen) {
+        span {
+          display: block;
+        }
+      }
+    }
+
+    circle, path {
+      fill: none;
+      stroke: $base-font-color;
+      stroke-width: 1px;
+    }
+
+    &.hover h4 {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+  }
+
+  .drop-targets footer {
+    align-items: stretch;
+    display: flex;
+    flex: 1 0 $sizing-increment;
+    flex-direction: row;
+    justify-content: center;
+    order: 1;
+
+    .drop-target {
+      flex: 1;
+      max-height: auto;
+      max-width: 20em;
     }
   }
 }
