@@ -15,6 +15,10 @@ class Group extends Model {
     return this._members || []
   }
 
+  member(id) {
+    return find(this.members, member => id == member.id)
+  }
+
   set roles(values) {
     this._roles = sortBy(
       values.map(attrs => attrs instanceof Role ? attrs : new Role(attrs)),

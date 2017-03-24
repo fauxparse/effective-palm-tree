@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
-import { find, findIndex, keyBy, some, sortBy } from 'lodash'
+import { find, findIndex, forEach, keyBy, some, sortBy } from 'lodash'
 import Event from '../models/event'
 import Avatar from './avatar'
 
@@ -27,7 +27,11 @@ class MemberItem extends React.Component {
     } = this.props
     const startDrag = e => onDragStart(e, member, assignment)
     return (
-      <li className={classNames('member', className, { assigned: assignment })}>
+      <li
+        className={classNames('member', className, { assigned: assignment })}
+        data-member-id={member.id}
+        data-allocation-id={assignment ? assignment.allocation.id : 'none'}
+      >
         <span
           className="action"
           onMouseDown={startDrag}
@@ -111,7 +115,7 @@ export default class EventAssignments extends React.Component {
         })}
         role="tabpanel"
       >
-        <div className="assignments">
+        <div className="assignments" ref="list">
           {this.roleGroups()}
           {this.available()}
         </div>
@@ -143,7 +147,7 @@ export default class EventAssignments extends React.Component {
 
   available() {
     const { event, group } = this.props
-    const { showAll, selections } = this.state
+    const { showAll, selections, dragging } = this.state
     return (
       <section className={classNames('role', 'none', { 'show-all': showAll })}>
         <h4>
@@ -189,8 +193,13 @@ export default class EventAssignments extends React.Component {
     const { dragging } = this.state
     const targetId = dragging && dragging.targetId
     return (
-      <div className="drop-targets" ref="dropTargets">
-        {event.allocations.map(a => this.dropTarget(a, group.role(a.roleId), targetId == a.id))}
+      <div
+        className="drop-targets"
+        ref="dropTargets"
+        onTouchMove={e => e.stopPropagation()}
+      >
+        {event.allocations.map(a =>
+          this.dropTarget(a, group.role(a.roleId), targetId == a.id))}
         <footer>
           <DropTarget key={-1} id={-1} hover={targetId == -1}>
             <h4>{ICONS.REMOVE}<span>Remove</span></h4>
@@ -199,6 +208,9 @@ export default class EventAssignments extends React.Component {
             <h4>{ICONS.CANCEL}<span>Cancel</span></h4>
           </DropTarget>
         </footer>
+        <div className={classNames('draggables', { multiple: dragging && dragging.selections.length > 1 })} ref="draggables">
+          {this.draggables()}
+        </div>
       </div>
     )
   }
@@ -213,26 +225,43 @@ export default class EventAssignments extends React.Component {
     )
   }
 
+  draggables() {
+    const { dragging } = this.state
+    if (dragging) {
+      return dragging.ghosts.map((ghost, i) =>
+        React.cloneElement(ghost, { key: i }))
+    }
+  }
+
   dragStart(e, member, assignment) {
+    // Stop the same action triggering both touch and mouse events
     if (this.dragStartEvent) return
     this.dragStartEvent = e
     e.persist()
     e.stopPropagation()
+
+    // Prevent mouse scrolling
+    if (!isTouchEvent(e)) e.preventDefault()
+
     const selections = this.state.selections.slice(0)
     const [x, y] = dragPosition(e)
     let item = e.target
     while (!item.classList || !item.classList.contains('member'))
       item = item.parentNode
+    const rect = item.getBoundingClientRect()
 
     if (!selections.length) {
-      selections.push([member.id, assignment && assignment.allocationId])
+      selections.push([member.id, assignment && assignment.allocation.id])
     }
     const dragging = {
       origin: { x, y },
+      offset: { x: x - rect.left, y: y - rect.top },
       item,
       member,
       assignment,
+      allocation: assignment && assignment.allocation,
       selections,
+      ghosts: [],
       moved: false,
       dragStartTimer: setTimeout(() => this.dragMove(e, true), 300)
     }
@@ -251,22 +280,57 @@ export default class EventAssignments extends React.Component {
   dragMove(e, force = false) {
     e.stopPropagation()
     const { dragging } = this.state
+    const { draggables } = this.refs
     const [x, y] = dragPosition(e)
     const dx = x - dragging.origin.x
     const dy = y - dragging.origin.y
     const distance = Math.sqrt(dx * dx + dy * dy)
     if (!dragging.moved && (force || distance > 5)) {
+      if (
+        !isSelected(dragging.selections, dragging.member, dragging.allocation)
+      ) {
+        dragging.selections.unshift([
+          dragging.member.id,
+          dragging.allocation && dragging.allocation.id
+        ])
+      }
       dragging.moved = true
       clearTimeout(dragging.dragStartTimer)
       dragging.x = x
       dragging.y = y
+      const { offset } = dragging
+      dragging.ghosts = this.dragGhosts(
+        dragging.selections,
+        x - offset.x,
+        y - offset.y
+      )
+      setTimeout(
+        () => {
+          forEach(
+            this.refs.draggables.querySelectorAll('.draggable'),
+            draggable => {
+              const dx = parseInt(draggable.style.left, 10)
+              const dy = parseInt(draggable.style.top, 10)
+              draggable.style.transform = `translate3d(${-dx}px, ${-dy}px, 0)`
+            }
+          )
+        },
+        10
+      )
+      if (dragging.selections.length > 1) {
+        this.setState({ selections: dragging.selections.slice(0) })
+      }
     }
-    dragging.target = find(
-      this.refs.dropTargets.querySelectorAll('.drop-target'),
-      t => inside(x, y, t.getBoundingClientRect())
-    )
-    dragging.targetId = dragging.target &&
-      dragging.target.getAttribute('data-allocation-id')
+
+    if (dragging.moved) {
+      draggables.style.transform = `translate3d(${x}px, ${y}px, 0)`
+      dragging.target = find(
+        this.refs.dropTargets.querySelectorAll('.drop-target'),
+        t => inside(x, y, t.getBoundingClientRect())
+      )
+      dragging.targetId = dragging.target &&
+        dragging.target.getAttribute('data-allocation-id')
+    }
     this.setState({ dragging })
   }
 
@@ -275,7 +339,12 @@ export default class EventAssignments extends React.Component {
     const { moved, member, assignment } = dragging
 
     clearTimeout(dragging.dragStartTimer)
-    setTimeout(() => { this.dragStartEvent = undefined }, 50)
+    setTimeout(
+      () => {
+        this.dragStartEvent = undefined
+      },
+      50
+    )
     if (moved) {
       this.setState({ selections: [] })
     } else {
@@ -288,6 +357,31 @@ export default class EventAssignments extends React.Component {
     body.removeEventListener('mousemove', this.dragMove)
     body.removeEventListener('mouseup', this.dragStop)
     this.setState({ dragging: false })
+  }
+
+  dragGhosts(selections, x, y) {
+    const { group } = this.props
+    const { list } = this.refs
+    return selections.map(([memberId, allocationId]) => {
+      const listItem = list.querySelector(
+        `.member[data-member-id="${memberId}"][data-allocation-id="${allocationId || 'none'}"]`
+      )
+      const rect = listItem.getBoundingClientRect()
+      const dx = x - rect.left
+      const dy = y - rect.top
+      return (
+        <div
+          className="draggable"
+          style={{
+            top: `${-dy}px`,
+            left: `${-dx}px`,
+            transform: `translate3d(0, 0, 0)`
+          }}
+        >
+          {selections.length == 1 && <Avatar member={group.member(memberId)}/>}
+        </div>
+      )
+    })
   }
 
   toggleSelection(member, assignment) {
