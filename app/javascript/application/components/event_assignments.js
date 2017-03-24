@@ -96,6 +96,11 @@ export default class EventAssignments extends React.Component {
     this.dragStop = this.dragStop.bind(this)
   }
 
+  componentWillUnmount() {
+    const { dragging } = this.state
+    if (dragging) clearTimeout(dragging.dragStartTimer)
+  }
+
   render() {
     const { event, group } = this.props
     const { dragging } = this.state
@@ -209,9 +214,12 @@ export default class EventAssignments extends React.Component {
   }
 
   dragStart(e, member, assignment) {
+    if (this.dragStartEvent) return
+    this.dragStartEvent = e
+    e.persist()
+    e.stopPropagation()
     const selections = this.state.selections.slice(0)
     const [x, y] = dragPosition(e)
-    e.stopPropagation()
     let item = e.target
     while (!item.classList || !item.classList.contains('member'))
       item = item.parentNode
@@ -225,25 +233,31 @@ export default class EventAssignments extends React.Component {
       member,
       assignment,
       selections,
-      moved: false
+      moved: false,
+      dragStartTimer: setTimeout(() => this.dragMove(e, true), 300)
     }
     this.setState({ dragging })
 
     const body = document.querySelector('body')
-    body.addEventListener('mouseup', this.dragStop)
-    body.addEventListener('touchend', this.dragStop)
-    body.addEventListener('mousemove', this.dragMove)
-    body.addEventListener('touchmove', this.dragMove)
+    if (isTouchEvent(e)) {
+      body.addEventListener('touchmove', this.dragMove)
+      body.addEventListener('touchend', this.dragStop)
+    } else {
+      body.addEventListener('mousemove', this.dragMove)
+      body.addEventListener('mouseup', this.dragStop)
+    }
   }
 
-  dragMove(e) {
+  dragMove(e, force = false) {
+    e.stopPropagation()
     const { dragging } = this.state
     const [x, y] = dragPosition(e)
     const dx = x - dragging.origin.x
     const dy = y - dragging.origin.y
     const distance = Math.sqrt(dx * dx + dy * dy)
-    if (!dragging.moved && distance > 5) {
+    if (!dragging.moved && (force || distance > 5)) {
       dragging.moved = true
+      clearTimeout(dragging.dragStartTimer)
       dragging.x = x
       dragging.y = y
     }
@@ -260,6 +274,8 @@ export default class EventAssignments extends React.Component {
     const { dragging, selections } = this.state
     const { moved, member, assignment } = dragging
 
+    clearTimeout(dragging.dragStartTimer)
+    setTimeout(() => { this.dragStartEvent = undefined }, 50)
     if (moved) {
       this.setState({ selections: [] })
     } else {
@@ -267,10 +283,10 @@ export default class EventAssignments extends React.Component {
     }
 
     const body = document.querySelector('body')
-    body.removeEventListener('mouseup', this.dragStop)
+    body.removeEventListener('touchmove', this.dragMove)
     body.removeEventListener('touchend', this.dragStop)
     body.removeEventListener('mousemove', this.dragMove)
-    body.removeEventListener('touchmove', this.dragMove)
+    body.removeEventListener('mouseup', this.dragStop)
     this.setState({ dragging: false })
   }
 
@@ -323,7 +339,7 @@ function isSelected(selections, member, allocation) {
 }
 
 function dragPosition(e) {
-  if (e.targetTouches && e.targetTouches.length) e = e.targetTouches[0]
+  if (isTouchEvent(e)) e = e.targetTouches[0]
   return [e.clientX, e.clientY]
 }
 
@@ -332,4 +348,8 @@ function inside(x, y, rect) {
     x < rect.left + rect.width &&
     y >= rect.top &&
     y < rect.top + rect.height
+}
+
+function isTouchEvent(e) {
+  return e.targetTouches && e.targetTouches.length > 0
 }

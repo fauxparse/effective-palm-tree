@@ -435,10 +435,10 @@
     flex: 1;
     overflow-y: auto;
     padding-bottom: $sizing-increment;
+    user-select: none;
 
     section {
       padding: 0.5em 0;
-      user-select: none;
 
       &:not(:first-child) {
         border-top: $base-border;
@@ -538,6 +538,11 @@
         transform: rotateX(90deg);
       }
     }
+  }
+
+  &.dragging .assignments {
+    touch-action: none;
+    pointer-events: none;
   }
 
   .drop-targets {
