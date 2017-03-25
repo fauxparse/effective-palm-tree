@@ -1,4 +1,4 @@
-import { assign, some } from 'lodash'
+import { assign, findIndex, some } from 'lodash'
 import Model from './model'
 import Member from './member'
 
@@ -32,6 +32,18 @@ class Allocation extends Model {
   isAssigned(member) {
     member = member.id || member
     return some(this.assignments, a => a.memberId == member)
+  }
+
+  remove(member) {
+    member = member.id || member
+    const index = findIndex(this.assignments, a => a.memberId = member)
+    if (index > -1) this.assignments.splice(index, 1)
+  }
+
+  add(member) {
+    if (!this.isAssigned(member)) {
+      this.assignments.push({ memberId: member.id || member, allocation: this })
+    }
   }
 
   set assignments(values) {

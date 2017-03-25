@@ -208,7 +208,12 @@ export default class EventAssignments extends React.Component {
             <h4>{ICONS.CANCEL}<span>Cancel</span></h4>
           </DropTarget>
         </footer>
-        <div className={classNames('draggables', { multiple: dragging && dragging.selections.length > 1 })} ref="draggables">
+        <div
+          className={classNames('draggables', {
+            multiple: dragging && dragging.selections.length > 1
+          })}
+          ref="draggables"
+        >
           {this.draggables()}
         </div>
       </div>
@@ -329,12 +334,13 @@ export default class EventAssignments extends React.Component {
         t => inside(x, y, t.getBoundingClientRect())
       )
       dragging.targetId = dragging.target &&
-        dragging.target.getAttribute('data-allocation-id')
+        parseInt(dragging.target.getAttribute('data-allocation-id'))
     }
     this.setState({ dragging })
   }
 
   dragStop(e) {
+    const { event, onChange } = this.props
     const { dragging, selections } = this.state
     const { moved, member, assignment } = dragging
 
@@ -346,7 +352,14 @@ export default class EventAssignments extends React.Component {
       50
     )
     if (moved) {
-      this.setState({ selections: [] })
+      if (dragging.targetId) {
+        this.updateAssignments(
+          dragging.selections,
+          parseInt(dragging.targetId)
+        )
+        this.setState({ selections: [] })
+        onChange(event)
+      }
     } else {
       this.toggleSelection(member, assignment)
     }
@@ -378,7 +391,7 @@ export default class EventAssignments extends React.Component {
             transform: `translate3d(0, 0, 0)`
           }}
         >
-          {selections.length == 1 && <Avatar member={group.member(memberId)}/>}
+          {selections.length == 1 && <Avatar member={group.member(memberId)} />}
         </div>
       )
     })
@@ -399,6 +412,12 @@ export default class EventAssignments extends React.Component {
       selections.push([member.id, allocation && allocation.id])
     }
     this.setState({ selections })
+  }
+
+  updateAssignments(selections, allocationId) {
+    const { event } = this.props
+    selections.forEach(([memberId, oldAllocationId]) =>
+      event.updateAssignment(memberId, oldAllocationId, allocationId))
   }
 }
 

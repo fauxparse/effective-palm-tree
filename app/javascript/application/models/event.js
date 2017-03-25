@@ -1,5 +1,5 @@
 import moment from 'moment-timezone'
-import { some } from 'lodash'
+import { find, some } from 'lodash'
 import fetch from '../lib/fetch'
 import Model from './model'
 import Allocation from './allocation'
@@ -82,8 +82,24 @@ class Event extends Model {
     return this._allocations
   }
 
+  allocation(id) {
+    return find(this.allocations, a => a.id == id)
+  }
+
   isAssigned(member) {
     return some(this.allocations, a => a.isAssigned(member))
+  }
+
+  updateAssignment(memberId, oldAllocationId, newAllocationId) {
+    if (oldAllocationId != newAllocationId) {
+      if (oldAllocationId > 0) {
+        this.allocation(oldAllocationId).remove(memberId)
+      }
+
+      if (newAllocationId > 0) {
+        this.allocation(newAllocationId).add(memberId)
+      }
+    }
   }
 }
 
