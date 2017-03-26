@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe OccurrenceSerializer do
+describe OccurrenceSerializer, type: :serializer do
   subject(:serializer) { OccurrenceSerializer.new(occurrence) }
   let(:occurrence) { event.occurrences.at(event.schedule.first) }
-  let(:event) { create(:event) }
+  let(:event) { create(:event, :with_roles) }
+  let(:member) { create(:member, group: event.group) }
 
   before do
-    event.allocations.create!(role: create(:role, group: event.group))
     occurrence.availability.build(member: create(:member, group: event.group))
+    occurrence.assignments.build(
+      allocation: event.allocations.first,
+      member: member
+    )
   end
 
   describe 'as JSON' do

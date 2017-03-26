@@ -36,5 +36,13 @@ describe UpdateAvailability, type: :service do
         .from(false)
         .to(true)
     end
+
+    context 'and they are now uncertain' do
+      let(:availability) { { member.id => nil } }
+
+      it 'removes availability' do
+        expect { service.call }.to change(Availability, :count).by(-1)
+      end
+    end
   end
 end

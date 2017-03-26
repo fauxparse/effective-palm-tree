@@ -64,6 +64,20 @@ FactoryGirl.define do
 
   factory :group do
     name 'PlayShop'
+
+    trait :with_roles do
+      after(:create) do |group|
+        create(:role, group: group, name: 'MC')
+        create(:role, group: group, name: 'player')
+        create(:role, group: group, name: 'muso')
+      end
+    end
+
+    trait :with_members do
+      after(:create) do |group|
+        5.times { create(:member, group: group) }
+      end
+    end
   end
 
   factory :member do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe UserSerializer do
+describe UserSerializer, type: :serializer do
   subject(:serializer) { UserSerializer.new(user) }
   let(:user) { create(:user) }
 
