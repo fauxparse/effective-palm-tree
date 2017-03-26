@@ -46,6 +46,20 @@ FactoryGirl.define do
         end
       end
     end
+
+    trait :with_roles do
+      after(:create) do |event|
+        event.allocations.create(
+          role: create(:role, name: 'MC', group: event.group), min: 1, max: 1
+        )
+        event.allocations.create(
+          role: create(:role, name: 'player', group: event.group), max: 4
+        )
+        event.allocations.create(
+          role: create(:role, name: 'muso', group: event.group), max: 1
+        )
+      end
+    end
   end
 
   factory :group do

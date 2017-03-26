@@ -3,7 +3,7 @@ playshop = Group.create(name: 'PlayShop')
 NAMES = %w(
   Matt Jen Ryan Sam Lori Christine Maddy Janaye Aaron George Maria Jed Harriet
   Stevie Liam Gabby Pippa Oli Tom Austin Callum Sabrina Barney Zoe
-)
+).freeze
 
 NAMES.each.with_index(23) do |name, i|
   playshop.members.create!(

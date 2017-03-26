@@ -24,7 +24,7 @@ class Allocation < ApplicationRecord
 
   def same_group
     errors.add(:role_id, 'must be from the same group as the event') \
-      unless event.group_id == role.group_id
+      unless event.group.id == role.group.id
   end
 
   def max_not_less_than_min

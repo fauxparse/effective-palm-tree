@@ -15,6 +15,15 @@ class EventsController < ApplicationController
     end
   end
 
+  def assignments
+    respond_to do |format|
+      format.json do
+        UpdateAssignments.new(occurrence, assignment_params).call
+        render json: occurrence.assignments.as_json
+      end
+    end
+  end
+
   private
 
   def events
@@ -31,5 +40,9 @@ class EventsController < ApplicationController
 
   def role_params
     params.permit(roles: [:id, :min, :max, :role_id])[:roles]
+  end
+
+  def assignment_params
+    params[:assignments]
   end
 end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddAvatarUrlToMembers < ActiveRecord::Migration[5.1]
   def change
     change_table :members do |t|
