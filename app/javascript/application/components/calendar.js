@@ -45,7 +45,7 @@ class Calendar extends React.Component {
       'show-bookmark': Math.abs(offset) > height
     })
     return (
-      <div className={className} ref={el => this.container = el}>
+      <div className={className} ref={el => { this.container = el }}>
         {this.timeline()}
         <button className="bookmark" onClick={() => scrollTo(-1)} />
         <Modal.Container>

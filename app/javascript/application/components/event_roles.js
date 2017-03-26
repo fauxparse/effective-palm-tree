@@ -69,14 +69,14 @@ class AllocationRange extends Select {
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
     const value = Math.round(Math.exp(position * maxl)) - 1
-    return value == maximum ? Allocation.UNLIMITED : value
+    return value === maximum ? Allocation.UNLIMITED : value
   }
 
   positionFromValue(value) {
     const { group } = this.props
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
-    return value == Allocation.UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
+    return value === Allocation.UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
   }
 }
 
@@ -116,7 +116,7 @@ class EventRole extends React.Component {
           selected={allocation.roleId || group.roles[0].id}
           options={group.roles.map(({ id, name, plural }) => [
             id,
-            allocation.max == 1 ? name : plural
+            allocation.max === 1 ? name : plural
           ])}
           onChange={roleId => this.change({ roleId })}
         />
@@ -129,7 +129,7 @@ class EventRole extends React.Component {
 
   change(attributes) {
     const { allocation, onChange } = this.props
-    forOwn(attributes, (value, key) => allocation[key] = value)
+    forOwn(attributes, (value, key) => { allocation[key] = value })
     onChange(allocation)
   }
 }
@@ -182,7 +182,7 @@ export default class EventRoles extends React.Component {
     const { event, group, onChange } = this.props
     const { allocations } = this.state
     const ids = allocations.map(a => a.roleId)
-    const roleId = (group.roles.filter(r => ids.indexOf(r.id) == -1)[0] ||
+    const roleId = (group.roles.filter(r => ids.indexOf(r.id) === -1)[0] ||
     group.roles[0] || {}).id
     if (roleId) {
       const allocation = new Allocation({
@@ -200,14 +200,14 @@ export default class EventRoles extends React.Component {
   changeRole(attributes, index) {
     const { allocations } = this.state
     const allocation = allocations[index]
-    forOwn(attributes, (value, key) => allocation[key] = value)
+    forOwn(attributes, (value, key) => { allocation[key] = value })
     this.setState({ allocations, dirty: true })
   }
 
   deleteRole(allocation) {
     const { allocations } = this.state
     this.setState({
-      allocations: allocations.filter(a => a.id != allocation.id),
+      allocations: allocations.filter(a => a.id !== allocation.id),
       dirty: true
     })
   }

@@ -22,7 +22,7 @@ class LoginForm extends React.Component {
             id="login-tab-log-in"
             role="tab"
             aria-controls="login-log-in"
-            aria-selected={mode == 'log-in'}
+            aria-selected={mode === 'log-in'}
           >
             <a href="#login-log-in" onClick={this.switchTab}>Log in</a>
           </li>
@@ -30,7 +30,7 @@ class LoginForm extends React.Component {
             id="login-tab-sign-up"
             role="tab"
             aria-controls="login-sign-up"
-            aria-selected={mode == 'sign-up'}
+            aria-selected={mode === 'sign-up'}
           >
             <a href="#login-sign-up" onClick={this.switchTab}>Sign up</a>
           </li>
@@ -39,7 +39,7 @@ class LoginForm extends React.Component {
           id="login-log-in"
           role="tabpanel"
           aria-labelledby="login-tab-log-in"
-          aria-hidden={mode != 'log-in'}
+          aria-hidden={mode !== 'log-in'}
         >
           <form onSubmit={this.onLoginSubmit.bind(this)}>
             {this.errors()}

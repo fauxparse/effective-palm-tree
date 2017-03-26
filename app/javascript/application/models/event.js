@@ -51,7 +51,7 @@ class Event extends Model {
 
   availabilityFor(member, value) {
     const id = member.id || member
-    if (arguments.length == 2) {
+    if (arguments.length === 2) {
       this.availability[id] = value
       fetch(this.url + '/availability', {
         method: 'PATCH',
@@ -62,7 +62,7 @@ class Event extends Model {
   }
 
   static cycleAvailability(availability) {
-    if (availability == Event.AVAILABLE) {
+    if (availability === Event.AVAILABLE) {
       return Event.UNAVAILABLE
     } else if (availability == Event.UNAVAILABLE) {
       return Event.UNKNOWN
@@ -83,7 +83,7 @@ class Event extends Model {
   }
 
   allocation(id) {
-    return find(this.allocations, a => a.id == id)
+    return find(this.allocations, a => a.id === id)
   }
 
   isAssigned(member) {

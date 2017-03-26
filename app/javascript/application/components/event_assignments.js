@@ -73,7 +73,7 @@ class RoleGroup extends React.Component {
 
     return (
       <section className="role">
-        <h4>{allocation.max == 1 ? role.name : role.plural}</h4>
+        <h4>{allocation.max === 1 ? role.name : role.plural}</h4>
         <ul>
           {assignments.map(assignment => (
             <MemberItem
@@ -137,7 +137,7 @@ export default class EventAssignments extends React.Component {
         key={allocation.id}
         allocation={allocation}
         event={event}
-        role={find(roles, r => r.id == allocation.roleId)}
+        role={find(roles, r => r.id === allocation.roleId)}
         members={members}
         selections={selections}
         onDragStart={(e, member, assignment) =>
@@ -170,7 +170,7 @@ export default class EventAssignments extends React.Component {
     let availability = event.availabilityFor(member)
     availability = availability == Event.AVAILABLE
       ? 'available'
-      : availability == Event.UNAVAILABLE ? 'unavailable' : 'unknown'
+      : availability === Event.UNAVAILABLE ? 'unavailable' : 'unknown'
     const icon = ICONS[availability.toUpperCase()]
     const avatar = event.isAssigned(member)
       ? false
@@ -200,12 +200,12 @@ export default class EventAssignments extends React.Component {
         onTouchMove={e => e.stopPropagation()}
       >
         {event.allocations.map(a =>
-          this.dropTarget(a, group.role(a.roleId), targetId == a.id))}
+          this.dropTarget(a, group.role(a.roleId), targetId === a.id))}
         <footer>
-          <DropTarget key={-1} id={-1} hover={targetId == -1}>
+          <DropTarget key={-1} id={-1} hover={targetId === -1}>
             <h4>{ICONS.REMOVE}<span>Remove</span></h4>
           </DropTarget>
-          <DropTarget key={0} id={0} hover={targetId == 0}>
+          <DropTarget key={0} id={0} hover={targetId === 0}>
             <h4>{ICONS.CANCEL}<span>Cancel</span></h4>
           </DropTarget>
         </footer>
@@ -335,7 +335,7 @@ export default class EventAssignments extends React.Component {
         t => inside(x, y, t.getBoundingClientRect())
       )
       dragging.targetId = dragging.target &&
-        parseInt(dragging.target.getAttribute('data-allocation-id'))
+        parseInt(dragging.target.getAttribute('data-allocation-id'), 10)
     }
     this.setState({ dragging })
   }
@@ -356,7 +356,7 @@ export default class EventAssignments extends React.Component {
       if (dragging.targetId) {
         this.updateAssignments(
           dragging.selections,
-          parseInt(dragging.targetId)
+          parseInt(dragging.targetId, 10)
         )
         this.setState({ selections: [] })
         onChange(event)
@@ -392,7 +392,7 @@ export default class EventAssignments extends React.Component {
             transform: `translate3d(0, 0, 0)`
           }}
         >
-          {selections.length == 1 && <Avatar member={group.member(memberId)} />}
+          {selections.length === 1 && <Avatar member={group.member(memberId)} />}
         </div>
       )
     })
@@ -405,7 +405,7 @@ export default class EventAssignments extends React.Component {
 
     const index = findIndex(
       selections,
-      ([m, a]) => m == member.id && a == allocationId
+      ([m, a]) => m === member.id && a === allocationId
     )
     if (index > -1) {
       selections.splice(index, 1)
@@ -447,9 +447,9 @@ class DropTarget extends React.Component {
 }
 
 function compareAvailability(availability) {
-  if (availability == Event.AVAILABLE) {
+  if (availability === Event.AVAILABLE) {
     return 0
-  } else if (availability == Event.UNAVAILABLE) {
+  } else if (availability === Event.UNAVAILABLE) {
     return 2
   } else {
     return 1
@@ -459,7 +459,7 @@ function compareAvailability(availability) {
 function isSelected(selections, member, allocation) {
   const memberId = member.id || member
   const allocationId = allocation && allocation.id
-  return find(selections, ([m, a]) => m == memberId && a == allocationId)
+  return find(selections, ([m, a]) => m === memberId && a === allocationId)
 }
 
 function dragPosition(e) {

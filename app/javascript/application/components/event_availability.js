@@ -39,7 +39,7 @@ class MyAvailability extends React.Component {
 
   changeAvailability(value) {
     const { availability, onChange } = this.props
-    if (availability == Event.UNKNOWN) {
+    if (availability === Event.UNKNOWN) {
       onChange(value)
     } else {
       onChange(Event.UNKNOWN)
@@ -58,7 +58,7 @@ class MemberAvailability extends React.Component {
     const availability = event.availabilityFor(member)
     const className = classNames({
       available: availability,
-      unavailable: availability == Event.UNAVAILABLE,
+      unavailable: availability === Event.UNAVAILABLE,
       unknown: availability == Event.UNKNOWN
     })
 
@@ -123,7 +123,7 @@ export default class EventAvailability extends React.Component {
   setAvailability(member, value) {
     const { event, group } = this.props
     const current = group.currentMember
-    if (current.admin || (current.id == member.id && this.beforeEvent())) {
+    if (current.admin || (current.id === member.id && this.beforeEvent())) {
       event.availabilityFor(member, value)
       this.props.onChange(event)
     }
