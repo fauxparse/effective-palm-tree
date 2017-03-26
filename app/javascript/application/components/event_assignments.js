@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { find, findIndex, forEach, keyBy, some, sortBy } from 'lodash'
+import fetch from '../lib/fetch'
 import Event from '../models/event'
 import Avatar from './avatar'
 
@@ -416,6 +417,16 @@ export default class EventAssignments extends React.Component {
 
   updateAssignments(selections, allocationId) {
     const { event } = this.props
+    fetch(event.url + '/assignments', {
+      method: 'PATCH',
+      body: {
+        assignments: selections.map(([memberId, old]) => [
+          memberId,
+          old || 0,
+          allocationId || 0
+        ])
+      }
+    })
     selections.forEach(([memberId, oldAllocationId]) =>
       event.updateAssignment(memberId, oldAllocationId, allocationId))
   }
