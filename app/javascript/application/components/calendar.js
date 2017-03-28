@@ -127,12 +127,13 @@ class Calendar extends React.Component {
     return results
   }
 
-  fetchMonth(index) {
+  fetchMonths(indices) {
     const { now, fetch, months } = this.props
-    if (!months[index]) {
-      const start = now.clone().startOf('month').add(index, 'months')
-      const stop = start.clone().add(1, 'month')
-      fetch(start, stop, index)
+    indices = indices.filter(i => !months[i])
+    if (indices.length) {
+      const start = now.clone().startOf('month').add(indices[0], 'months')
+      const stop = now.clone().add(indices[indices.length - 1] + 1, 'months')
+      fetch(start, stop, indices[0])
     }
   }
 
@@ -144,17 +145,23 @@ class Calendar extends React.Component {
     let index = this.indexAt(windowStart)
     let top = this.calculateOffset(index)
 
+    let toFetch = []
+
     while (top < windowEnd) {
-      this.fetchMonth(index)
+      if (!months[index]) toFetch.push(index)
       top += monthHeight(months[index])
       index++
     }
 
-    index = top = 0
+    index = (top = 0)
     while (top > windowStart) {
-      this.fetchMonth(index)
+      if (!months[index]) toFetch.unshift(index)
       index--
       top -= monthHeight(months[index])
+    }
+
+    if (toFetch.length) {
+      setTimeout(() => this.fetchMonths(toFetch))
     }
   }
 
