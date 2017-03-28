@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { last, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'

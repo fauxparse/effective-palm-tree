@@ -226,8 +226,8 @@ function monthHeight(month = { events: [] }) {
   return Math.max(2, events.length + 1) * 48
 }
 
-const mapStateToProps = ({ events, calendar }, { now }) =>
-  assign({ events }, calculateOffsets(calendar, now))
+const mapStateToProps = ({ events: { all, calendar } }, { now }) =>
+  assign({ events: all }, calculateOffsets(calendar, now))
 
 const mapDispatchToProps = dispatch => ({
   refreshEvents: events => dispatch(eventActions.refresh(events)),

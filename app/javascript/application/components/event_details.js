@@ -103,7 +103,7 @@ class EventDetails extends React.Component {
 
 const mapStateToProps = ({ events, groups }, { location, params }) => {
   return {
-    event: events[location.pathname],
+    event: events.all[location.pathname],
     group: groups[params.group]
   }
 }
