@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
-import { sortBy } from 'lodash'
+import { assign, keyBy, keys, sortBy, values } from 'lodash'
+import fetch from '../lib/fetch'
 import InfinitelyScrollable from './infinitely_scrollable'
-import Month from '../models/month'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
 import Modal from './modal'
@@ -15,17 +15,12 @@ class Calendar extends React.Component {
     super(props)
     this.fillMonths = this.fillMonths.bind(this)
     this.onResize = this.onResize.bind(this)
-    this.state = {
-      now: moment().tz(this.props.timezone),
-      months: {},
-      min: 0,
-      max: 0
-    }
+    this.state = { height: 0 }
   }
 
   componentDidMount() {
     window.addEventListener('resize', this.onResize)
-    requestAnimationFrame(this.onResize)
+    setTimeout(this.onResize)
   }
 
   componentWillUnmount() {
@@ -45,7 +40,12 @@ class Calendar extends React.Component {
       'show-bookmark': Math.abs(offset) > height
     })
     return (
-      <div className={className} ref={el => { this.container = el }}>
+      <div
+        className={className}
+        ref={el => {
+          this.container = el
+        }}
+      >
         {this.timeline()}
         <button className="bookmark" onClick={() => scrollTo(-1)} />
         <Modal.Container>
@@ -66,109 +66,108 @@ class Calendar extends React.Component {
     }
   }
 
-  renderMonth(month) {
-    const { offset, timezone, events, refreshEvents } = this.props
+  renderMonth(index) {
+    const { now, months, offset, timezone, refreshEvents } = this.props
+    const month = months[index] || { loading: true }
+    const events = this.eventsByMonth(index)
+    const top = this.calculateOffset(index)
+    const height = monthHeight({ events })
     return (
       <CalendarMonth
-        key={month.index}
-        loading={!month.loaded}
-        events={this.eventsByMonth(month.index)}
-        start={month.start}
-        style={this.transform(month.top)}
-        headerOffset={Math.max(
-          0,
-          Math.min(month.height - 48, offset - month.top)
-        )}
+        key={index}
+        loading={month.loading}
+        events={events}
+        start={now.clone().add(index, 'months')}
+        style={{ top }}
+        headerOffset={Math.max(0, Math.min(height - 48, offset - top))}
         onHeaderClicked={() => this.props.scrollTo(month.top - 1)}
         refreshEvent={refreshEvents}
       />
     )
   }
 
+  calculateOffset(index) {
+    const { months, offsets } = this.props
+    if (offsets[index] !== undefined) {
+      return offsets[index]
+    } else if (index === 0) {
+      return 0
+    } else if (index < 0) {
+      return this.calculateOffset(index + 1) - monthHeight(months[index])
+    } else {
+      return this.calculateOffset(index - 1) + monthHeight(months[index - 1])
+    }
+  }
+
   eventsByMonth(index) {
-    const { events, eventsByMonth } = this.props
-    const { key } = this.state.months[index]
-    return (eventsByMonth[key] || []).map(url => events[url])
+    const { now, events, months } = this.props
+    const month = months[index]
+    return month ? month.events.map(url => events[url]) : []
   }
 
   visibleMonths() {
-    const { offset } = this.props
-    const { months, height } = this.state
+    const { offset, months, min, max, offsets, heights } = this.props
+    const { height } = this.state
     let results = []
 
     let index = this.indexAt(offset)
-    let month = months[index]
-    let y = month ? month.top : 0
-
-    while ((month = months[index]) && y < offset + height) {
-      results.push(month)
+    let y = this.calculateOffset(index)
+    while (y < offset + height) {
+      results.push(index)
       index++
-      y += month.height
+      y += monthHeight(months[index])
+    }
+
+    index = Math.min(0, results[0] || 0) - 1
+    while (this.calculateOffset(index) + monthHeight(months[index]) > offset) {
+      results.unshift(index)
+      index--
     }
 
     return results
   }
 
+  fetchMonth(index) {
+    const { now, fetch, months } = this.props
+    if (!months[index]) {
+      const start = now.clone().startOf('month').add(index, 'months')
+      const stop = start.clone().add(1, 'month')
+      fetch(start, stop, index)
+    }
+  }
+
   fillMonths(offset) {
-    let { months, min, max, height } = this.state
+    const { now, fetch, months } = this.props
+    let { height } = this.state
     let windowStart = offset - height
     let windowEnd = offset + height * 2
-    let start = this.indexAt(windowStart)
-    let month = this.month(start, { top: 0 })
-    let top = month.top
-    let bottom = top + month.height
-    let index = start
+    let index = this.indexAt(windowStart)
+    let top = this.calculateOffset(index)
 
-    while (bottom < windowEnd) {
-      months[index++] = month
-      bottom = month.top + month.height
-      month = this.month(index, { top: bottom })
-      max = index
+    while (top < windowEnd) {
+      this.fetchMonth(index)
+      top += monthHeight(months[index])
+      index++
     }
 
-    index = start
+    index = top = 0
     while (top > windowStart) {
-      index -= 1
-      month = (months[index] = this.month(index, { bottom: top }))
-      top = month.top
-      min = index
+      this.fetchMonth(index)
+      index--
+      top -= monthHeight(months[index])
     }
-
-    this.setState({ months, min, max })
-  }
-
-  month(index, options) {
-    const { now, months } = this.state
-    let month = months[index]
-
-    if (!month) {
-      const date = now.clone().startOf('month').add(index, 'months')
-      month = Month.getMonth(date, index)
-      month.top = options.top === undefined
-        ? options.bottom - month.height
-        : options.top
-      month.onChange = m => this.monthChanged(m, index)
-    }
-    return month
-  }
-
-  monthChanged(month, index) {
-    const { months } = this.state
-    this.props.refreshEvents(month.events)
-    this.setState({ months })
-    this.refreshOffsetsFrom(index)
   }
 
   indexAt(offset) {
-    let { min, max, months } = this.state
+    let { min, max, months, offsets } = this.props
     while (min < max) {
       let mid = Math.floor((min + max) / 2)
-      let month = months[mid]
-      if (!month) {
+      let top = offsets[mid]
+      if (!top) {
         return mid
-      } else if (month.top <= offset && offset < month.top + month.height) {
+      } else if (top <= offset && offset < top + monthHeight(months[mid])) {
         return mid
-      } else if (offset < month.top) {
+      } else if (offset < top) {
         max = mid - 1
       } else {
         min = mid + 1
@@ -177,41 +176,13 @@ class Calendar extends React.Component {
     return min
   }
 
-  refreshOffsetsFrom(index) {
-    const { months } = this.state
-
-    if (index >= 0) {
-      if (months[index]) {
-        let y = months[index].top
-        while (months[index]) {
-          months[index].top = y
-          y += months[index++].height
-        }
-      }
-    } else {
-      if (months[index + 1]) {
-        let y = months[index + 1].top
-        while (months[index]) {
-          y = (months[index].top = y - months[index].height)
-          index--
-        }
-      }
-    }
-    this.setState({ months })
-  }
-
-  isVisibleAt(offset, month) {
-    const bottom = month.top + month.height
-    return offset >= top && offset < bottom
-  }
-
   transform(y) {
     return { transform: `translateY(${y}px)` }
   }
 
   onResize() {
     this.setState({ height: this.container.clientHeight })
-    this.fillMonths(this.state.offset || 0)
+    this.fillMonths(this.props.offset)
   }
 }
 
@@ -222,15 +193,39 @@ Calendar.propTypes = {
 
 Calendar.defaultProps = {
   offset: 0,
+  now: moment(),
   timezone: 'Pacific/Auckland'
 }
 
-const mapStateToProps = ({ events, calendar: eventsByMonth }) => ({
-  events, eventsByMonth
-})
+function calculateOffsets(months) {
+  const indexed = keyBy(values(months), m => m.index)
+  const indices = keys(indexed).map(k => parseInt(k, 10)).sort()
+  const min = indices[0] || 0
+  const max = indices[indices.length - 1] || 0
+  const offsets = {}
+  const heights = {}
+  for (let i = 0, y = 0; i <= max; i++) {
+    offsets[i] = y
+    y += (heights[i] = monthHeight(indexed[i]))
+  }
+  for (let i = -1, y = 0; i >= min; i--) {
+    y = (offsets[i] = y - (heights[i] = monthHeight(indexed[i])))
+  }
+  return { min, max, heights, offsets, months: indexed }
+}
+
+function monthHeight(month = { events: [] }) {
+  const { events } = month || { events: [] }
+  return Math.max(2, events.length + 1) * 48
+}
+
+const mapStateToProps = ({ events, calendar }, { now }) =>
+  assign({ events }, calculateOffsets(calendar, now))
 
 const mapDispatchToProps = dispatch => ({
-  refreshEvents: events => dispatch(eventActions.refresh(events))
+  refreshEvents: events => dispatch(eventActions.refresh(events)),
+  fetch: (start, stop, index) =>
+    dispatch(eventActions.fetch(start, stop, index))
 })
 
 export default InfinitelyScrollable(
