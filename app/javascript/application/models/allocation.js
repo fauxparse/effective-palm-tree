@@ -1,6 +1,5 @@
 import { assign, findIndex, some } from 'lodash'
 import Model from './model'
-import Member from './member'
 
 class Allocation extends Model {
   attributes() {
@@ -36,7 +35,7 @@ class Allocation extends Model {
 
   remove(member) {
     member = member.id || member
-    const index = findIndex(this.assignments, a => a.memberId = member)
+    const index = findIndex(this.assignments, a => a.memberId == member)
     if (index > -1) this.assignments.splice(index, 1)
   }
 

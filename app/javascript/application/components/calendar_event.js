@@ -55,8 +55,8 @@ class CalendarEvent extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user, groups }, { event }) => ({
-  member: groups[event.groupId].currentMember
+const mapStateToProps = ({ groups, members }, { event }) => ({
+  member: members[groups[event.groupId].memberId]
 })
 
 export default connect(mapStateToProps)(CalendarEvent)

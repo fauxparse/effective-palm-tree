@@ -1,4 +1,5 @@
 import React from 'react'
+import { sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import Event from '../models/event'
@@ -88,13 +89,12 @@ class MemberAvailability extends React.Component {
 
 export default class EventAvailability extends React.Component {
   render() {
-    const { event, group } = this.props
+    const { event, group, members } = this.props
     return (
       <section className="event-availability" role="tabpanel">
         {this.myAvailability()}
         <ul className="members">
-          {group
-            .sort()
+          {sortBy(members, m => m.name.toLocaleLowerCase())
             .map(member => (
               <MemberAvailability
                 key={member.id}
@@ -109,20 +109,22 @@ export default class EventAvailability extends React.Component {
   }
 
   myAvailability() {
-    const { event, group } = this.props
+    const { event, group, members } = this.props
+    const member = members[group.memberId]
+
     if (this.beforeEvent()) {
       return (
         <MyAvailability
           availability={event.availabilityFor(group.currentMember)}
-          onChange={value => this.setAvailability(group.currentMember, value)}
+          onChange={value => this.setAvailability(member, value)}
         />
       )
     }
   }
 
   setAvailability(member, value) {
-    const { event, group } = this.props
-    const current = group.currentMember
+    const { event, group, members } = this.props
+    const current = members[group.memberId]
     if (current.admin || (current.id === member.id && this.beforeEvent())) {
       event.availabilityFor(member, value)
       this.props.onChange(event)

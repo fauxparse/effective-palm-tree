@@ -1,9 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { normalize } from 'normalizr'
 import fetch from '../lib/fetch'
 import Layout from './layout'
 import Modal from './modal'
 import { actions as userActions } from '../actions/user'
+import { actions as dataActions } from '../actions/entities'
+import { session } from '../schema'
 
 class LoginForm extends React.Component {
   constructor(props) {
@@ -147,7 +150,7 @@ class Security extends React.Component {
     if (response.ok) {
       response.json().then(user => {
         this.setState({ errors: {} })
-        this.props.logInAs(user)
+        this.props.refresh(normalize(user, session).entities)
       })
     } else {
       response
@@ -160,7 +163,7 @@ class Security extends React.Component {
 
 const mapStateToProps = ({ user }) => ({ user })
 const mapDispatchToProps = dispatch => ({
-  logInAs: user => dispatch(userActions.logIn(user))
+  refresh: entities => dispatch(dataActions.refresh(entities))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Security)

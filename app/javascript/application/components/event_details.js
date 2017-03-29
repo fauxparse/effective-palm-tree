@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { pick } from 'lodash'
 import history from '../lib/history'
 import fetch from '../lib/fetch'
 import Header from './header'
@@ -54,13 +55,15 @@ class EventDetails extends React.Component {
   }
 
   contents() {
-    const { event, group, refreshEvent } = this.props
+    const { event, group, members, roles, refreshEvent } = this.props
     const { tab } = this.state
     if (tab == 'assignments') {
       return (
         <EventAssignments
           event={event}
           group={group}
+          members={members}
+          roles={roles}
           onChange={refreshEvent}
         />
       )
@@ -69,6 +72,7 @@ class EventDetails extends React.Component {
         <EventAvailability
           event={event}
           group={group}
+          members={members}
           onChange={refreshEvent}
         />
       )
@@ -77,6 +81,7 @@ class EventDetails extends React.Component {
         <EventRoles
           event={event}
           group={group}
+          roles={roles}
           onChange={refreshEvent}
         />
       )
@@ -101,10 +106,13 @@ class EventDetails extends React.Component {
   }
 }
 
-const mapStateToProps = ({ events, groups }, { location, params }) => {
+const mapStateToProps = (state, { location, params }) => {
+  const group = state.groups[params.group]
   return {
-    event: events.all[location.pathname],
-    group: groups[params.group]
+    event: state.events[location.pathname],
+    group,
+    members: pick(state.members, group.members),
+    roles: pick(state.roles, group.roles)
   }
 }
 

@@ -1,6 +1,7 @@
 import fetch from '../lib/fetch'
 
 const constants = {
+  AUTHENTICATE: 'user.authenticate',
   LOG_IN: 'user.log_in',
   LOG_OUT: 'user.log_out'
 }

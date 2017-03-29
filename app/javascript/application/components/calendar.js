@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
-import { assign, keyBy, keys, sortBy, values } from 'lodash'
+import { keyBy, keys, sortBy, values } from 'lodash'
 import fetch from '../lib/fetch'
 import { query } from '../lib/reactive_query'
 import InfinitelyScrollable from './infinitely_scrollable'
@@ -233,20 +233,10 @@ const monthHeight = (month) =>
   Math.max(2, (month && month.events || []).length + 1) * 48
 
 const fetchMonths = (start, stop, startIndex) =>
-  query(
-    EVENTS.REFRESH,
-    '/events',
-    {
-      queryParams: {
-        start: start.format('YYYY-MM-DD'),
-        stop: stop.format('YYYY-MM-DD')
-      },
-      params: { start, stop, startIndex }
-    }
-  )
+  query(EVENTS.REFRESH, '/events', { params: { start, stop, startIndex } })
 
-const mapStateToProps = ({ events: { all, calendar } }, { now }) =>
-  assign({ events: all }, calculateOffsets(calendar, now))
+const mapStateToProps = ({ events, calendar }, { now }) =>
+  ({ events, ...calculateOffsets(calendar, now) })
 
 const mapDispatchToProps = dispatch => ({
   refreshEvents: events => dispatch(eventActions.refresh(events)),

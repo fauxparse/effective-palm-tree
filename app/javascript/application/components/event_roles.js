@@ -1,5 +1,5 @@
 import React from 'react'
-import { assign, forOwn, pick, range, sortBy } from 'lodash'
+import { assign, difference, forOwn, keys, pick, range, sortBy, values } from 'lodash'
 import Tether from 'tether'
 import fetch from '../lib/fetch'
 import Select from './select'
@@ -93,8 +93,10 @@ class EventRole extends React.Component {
       onChange,
       onDragStart,
       onDelete,
-      offset
+      offset,
     } = this.props
+    const roles = sortBy(values(this.props.roles), r => r.name.toLocaleLowerCase())
+
     return (
       <li
         className="allocation"
@@ -113,8 +115,8 @@ class EventRole extends React.Component {
           onChange={(min, max) => this.change({ min, max })}
         />
         <Select
-          selected={allocation.roleId || group.roles[0].id}
-          options={group.roles.map(({ id, name, plural }) => [
+          selected={allocation.roleId || roles[0].id}
+          options={roles.map(({ id, name, plural }) => [
             id,
             allocation.max === 1 ? name : plural
           ])}
@@ -147,7 +149,7 @@ export default class EventRoles extends React.Component {
   }
 
   render() {
-    const { event, group } = this.props
+    const { event, group, roles } = this.props
     const { allocations, dirty, dragging } = this.state
     return (
       <section className="event-roles">
@@ -157,6 +159,7 @@ export default class EventRoles extends React.Component {
               key={allocation.id}
               allocation={allocation}
               group={group}
+              roles={roles}
               offset={dragging ? dragging.offsets[i] : 0}
               onChange={a => this.changeRole(a, i)}
               onDelete={() => this.deleteRole(allocation)}
@@ -179,11 +182,10 @@ export default class EventRoles extends React.Component {
   }
 
   addRole() {
-    const { event, group, onChange } = this.props
+    const { event, group, roles, onChange } = this.props
     const { allocations } = this.state
-    const ids = allocations.map(a => a.roleId)
-    const roleId = (group.roles.filter(r => ids.indexOf(r.id) === -1)[0] ||
-    group.roles[0] || {}).id
+    const ids = allocations.map(a => a.roleId.toString())
+    const roleId = difference(keys(roles), ids)[0] || keys(roles)[0]
     if (roleId) {
       const allocation = new Allocation({
         roleId,
@@ -193,7 +195,7 @@ export default class EventRoles extends React.Component {
         max: Allocation.UNLIMITED
       })
       allocations.push(allocation)
-      this.setState({ dirty: true })
+      this.setState({ allocations, dirty: true })
     }
   }
 
