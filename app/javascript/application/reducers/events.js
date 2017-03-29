@@ -1,4 +1,4 @@
-import { assign, concat, defaults, keyBy, uniq } from 'lodash'
+import { assign, castArray, concat, defaults, keyBy, uniq } from 'lodash'
 import moment from 'moment-timezone'
 import { constants as USER } from '../actions/user'
 import { constants as EVENTS } from '../actions/events'
@@ -9,11 +9,11 @@ const defaultState = () => ({ all: {}, calendar: {} })
 
 export default function events(state = defaultState(), action) {
   if (action.type == EVENTS.REFRESH) {
-    const events = action.events.map(
+    const events = (action.events || action.data).map(
       event => event instanceof Event ? event.clone() : new Event(event)
     )
     const all = defaults({}, keyBy(events, event => event.url), state.all)
-    const calendar = action.events.reduce(
+    const calendar = events.reduce(
       (hash, { url }) => {
         const key = extractDate(url)
         const month = hash[key] || { start: moment(key + '-01', 'YYYY-MM-DD') }
@@ -31,9 +31,10 @@ export default function events(state = defaultState(), action) {
     let index = action.startIndex
     while (date.isBefore(action.stop)) {
       const key = date.format('YYYY-MM')
-      calendar[key] = assign({}, calendar[key], {
+      const month = calendar[key] || { events: [] }
+      calendar[key] = assign({}, month, {
         loading: action.type === EVENTS.FETCHING,
-        events: [],
+        events: month.events,
         index
       })
       date.add(1, 'month')

@@ -4,11 +4,12 @@ import moment from 'moment-timezone'
 import classNames from 'classnames'
 import { assign, keyBy, keys, sortBy, values } from 'lodash'
 import fetch from '../lib/fetch'
+import { query } from '../lib/reactive_query'
 import InfinitelyScrollable from './infinitely_scrollable'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
 import Modal from './modal'
-import { actions as eventActions } from '../actions/events'
+import { actions as eventActions, constants as EVENTS } from '../actions/events'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -67,7 +68,14 @@ class Calendar extends React.Component {
   }
 
   renderMonth(index) {
-    const { now, months, offset, timezone, refreshEvents } = this.props
+    const {
+      now,
+      months,
+      offset,
+      timezone,
+      refreshEvents,
+      scrollTo
+    } = this.props
     const month = months[index] || { loading: true }
     const events = this.eventsByMonth(index)
     const top = this.calculateOffset(index)
@@ -75,12 +83,12 @@ class Calendar extends React.Component {
     return (
       <CalendarMonth
         key={index}
-        loading={month.loading}
+        loading={!events.length && month.loading}
         events={events}
-        start={now.clone().add(index, 'months')}
+        start={month.start || now.clone().add(index, 'months')}
         style={{ top }}
         headerOffset={Math.max(0, Math.min(height - 48, offset - top))}
-        onHeaderClicked={() => this.props.scrollTo(month.top - 1)}
+        onHeaderClicked={() => scrollTo(this.calculateOffset(index) - 1)}
         refreshEvent={refreshEvents}
       />
     )
@@ -221,18 +229,28 @@ function calculateOffsets(months) {
   return { min, max, heights, offsets, months: indexed }
 }
 
-function monthHeight(month = { events: [] }) {
-  const { events } = month || { events: [] }
-  return Math.max(2, events.length + 1) * 48
-}
+const monthHeight = (month) =>
+  Math.max(2, (month && month.events || []).length + 1) * 48
+
+const fetchMonths = (start, stop, startIndex) =>
+  query(
+    EVENTS.REFRESH,
+    '/events',
+    {
+      queryParams: {
+        start: start.format('YYYY-MM-DD'),
+        stop: stop.format('YYYY-MM-DD')
+      },
+      params: { start, stop, startIndex }
+    }
+  )
 
 const mapStateToProps = ({ events: { all, calendar } }, { now }) =>
   assign({ events: all }, calculateOffsets(calendar, now))
 
 const mapDispatchToProps = dispatch => ({
   refreshEvents: events => dispatch(eventActions.refresh(events)),
-  fetch: (start, stop, index) =>
-    dispatch(eventActions.fetch(start, stop, index))
+  fetch: (start, stop, index) => dispatch(fetchMonths(start, stop, index))
 })
 
 export default InfinitelyScrollable(
