@@ -61,9 +61,6 @@ class EventDetails extends React.Component {
       return (
         <EventAssignments
           event={event}
-          group={group}
-          members={members}
-          roles={roles}
           onChange={refreshEvent}
         />
       )
@@ -71,8 +68,6 @@ class EventDetails extends React.Component {
       return (
         <EventAvailability
           event={event}
-          group={group}
-          members={members}
           onChange={refreshEvent}
         />
       )
@@ -80,8 +75,6 @@ class EventDetails extends React.Component {
       return (
         <EventRoles
           event={event}
-          group={group}
-          roles={roles}
           onChange={refreshEvent}
         />
       )

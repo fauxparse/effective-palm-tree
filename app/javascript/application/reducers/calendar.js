@@ -40,7 +40,7 @@ export default function events(state = {}, action) {
   const { type } = action
 
   if (type === EVENTS.REFRESH) {
-    return indexByMonth(state, action.events || action.data)
+    return indexByMonth(state, action.events)
   } else if (type === EVENTS.FETCHING || type === EVENTS.FETCHED) {
     return setLoading(
       { ...state },

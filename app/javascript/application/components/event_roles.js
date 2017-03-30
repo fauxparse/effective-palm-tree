@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import { assign, difference, forOwn, keys, pick, range, sortBy, values } from 'lodash'
 import Tether from 'tether'
 import fetch from '../lib/fetch'
@@ -136,7 +137,7 @@ class EventRole extends React.Component {
   }
 }
 
-export default class EventRoles extends React.Component {
+class EventRoles extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -313,3 +314,16 @@ export default class EventRoles extends React.Component {
     return e.clientY
   }
 }
+
+const mapStateToProps = ({ availability, groups, roles }, { event }) => {
+  const group = groups[event.groupId]
+  return {
+    availability: availability[event.url] || {},
+    group,
+    roles: pick(roles, group.roles)
+  }
+}
+
+const mapDispatchToProps = dispatch => ({})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventRoles)

@@ -1,4 +1,5 @@
 import fetch from './fetch'
+import { normalize } from 'normalizr'
 import { assign, pick, toPairs } from 'lodash'
 import moment from 'moment-timezone'
 
@@ -40,7 +41,10 @@ const after = ({ name, options }, dispatch) =>
   dispatch({ type: name + '.after', ...options.params })
 
 const apiResponse = (action, dispatch) => json => {
-  dispatch({ type: action.name, data: json, ...action.options.params })
+  const { name, options: { params, schema } } = action
+  const key = name.split('.')[0]
+  const data = schema ? normalize(json, schema) : { [key]: json }
+  dispatch({ type: action.name, ...data, ...action.options.params, action })
   after(action, dispatch)
 }
 

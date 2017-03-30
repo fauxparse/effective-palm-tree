@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import { Link } from 'react-router'
 import moment from 'moment-timezone'
 import Event from '../models/event'
+import { actions as availabilityActions } from '../actions/availability'
 
 const ICON = (
   <svg width="40" height="40" viewBox="0 0 40 40">
@@ -20,14 +21,8 @@ const ICON = (
 )
 
 class CalendarEvent extends React.Component {
-  constructor(props) {
-    super(props)
-    const { event, member } = props
-  }
-
   render() {
-    const { event, member } = this.props
-    const availability = event.availabilityFor(member)
+    const { availability, event, member } = this.props
     const classes = {
       available: availability == Event.AVAILABLE,
       unavailable: availability == Event.UNAVAILABLE,
@@ -45,18 +40,24 @@ class CalendarEvent extends React.Component {
   }
 
   cycle() {
-    const { event, member, onChange } = this.props
-    let availability = event.availabilityFor(member)
+    const { availability, event, member, setAvailability } = this.props
     if (moment().isBefore(event.startsAt)) {
-      availability = Event.cycleAvailability(availability)
-      onChange(event, member, availability)
-      this.setState({ availability })
+      setAvailability(event, member, Event.cycleAvailability(availability))
     }
   }
 }
 
-const mapStateToProps = ({ groups, members }, { event }) => ({
-  member: members[groups[event.groupId].memberId]
+const mapStateToProps = ({ groups, members, availability }, { event }) => {
+  const memberId = groups[event.groupId].memberId
+  return {
+    member: members[memberId],
+    availability: (availability[event.url] || {})[memberId]
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  setAvailability: (event, member, availability) =>
+    dispatch(availabilityActions.set(event, member, availability))
 })
 
-export default connect(mapStateToProps)(CalendarEvent)
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarEvent)

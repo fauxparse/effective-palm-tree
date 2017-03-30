@@ -1,6 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { find, findIndex, forEach, keyBy, some, sortBy } from 'lodash'
+import { find, findIndex, forEach, keyBy, pick, some, sortBy } from 'lodash'
 import fetch from '../lib/fetch'
 import Event from '../models/event'
 import Avatar from './avatar'
@@ -18,7 +19,6 @@ const ICONS = {
 class MemberItem extends React.Component {
   render() {
     const {
-      event,
       member,
       assignment,
       className,
@@ -62,7 +62,6 @@ class RoleGroup extends React.Component {
   render() {
     const {
       allocation,
-      event,
       role,
       members,
       selections,
@@ -79,7 +78,6 @@ class RoleGroup extends React.Component {
             <MemberItem
               key={assignment.memberId}
               assignment={assignment}
-              event={event}
               member={members[assignment.memberId]}
               selected={isSelected(selections, assignment.memberId, allocation)}
               selecting={selections.length > 0}
@@ -92,7 +90,7 @@ class RoleGroup extends React.Component {
   }
 }
 
-export default class EventAssignments extends React.Component {
+class EventAssignments extends React.Component {
   constructor(props) {
     super(props)
     this.state = { showAll: false, selections: [] }
@@ -164,18 +162,18 @@ export default class EventAssignments extends React.Component {
   }
 
   availableMemberItem(event, member, selections) {
-    let availability = event.availabilityFor(member)
-    availability = availability == Event.AVAILABLE
+    const availability = this.props.availability[member.id]
+    const available = availability == Event.AVAILABLE
       ? 'available'
       : availability === Event.UNAVAILABLE ? 'unavailable' : 'unknown'
-    const icon = ICONS[availability.toUpperCase()]
+    const icon = ICONS[available.toUpperCase()]
     const avatar = event.isAssigned(member)
       ? false
-      : <span className={classNames('avatar', availability)}>{icon}</span>
+      : <span className={classNames('avatar', available)}>{icon}</span>
     return (
       <MemberItem
         key={member.id}
-        className={availability}
+        className={available}
         event={event}
         member={member}
         avatar={avatar}
@@ -475,3 +473,17 @@ function inside(x, y, rect) {
 function isTouchEvent(e) {
   return e.targetTouches && e.targetTouches.length > 0
 }
+
+const mapStateToProps = ({ availability, groups, members, roles }, { event }) => {
+  const group = groups[event.groupId]
+  return {
+    availability: availability[event.url] || {},
+    group,
+    members: pick(members, group.members),
+    roles: pick(roles, group.roles)
+  }
+}
+
+const mapDispatchToProps = (dispatch, { event }) => ({})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventAssignments)
