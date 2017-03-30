@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 class OccurrenceSerializer < ActiveModel::Serializer
   attributes :name, :group_id, :starts_at, :ends_at, :availability
-  attributes :allocations
+  has_many :allocations
+  has_many :assignments
   attribute :url, if: :url?
 
   def name
@@ -24,20 +25,6 @@ class OccurrenceSerializer < ActiveModel::Serializer
     object.availability.inject({}) do |result, availability|
       result.update(availability.member_id => availability.available?)
     end
-  end
-
-  def allocations
-    event.allocations.sort_by(&:position).map do |allocation|
-      AllocationSerializer.new(allocation).as_json.merge(
-        assignments: assignments(allocation)
-      )
-    end
-  end
-
-  def assignments(allocation)
-    ActiveModelSerializers::SerializableResource.new(
-      object.assignments.select { |a| a.allocation_id == allocation.id }
-    ).as_json
   end
 
   delegate :group, :event, to: :object

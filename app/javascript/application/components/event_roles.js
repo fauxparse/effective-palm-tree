@@ -5,7 +5,6 @@ import Tether from 'tether'
 import fetch from '../lib/fetch'
 import Select from './select'
 import RangeSlider from './range_slider'
-import Allocation from '../models/allocation'
 
 // prettier-ignore
 const ICONS = {
@@ -15,9 +14,29 @@ const ICONS = {
   SAVE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
 }
 
+const UNLIMITED = null
+
+const countString = (allocation) => {
+  if (allocation.min == allocation.max) {
+    return allocation.min
+  } else if (allocation.min) {
+    if (allocation.max == UNLIMITED) {
+      return `${allocation.min} or more`
+    } else {
+      return `${allocation.min} to ${allocation.max}`
+    }
+  } else {
+    if (allocation.max == UNLIMITED) {
+      return `Some`
+    } else {
+      return `Up to ${allocation.max}`
+    }
+  }
+}
+
 class AllocationRange extends Select {
   selectedLabel() {
-    return this.props.allocation.countString()
+    return countString(this.props.allocation)
   }
 
   renderDropdown() {
@@ -27,7 +46,7 @@ class AllocationRange extends Select {
     return (
       <div className="select-options">
         <div className="allocation-range list">
-          <p>{allocation.countString()}</p>
+          <p>{countString(allocation)}</p>
           <RangeSlider
             min={this.positionFromValue(min)}
             max={this.positionFromValue(max)}
@@ -70,14 +89,14 @@ class AllocationRange extends Select {
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
     const value = Math.round(Math.exp(position * maxl)) - 1
-    return value === maximum ? Allocation.UNLIMITED : value
+    return value === maximum ? UNLIMITED : value
   }
 
   positionFromValue(value) {
     const { group } = this.props
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
-    return value === Allocation.UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
+    return value === UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
   }
 }
 
@@ -141,12 +160,20 @@ class EventRoles extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      allocations: props.event.allocations.map(a => a.clone()),
+      allocations: props.allocations.slice(0),
       dirty: false
     }
     this.dragStart = this.dragStart.bind(this)
     this.dragMove = this.dragMove.bind(this)
     this.dragStop = this.dragStop.bind(this)
+  }
+
+  componentWillReceiveProps({ allocations }) {
+    if (allocations) {
+      this.setState({
+        allocations: allocations.map(a => ({ ...a }))
+      })
+    }
   }
 
   render() {
@@ -188,13 +215,13 @@ class EventRoles extends React.Component {
     const ids = allocations.map(a => a.roleId.toString())
     const roleId = difference(keys(roles), ids)[0] || keys(roles)[0]
     if (roleId) {
-      const allocation = new Allocation({
+      const allocation = {
         roleId,
         id: Math.min(0, ...allocations.map(a => a.id)) - 1,
         position: allocations.length,
         min: 0,
-        max: Allocation.UNLIMITED
-      })
+        max: UNLIMITED
+      }
       allocations.push(allocation)
       this.setState({ allocations, dirty: true })
     }
@@ -221,10 +248,10 @@ class EventRoles extends React.Component {
     if (dirty) {
       event.allocations = allocations
       this.setState({ dirty: false })
-      roles = event.allocations.map(allocation =>
+      const roles = event.allocations.map(allocation =>
         pick(allocation, ['id', 'roleId', 'min', 'max']))
       fetch(event.url + '/roles', { method: 'PATCH', body: { roles } })
-        .then(response => response.json)
+        .then(response => response.json())
         .then(attrs => onChange(event.update({ allocations: attrs })))
     }
   }
@@ -315,10 +342,11 @@ class EventRoles extends React.Component {
   }
 }
 
-const mapStateToProps = ({ availability, groups, roles }, { event }) => {
+const mapStateToProps = ({ allocations, groups, roles }, { event }) => {
   const group = groups[event.groupId]
+  const eventId = event.url.replace(/\d{4}-\d{2}-\d{2}\/?$/, '')
   return {
-    availability: availability[event.url] || {},
+    allocations: allocations[eventId] || [],
     group,
     roles: pick(roles, group.roles)
   }

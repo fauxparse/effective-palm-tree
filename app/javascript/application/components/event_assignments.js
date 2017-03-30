@@ -31,7 +31,7 @@ class MemberItem extends React.Component {
       <li
         className={classNames('member', className, { assigned: assignment })}
         data-member-id={member.id}
-        data-allocation-id={assignment ? assignment.allocation.id : 'none'}
+        data-allocation-id={assignment ? assignment.allocationId : 'none'}
       >
         <span
           className="action"
@@ -67,14 +67,11 @@ class RoleGroup extends React.Component {
       selections,
       onDragStart
     } = this.props
-    const assignments = sortBy(allocation.assignments, a =>
-      members[a.memberId].name.toLocaleLowerCase())
-
     return (
       <section className="role">
         <h4>{allocation.max === 1 ? role.name : role.plural}</h4>
         <ul>
-          {assignments.map(assignment => (
+          {this.assignments().map(assignment => (
             <MemberItem
               key={assignment.memberId}
               assignment={assignment}
@@ -86,6 +83,14 @@ class RoleGroup extends React.Component {
           ))}
         </ul>
       </section>
+    )
+  }
+
+  assignments() {
+    const { allocation, assignments, members, role } = this.props
+    return sortBy(
+      assignments,
+      a => members[a.memberId].name.toLocaleLowerCase()
     )
   }
 }
@@ -124,13 +129,13 @@ class EventAssignments extends React.Component {
   }
 
   roleGroups() {
-    const { event, group, members, roles } = this.props
-    const { allocations } = event
+    const { allocations, assignments, event, group, members, roles } = this.props
     const { selections } = this.state
 
     return allocations.map(allocation => (
       <RoleGroup
         key={allocation.id}
+        assignments={assignments.filter(a => a.allocationId === allocation.id)}
         allocation={allocation}
         event={event}
         role={roles[allocation.roleId]}
@@ -162,12 +167,13 @@ class EventAssignments extends React.Component {
   }
 
   availableMemberItem(event, member, selections) {
+    const { assignments } = this.props
     const availability = this.props.availability[member.id]
-    const available = availability == Event.AVAILABLE
+    const available = availability === Event.AVAILABLE
       ? 'available'
       : availability === Event.UNAVAILABLE ? 'unavailable' : 'unknown'
     const icon = ICONS[available.toUpperCase()]
-    const avatar = event.isAssigned(member)
+    const avatar = some(assignments, a => a.memberId === member.id)
       ? false
       : <span className={classNames('avatar', available)}>{icon}</span>
     return (
@@ -236,6 +242,8 @@ class EventAssignments extends React.Component {
   }
 
   dragStart(e, member, assignment) {
+    const { allocations } = this.props
+
     // Stop the same action triggering both touch and mouse events
     if (this.dragStartEvent) return
     this.dragStartEvent = e
@@ -253,7 +261,7 @@ class EventAssignments extends React.Component {
     const rect = item.getBoundingClientRect()
 
     if (!selections.length) {
-      selections.push([member.id, assignment && assignment.allocation.id])
+      selections.push([member.id, assignment && assignment.allocationId])
     }
     const dragging = {
       origin: { x, y },
@@ -261,7 +269,7 @@ class EventAssignments extends React.Component {
       item,
       member,
       assignment,
-      allocation: assignment && assignment.allocation,
+      allocation: assignment && allocations[assignment.allocationId],
       selections,
       ghosts: [],
       moved: false,
@@ -474,9 +482,12 @@ function isTouchEvent(e) {
   return e.targetTouches && e.targetTouches.length > 0
 }
 
-const mapStateToProps = ({ availability, groups, members, roles }, { event }) => {
+const mapStateToProps = ({ allocations, assignments, availability, groups, members, roles }, { event }) => {
   const group = groups[event.groupId]
+  const eventId = event.url.replace(/\d{4}-\d{2}-\d{2}\/?$/, '')
   return {
+    allocations: allocations[eventId] || [],
+    assignments: assignments[event.url] || [],
     availability: availability[event.url] || {},
     group,
     members: pick(members, group.members),

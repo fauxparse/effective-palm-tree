@@ -2,7 +2,6 @@ import moment from 'moment-timezone'
 import { find, some } from 'lodash'
 import fetch from '../lib/fetch'
 import Model from './model'
-import Allocation from './allocation'
 
 class Event extends Model {
   constructor(attributes = {}) {
@@ -21,7 +20,8 @@ class Event extends Model {
       'url',
       'availability',
       'groupId',
-      'allocations'
+      'allocations',
+      'assignments'
     ]
   }
 
@@ -71,34 +71,12 @@ class Event extends Model {
     }
   }
 
-  set allocations(values) {
-    this._allocations = values.map(
-      attrs => attrs instanceof Allocation ? attrs : new Allocation(attrs)
-    )
-  }
-
-  get allocations() {
-    if (!this._allocations) this._allocations = []
-    return this._allocations
-  }
-
-  allocation(id) {
-    return find(this.allocations, a => a.id === id)
-  }
-
-  isAssigned(member) {
-    return some(this.allocations, a => a.isAssigned(member))
-  }
-
-  updateAssignment(memberId, oldAllocationId, newAllocationId) {
-    if (oldAllocationId != newAllocationId) {
-      if (oldAllocationId > 0) {
-        this.allocation(oldAllocationId).remove(memberId)
-      }
-
-      if (newAllocationId > 0) {
-        this.allocation(newAllocationId).add(memberId)
-      }
+  updateAssignment(memberId, oldAllocationId, allocationId) {
+    if (oldAllocationId != allocationId) {
+      this.assignments =
+        this.assignments.filter(
+          a => a.memberId !== memberId || a.allocationId !== oldAllocationId
+        ).concat([{ memberId, allocationId }])
     }
   }
 }
