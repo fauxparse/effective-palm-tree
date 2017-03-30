@@ -6,6 +6,8 @@ export const role = new schema.Entity('roles')
 
 export const allocation = new schema.Entity('allocations')
 
+export const assignment = new schema.Entity('assignments')
+
 export const group = new schema.Entity('groups', {
   members: [member],
   roles: [role]
@@ -23,5 +25,6 @@ export const session = new schema.Entity('sessions', {
 })
 
 export const event = new schema.Entity('events', {
-  allocations: [allocation]
+  allocations: [allocation],
+  assignments: [assignment]
 }, { idAttribute: 'url' })

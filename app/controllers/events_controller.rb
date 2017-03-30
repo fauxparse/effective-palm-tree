@@ -19,7 +19,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.json do
         UpdateAssignments.new(occurrence, assignment_params).call
-        render json: occurrence.assignments.as_json
+        render json: occurrence, include: [:allocations, :assignments]
       end
     end
   end

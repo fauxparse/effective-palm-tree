@@ -11,6 +11,9 @@ import EventAvailability from './event_availability'
 import EventRoles from './event_roles'
 import { Tab, TabList } from './tabs'
 import { actions as eventActions } from '../actions/events'
+import { query } from '../lib/reactive_query'
+import { constants as ENTITIES } from '../actions/entities'
+import { event as eventSchema } from '../schema'
 
 // prettier-ignore
 const ICONS = {
@@ -21,10 +24,9 @@ const ICONS = {
 
 class EventDetails extends React.Component {
   constructor(props) {
-    const { group, event, date } = props.params
     super(props)
     this.state = { tab: 'assignments' }
-    if (group && event && date) this.loadEvent(group, event, date)
+    props.loadEvent()
   }
 
   render() {
@@ -90,13 +92,6 @@ class EventDetails extends React.Component {
     e.stopPropagation()
     history.push('/events')
   }
-
-  async loadEvent(groupId, eventId, date) {
-    const url = `/events/${groupId}/${eventId}/${date}`
-    fetch(location.pathname)
-      .then(response => response.json())
-      .then(attrs => this.setState({ event: new Event(attrs) }))
-  }
 }
 
 const mapStateToProps = (state, { location, params }) => {
@@ -109,10 +104,15 @@ const mapStateToProps = (state, { location, params }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  refreshEvent: event => {
-    dispatch(eventActions.refresh(event))
-  }
+const mapDispatchToProps = (dispatch, { params: { group, event, date } }) => ({
+  refreshEvent: e => {
+    dispatch(eventActions.refresh(e))
+  },
+  loadEvent: () => dispatch(query(
+    ENTITIES.REFRESH,
+    `/events/${group}/${event}/${date}`,
+    { schema: eventSchema }
+  ))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventDetails)
