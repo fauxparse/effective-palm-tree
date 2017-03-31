@@ -350,7 +350,6 @@ const mapStateToProps = ({ allocations, groups, roles }, { event }) => {
 
 const mapDispatchToProps = (dispatch, { event }) => ({
   saveChanges: (roles) => dispatch(query(
-    ENTITIES.REFRESH,
     event.url + '/roles',
     {
       schema: eventSchema,

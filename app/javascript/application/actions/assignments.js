@@ -8,7 +8,7 @@ const constants = {
 
 const actions = {
   assign: (event, selections) =>
-    query(ENTITIES.REFRESH, event.url + '/assignments', {
+    query(event.url + '/assignments', {
       schema: eventSchema,
       method: 'PATCH',
       body: { assignments: selections }

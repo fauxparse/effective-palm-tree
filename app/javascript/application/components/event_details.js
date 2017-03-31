@@ -90,7 +90,6 @@ const mapStateToProps = (state, { location, params }) => {
 
 const mapDispatchToProps = (dispatch, { params: { group, event, date } }) => ({
   loadEvent: () => dispatch(query(
-    ENTITIES.REFRESH,
     `/events/${group}/${event}/${date}`,
     { schema: eventSchema }
   ))

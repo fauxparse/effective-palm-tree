@@ -232,7 +232,9 @@ const monthHeight = (month) =>
   Math.max(2, (month && month.events || []).length + 1) * 48
 
 const fetchMonths = (start, stop, startIndex) =>
-  query(ENTITIES.REFRESH, '/events', { schema: [eventSchema], params: { start, stop, startIndex } })
+  query('/events', {
+    schema: [eventSchema], params: { start, stop, startIndex }
+  })
 
 const mapStateToProps = ({ events, calendar }, { now }) =>
   ({ events, ...calculateOffsets(calendar, now) })

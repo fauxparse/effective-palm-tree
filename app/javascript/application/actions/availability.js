@@ -8,7 +8,7 @@ const constants = {
 
 const actions = {
   set: (event, member, availability) =>
-    query(ENTITIES.REFRESH, event.url + '/availability', {
+    query(event.url + '/availability', {
       schema: eventSchema,
       method: 'PATCH',
       body: { availability: { [member.id]: availability } }
