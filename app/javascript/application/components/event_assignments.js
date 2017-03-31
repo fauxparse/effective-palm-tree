@@ -107,7 +107,7 @@ class EventAssignments extends React.Component {
 
   componentWillUnmount() {
     const { dragging } = this.state
-    if (dragging) clearTimeout(dragging.dragStartTimer)
+    if (dragging) { clearTimeout(dragging.dragStartTimer) }
   }
 
   render() {
@@ -248,19 +248,20 @@ class EventAssignments extends React.Component {
     const { allocations } = this.props
 
     // Stop the same action triggering both touch and mouse events
-    if (this.dragStartEvent) return
+    if (this.dragStartEvent) { return }
     this.dragStartEvent = e
     e.persist()
     e.stopPropagation()
 
     // Prevent mouse scrolling
-    if (!isTouchEvent(e)) e.preventDefault()
+    if (!isTouchEvent(e)) { e.preventDefault() }
 
     const selections = this.state.selections.slice(0)
     const [x, y] = dragPosition(e)
     let item = e.target
-    while (!item.classList || !item.classList.contains('member'))
+    while (!item.classList || !item.classList.contains('member')) {
       item = item.parentNode
+    }
     const rect = item.getBoundingClientRect()
 
     if (!selections.length) {
@@ -461,7 +462,7 @@ function isSelected(selections, member, allocation) {
 }
 
 function dragPosition(e) {
-  if (isTouchEvent(e)) e = e.targetTouches[0]
+  if (isTouchEvent(e)) { e = e.targetTouches[0] }
   return [e.clientX, e.clientY]
 }
 

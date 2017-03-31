@@ -19,16 +19,16 @@ const ICONS = {
 const UNLIMITED = null
 
 const countString = (allocation) => {
-  if (allocation.min == allocation.max) {
+  if (allocation.min === allocation.max) {
     return allocation.min
   } else if (allocation.min) {
-    if (allocation.max == UNLIMITED) {
+    if (allocation.max === UNLIMITED) {
       return `${allocation.min} or more`
     } else {
       return `${allocation.min} to ${allocation.max}`
     }
   } else {
-    if (allocation.max == UNLIMITED) {
+    if (allocation.max === UNLIMITED) {
       return `Some`
     } else {
       return `Up to ${allocation.max}`
@@ -115,7 +115,7 @@ class EventRole extends React.Component {
       onChange,
       onDragStart,
       onDelete,
-      offset,
+      offset
     } = this.props
     const roles = sortBy(values(this.props.roles), r => r.name.toLocaleLowerCase())
 
@@ -333,7 +333,7 @@ class EventRoles extends React.Component {
   }
 
   yPosition(e) {
-    if (e.targetTouches && e.targetTouches.length) e = e.targetTouches[0]
+    if (e.targetTouches && e.targetTouches.length) { e = e.targetTouches[0] }
     return e.clientY
   }
 }

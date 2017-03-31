@@ -40,12 +40,12 @@ export default function InfinitelyScrollable(WrappedComponent) {
       this.cancelDrag()
       this.cancelAutoScroll()
       this.setState({
-        offset: this.state.offset + e.deltaY * 16 ** e.deltaMode
+        offset: this.state.offset + e.deltaY * Math.pow(16, e.deltaMode)
       })
     }
 
     onTouchStart(e) {
-      if (e.button) return
+      if (e.button) { return }
 
       let dragging = {
         reference: this.yPosition(e),
@@ -76,7 +76,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
       let { dragging, offset } = this.state
       let { velocity, ticker } = dragging
 
-      if (ticker) clearInterval(ticker)
+      if (ticker) { clearInterval(ticker) }
       if (velocity > 10 || velocity < -10) {
         let amplitude = 0.8 * velocity
         this.setState({
@@ -95,7 +95,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
     }
 
     yPosition(e) {
-      if (e.targetTouches && e.targetTouches.length) e = e.targetTouches[0]
+      if (e.targetTouches && e.targetTouches.length) { e = e.targetTouches[0] }
       return e.clientY
     }
 
@@ -141,7 +141,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
             this.ease(elapsed, origin, target - origin, duration)
           )
         })
-        if (elapsed <= duration) requestAnimationFrame(this.autoScroll)
+        if (elapsed <= duration) { requestAnimationFrame(this.autoScroll) }
       }
     }
 
@@ -149,7 +149,7 @@ export default function InfinitelyScrollable(WrappedComponent) {
     // http://gizma.com/easing/
     ease(t, b, c, d) {
       t /= d / 2
-      if (t < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b
+      if (t < 1) { return c / 2 * Math.pow(2, 10 * (t - 1)) + b }
       t--
       return c / 2 * (-Math.pow(2, -10 * t) + 2) + b
     }

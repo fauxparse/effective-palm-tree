@@ -1,8 +1,10 @@
 import { extend, isObject } from 'lodash'
+import 'whatwg-fetch' /*global fetch*/
 
 var token
 
 export default function fetchWithCSRF(path, options = {}) {
+  /*global document*/
   if (!token) {
     token = document
       .querySelector('[name="csrf-token"]')
@@ -19,6 +21,6 @@ export default function fetchWithCSRF(path, options = {}) {
     options.headers
   )
   options = extend({}, { credentials: 'same-origin' }, options, { headers })
-  if (isObject(options.body)) options.body = JSON.stringify(options.body)
+  if (isObject(options.body)) { options.body = JSON.stringify(options.body) }
   return fetch(path, options)
 }

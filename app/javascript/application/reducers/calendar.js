@@ -59,7 +59,7 @@ export default function events(state = {}, action) {
       true
     )
   } else if (action.type === USER.LOG_OUT) {
-    return defaultState()
+    return {}
   } else {
     return state
   }

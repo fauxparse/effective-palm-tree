@@ -159,14 +159,14 @@ class Calendar extends React.Component {
     let toFetch = []
 
     while (top < windowEnd) {
-      if (!months[index]) toFetch.push(index)
+      if (!months[index]) { toFetch.push(index) }
       top += monthHeight(months[index])
       index++
     }
 
     index = (top = 0)
     while (top > windowStart) {
-      if (!months[index]) toFetch.unshift(index)
+      if (!months[index]) { toFetch.unshift(index) }
       index--
       top -= monthHeight(months[index])
     }

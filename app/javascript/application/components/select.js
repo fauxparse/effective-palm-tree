@@ -57,7 +57,7 @@ export default class Select extends React.Component {
       <div className="select-options">
         <ul className="list">
           {options.map(([id, label]) => (
-            <li key={id} aria-selected={id == selectedId}>
+            <li key={id} aria-selected={id === selectedId}>
               <a href="#" onClick={e => this.select(e, id)}>{label}</a>
             </li>
           ))}
@@ -82,7 +82,7 @@ export default class Select extends React.Component {
     const { tether } = this.state
     const { portal } = this.refs
     const dropdown = portal.portal
-    if (tether) tether.destroy()
+    if (tether) { tether.destroy() }
     dropdown.classList.remove('open')
     setTimeout(removeFromDOM, 300)
     this.setState({ open: false })

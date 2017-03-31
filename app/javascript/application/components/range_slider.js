@@ -91,7 +91,7 @@ export default class RangeSlider extends React.Component {
   }
 
   xPosition(e) {
-    if (e.targetTouches && e.targetTouches.length) e = e.targetTouches[0]
+    if (e.targetTouches && e.targetTouches.length) { e = e.targetTouches[0] }
     return e.clientX
   }
 }
