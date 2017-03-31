@@ -57,7 +57,7 @@ class LoginForm extends React.Component {
           id="login-sign-up"
           role="tabpanel"
           aria-labelledby="login-tab-sign-up"
-          aria-hidden={mode != 'sign-up'}
+          aria-hidden={mode !== 'sign-up'}
         />
       </div>
     )

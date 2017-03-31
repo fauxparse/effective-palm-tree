@@ -230,7 +230,7 @@ class EventAssignments extends React.Component {
       const count = dragging ? dragging.selections.length : 1
       return (
         <DropTarget key={id} id={id} hover={hover}>
-          <h4>{count == 1 ? role.name : role.plural}</h4>
+          <h4>{count === 1 ? role.name : role.plural}</h4>
         </DropTarget>
       )
     }

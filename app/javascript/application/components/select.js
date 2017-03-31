@@ -68,7 +68,7 @@ export default class Select extends React.Component {
 
   selectedOption() {
     const { options, selected } = this.props
-    return find(options, ([id, _]) => id == selected) || []
+    return find(options, ([id, _]) => id === selected) || []
   }
 
   triggerClicked(e) {

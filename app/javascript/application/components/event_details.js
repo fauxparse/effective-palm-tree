@@ -57,11 +57,11 @@ class EventDetails extends React.Component {
   contents() {
     const { event, group, members, roles } = this.props
     const { tab } = this.state
-    if (tab == 'assignments') {
+    if (tab === 'assignments') {
       return <EventAssignments event={event} />
-    } else if (tab == 'availability') {
+    } else if (tab === 'availability') {
       return <EventAvailability event={event} />
-    } else if (tab == 'roles') {
+    } else if (tab === 'roles') {
       return <EventRoles event={event} />
     }
   }

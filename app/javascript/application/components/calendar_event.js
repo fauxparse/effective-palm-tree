@@ -24,9 +24,9 @@ class CalendarEvent extends React.Component {
   render() {
     const { availability, event, member } = this.props
     const classes = {
-      available: availability == Event.AVAILABLE,
-      unavailable: availability == Event.UNAVAILABLE,
-      unknown: availability == Event.UNKNOWN
+      available: availability === Event.AVAILABLE,
+      unavailable: availability === Event.UNAVAILABLE,
+      unknown: availability !== Event.AVAILABLE && availability !== Event.UNAVAILABLE
     }
     return (
       <li className={classNames(classes)}>
