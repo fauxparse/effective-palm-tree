@@ -16,7 +16,7 @@ RSpec.describe AvailabilityController, type: :request do
       as: user_id
     )
   end
-  let(:occurrence) { event.occurrences.at(event.starts_at) }
+  let(:occurrence) { event.occurrences.occurring_at(event.starts_at) }
 
   describe 'GET #show' do
     before do

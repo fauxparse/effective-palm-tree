@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def occurrence
-    @occurrence ||= event.occurrences.on(date) if event
+    @occurrence ||= event.occurrences.occurring_on(date) if event
   end
 
   def date

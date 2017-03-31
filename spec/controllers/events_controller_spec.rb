@@ -104,7 +104,7 @@ RSpec.describe EventsController, type: :request do
   describe 'PATCH #assignments' do
     let(:event) { create(:event, :with_roles, group: group) }
     let(:date) { event.starts_at.to_date }
-    let(:occurrence) { event.occurrences.on(date).tap(&:save) }
+    let(:occurrence) { event.occurrences.occurring_on(date).tap(&:save) }
 
     def patch!
       patch event_occurrence_assignments_path(group, event, date, as: user_id),

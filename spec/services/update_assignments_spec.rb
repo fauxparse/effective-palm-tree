@@ -6,7 +6,7 @@ describe UpdateAssignments, type: :service do
   let(:event) { create(:event, :with_roles) }
   let(:member) { create(:member, group: event.group) }
   let(:date) { event.starts_at.to_date }
-  let(:occurrence) { event.occurrences.on(date).tap(&:save) }
+  let(:occurrence) { event.occurrences.occurring_on(date).tap(&:save) }
 
   context 'adding assignments' do
     let(:changes) do

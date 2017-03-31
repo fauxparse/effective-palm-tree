@@ -15,9 +15,7 @@ describe EventOccurrences do
     it { is_expected.to have_exactly(1).item }
 
     context 'that has been edited and saved' do
-      before do
-        event.occurrences.at(event.starts_at).save
-      end
+      before { event.occurrences.occurring_at(event.starts_at).save }
 
       it { is_expected.to have_exactly(1).item }
     end

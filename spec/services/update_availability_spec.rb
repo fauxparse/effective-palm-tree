@@ -6,7 +6,7 @@ describe UpdateAvailability, type: :service do
   let(:group) { create(:group) }
   let(:member) { create(:member, group: group) }
   let(:event) { create(:event, :weekly, group: group) }
-  let(:occurrence) { event.occurrences.at(event.starts_at) }
+  let(:occurrence) { event.occurrences.occurring_at(event.starts_at) }
   let(:availability) { { member.id => true } }
 
   it 'adds availability' do

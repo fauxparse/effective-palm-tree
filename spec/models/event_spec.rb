@@ -74,7 +74,7 @@ RSpec.describe Event, type: :model do
     let(:start_date) { event.schedule.first.to_date }
 
     describe '#on' do
-      subject(:occurrence) { occurrences.on(date) }
+      subject(:occurrence) { occurrences.occurring_on(date) }
 
       context 'the start date' do
         let(:date) { start_date }

@@ -3,7 +3,7 @@ require 'rails_helper'
 
 describe OccurrenceSerializer, type: :serializer do
   subject(:serializer) { OccurrenceSerializer.new(occurrence) }
-  let(:occurrence) { event.occurrences.at(event.schedule.first) }
+  let(:occurrence) { event.occurrences.occurring_at(event.schedule.first) }
   let(:event) { create(:event, :with_roles) }
   let(:member) { create(:member, group: event.group) }
 

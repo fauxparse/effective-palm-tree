@@ -36,7 +36,7 @@ mcs = live.allocations.create!(role: mc, min: 1, max: 1)
 players = live.allocations.create!(role: player, min: 1, max: 4)
 musos = live.allocations.create!(role: muso, min: 0, max: 1)
 
-live.occurrences.on(Date.civil(2017, 3, 17)).tap do |show|
+live.occurrences.occurring_on(Date.civil(2017, 3, 17)).tap do |show|
   show.save!
   {
     mcs => %w(Matt),

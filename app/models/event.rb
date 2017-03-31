@@ -10,14 +10,14 @@ class Event < ApplicationRecord
     dependent: :destroy
 
   has_many :occurrences, dependent: :destroy do
-    def on(date)
+    def occurring_on(date)
       start = date.beginning_of_day
       stop = date.end_of_day
       time = schedule.occurrences_between(start, stop).first
-      at(time) if time.present?
+      occurring_at(time) if time.present?
     end
 
-    def at(time)
+    def occurring_at(time)
       time = schedule.occurrences_between(time, time + 1.day).first
       existing_occurrence_at(time) if time.present?
     end
