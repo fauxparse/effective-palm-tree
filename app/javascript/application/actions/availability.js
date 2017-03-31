@@ -1,5 +1,5 @@
 import { query } from '../lib/reactive_query'
-import { event } from '../schema'
+import { event as eventSchema } from '../schema'
 import { constants as ENTITIES } from './entities'
 
 const constants = {
@@ -9,7 +9,7 @@ const constants = {
 const actions = {
   set: (event, member, availability) =>
     query(ENTITIES.REFRESH, event.url + '/availability', {
-      schema: event,
+      schema: eventSchema,
       method: 'PATCH',
       body: { availability: { [member.id]: availability } }
     })

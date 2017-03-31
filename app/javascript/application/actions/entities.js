@@ -5,3 +5,5 @@ export const constants = {
 export const actions = {
   refresh: entities => ({ type: constants.REFRESH, entities })
 }
+
+export const before = (event) => event + '.before'

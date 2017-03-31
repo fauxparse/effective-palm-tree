@@ -9,7 +9,8 @@ import InfinitelyScrollable from './infinitely_scrollable'
 import Event from '../models/event'
 import CalendarMonth from './calendar_month'
 import Modal from './modal'
-import { actions as eventActions, constants as EVENTS } from '../actions/events'
+import { constants as ENTITIES } from '../actions/entities'
+import { event as eventSchema } from '../schema'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -73,7 +74,6 @@ class Calendar extends React.Component {
       months,
       offset,
       timezone,
-      refreshEvents,
       scrollTo
     } = this.props
     const month = months[index] || { loading: true }
@@ -89,7 +89,6 @@ class Calendar extends React.Component {
         style={{ top }}
         headerOffset={Math.max(0, Math.min(height - 48, offset - top))}
         onHeaderClicked={() => scrollTo(this.calculateOffset(index) - 1)}
-        refreshEvent={refreshEvents}
       />
     )
   }
@@ -122,8 +121,8 @@ class Calendar extends React.Component {
     let y = this.calculateOffset(index)
     while (y < offset + height) {
       results.push(index)
-      index++
       y += monthHeight(months[index])
+      index++
     }
 
     index = Math.min(0, results[0] || 0) - 1
@@ -233,13 +232,12 @@ const monthHeight = (month) =>
   Math.max(2, (month && month.events || []).length + 1) * 48
 
 const fetchMonths = (start, stop, startIndex) =>
-  query(EVENTS.REFRESH, '/events', { params: { start, stop, startIndex } })
+  query(ENTITIES.REFRESH, '/events', { schema: [eventSchema], params: { start, stop, startIndex } })
 
 const mapStateToProps = ({ events, calendar }, { now }) =>
   ({ events, ...calculateOffsets(calendar, now) })
 
 const mapDispatchToProps = dispatch => ({
-  refreshEvents: events => dispatch(eventActions.refresh(events)),
   fetch: (start, stop, index) => dispatch(fetchMonths(start, stop, index))
 })
 

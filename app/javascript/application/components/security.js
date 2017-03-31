@@ -5,7 +5,7 @@ import fetch from '../lib/fetch'
 import Layout from './layout'
 import Modal from './modal'
 import { actions as userActions } from '../actions/user'
-import { actions as dataActions } from '../actions/entities'
+import { actions as entityActions } from '../actions/entities'
 import { session } from '../schema'
 
 class LoginForm extends React.Component {
@@ -163,7 +163,7 @@ class Security extends React.Component {
 
 const mapStateToProps = ({ user }) => ({ user })
 const mapDispatchToProps = dispatch => ({
-  refresh: entities => dispatch(dataActions.refresh(entities))
+  refresh: entities => dispatch(entityActions.refresh(entities))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Security)

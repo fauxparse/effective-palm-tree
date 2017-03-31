@@ -10,7 +10,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.json do
         UpdateEventRoles.new(event, role_params).call
-        render json: event.allocations.sort_by(&:position)
+        render json: occurrence, include: [:allocations]
       end
     end
   end

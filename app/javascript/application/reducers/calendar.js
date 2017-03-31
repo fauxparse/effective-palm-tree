@@ -1,13 +1,12 @@
-import { assign, concat, uniq } from 'lodash'
+import { concat, uniq, values } from 'lodash'
 import moment from 'moment-timezone'
 import { constants as USER } from '../actions/user'
-import { constants as EVENTS } from '../actions/events'
-import Event from '../models/event'
+import { before, constants as ENTITIES } from '../actions/entities'
 
 const extractDate = url => url.replace(/^.*(\d{4}-\d{2})-\d{2}\/?$/, '$1')
 
-const indexByMonth = (state, events) =>
-  events.reduce(
+const indexByMonth = (state, events) => {
+  return values(events).reduce(
     (hash, { url }) => {
       const key = extractDate(url)
       const month = hash[key] || { start: moment(key + '-01', 'YYYY-MM-DD') }
@@ -17,6 +16,7 @@ const indexByMonth = (state, events) =>
     },
     { ...state }
   )
+}
 
 const setLoading = (state, start, stop, index, loading) => {
   let date = start.clone()
@@ -39,15 +39,24 @@ const setLoading = (state, start, stop, index, loading) => {
 export default function events(state = {}, action) {
   const { type } = action
 
-  if (type === EVENTS.REFRESH) {
-    return indexByMonth(state, action.events)
-  } else if (type === EVENTS.FETCHING || type === EVENTS.FETCHED) {
+  if (type === ENTITIES.REFRESH && action.start) {
+    if (action.start) {
+      state = setLoading(
+        { ...state },
+        action.start,
+        action.stop,
+        action.startIndex,
+        false
+      )
+    }
+    return indexByMonth(state, action.entities.events || {})
+  } else if (type === before(ENTITIES.REFRESH) && action.start) {
     return setLoading(
       { ...state },
       action.start,
       action.stop,
       action.startIndex,
-      type === EVENTS.FETCHING
+      true
     )
   } else if (action.type === USER.LOG_OUT) {
     return defaultState()

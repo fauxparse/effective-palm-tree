@@ -348,7 +348,7 @@ class EventAssignments extends React.Component {
   }
 
   dragStop(e) {
-    const { event, onChange } = this.props
+    const { event } = this.props
     const { dragging, selections } = this.state
     const { moved, member, allocation } = dragging
 
@@ -366,7 +366,6 @@ class EventAssignments extends React.Component {
           parseInt(dragging.targetId, 10)
         )
         this.setState({ selections: [] })
-        onChange(event)
       }
     } else {
       this.toggleSelection(member, allocation)

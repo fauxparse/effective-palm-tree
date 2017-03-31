@@ -10,7 +10,6 @@ import EventAssignments from './event_assignments'
 import EventAvailability from './event_availability'
 import EventRoles from './event_roles'
 import { Tab, TabList } from './tabs'
-import { actions as eventActions } from '../actions/events'
 import { query } from '../lib/reactive_query'
 import { constants as ENTITIES } from '../actions/entities'
 import { event as eventSchema } from '../schema'
@@ -57,29 +56,14 @@ class EventDetails extends React.Component {
   }
 
   contents() {
-    const { event, group, members, roles, refreshEvent } = this.props
+    const { event, group, members, roles } = this.props
     const { tab } = this.state
     if (tab == 'assignments') {
-      return (
-        <EventAssignments
-          event={event}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventAssignments event={event} />
     } else if (tab == 'availability') {
-      return (
-        <EventAvailability
-          event={event}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventAvailability event={event} />
     } else if (tab == 'roles') {
-      return (
-        <EventRoles
-          event={event}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventRoles event={event} />
     }
   }
 
@@ -105,9 +89,6 @@ const mapStateToProps = (state, { location, params }) => {
 }
 
 const mapDispatchToProps = (dispatch, { params: { group, event, date } }) => ({
-  refreshEvent: e => {
-    dispatch(eventActions.refresh(e))
-  },
   loadEvent: () => dispatch(query(
     ENTITIES.REFRESH,
     `/events/${group}/${event}/${date}`,

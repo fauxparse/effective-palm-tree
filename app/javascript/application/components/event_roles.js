@@ -2,7 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { assign, difference, forOwn, keys, pick, range, sortBy, values } from 'lodash'
 import Tether from 'tether'
-import fetch from '../lib/fetch'
+import { query } from '../lib/reactive_query'
+import { constants as ENTITIES } from '../actions/entities'
+import { event as eventSchema } from '../schema'
 import Select from './select'
 import RangeSlider from './range_slider'
 
@@ -243,16 +245,10 @@ class EventRoles extends React.Component {
   }
 
   saveChanges() {
-    const { event, onChange } = this.props
     const { allocations, dirty } = this.state
     if (dirty) {
-      event.allocations = allocations
+      this.props.saveChanges(allocations)
       this.setState({ dirty: false })
-      const roles = event.allocations.map(allocation =>
-        pick(allocation, ['id', 'roleId', 'min', 'max']))
-      fetch(event.url + '/roles', { method: 'PATCH', body: { roles } })
-        .then(response => response.json())
-        .then(attrs => onChange(event.update({ allocations: attrs })))
     }
   }
 
@@ -352,6 +348,16 @@ const mapStateToProps = ({ allocations, groups, roles }, { event }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({})
+const mapDispatchToProps = (dispatch, { event }) => ({
+  saveChanges: (roles) => dispatch(query(
+    ENTITIES.REFRESH,
+    event.url + '/roles',
+    {
+      schema: eventSchema,
+      method: 'PATCH',
+      body: { roles }
+    }
+  ))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventRoles)
