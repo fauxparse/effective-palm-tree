@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { last, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
@@ -10,7 +9,6 @@ import { actions as eventActions } from '../actions/events'
 class CalendarMonth extends React.Component {
   constructor(props) {
     super(props)
-    this.changeEventAvailability = this.changeEventAvailability.bind(this)
     this.state = { today: moment().tz(props.timezone) }
   }
 
@@ -62,22 +60,10 @@ class CalendarMonth extends React.Component {
           <span className="day">{date.format('ddd')}</span>
         </h4>
         <ul>
-          {events.map((event, i) => (
-            <CalendarEvent
-              key={i}
-              event={event}
-              onChange={this.changeEventAvailability}
-            />
-          ))}
+          {events.map((event, i) => <CalendarEvent key={i} event={event} />)}
         </ul>
       </section>
     )
-  }
-
-  changeEventAvailability(event, member, value) {
-    const { refreshEvent } = this.props
-    event.availabilityFor(member, value)
-    refreshEvent(event)
   }
 }
 

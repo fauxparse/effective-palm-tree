@@ -1,10 +1,12 @@
 import React from 'react'
-import { assign, forOwn, pick, range, sortBy } from 'lodash'
+import { connect } from 'react-redux'
+import { assign, difference, forOwn, keys, pick, range, sortBy, values } from 'lodash'
 import Tether from 'tether'
-import fetch from '../lib/fetch'
+import { query } from '../lib/reactive_query'
+import { constants as ENTITIES } from '../actions/entities'
+import { event as eventSchema } from '../schema'
 import Select from './select'
 import RangeSlider from './range_slider'
-import Allocation from '../models/allocation'
 
 // prettier-ignore
 const ICONS = {
@@ -14,9 +16,29 @@ const ICONS = {
   SAVE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
 }
 
+const UNLIMITED = null
+
+const countString = (allocation) => {
+  if (allocation.min == allocation.max) {
+    return allocation.min
+  } else if (allocation.min) {
+    if (allocation.max == UNLIMITED) {
+      return `${allocation.min} or more`
+    } else {
+      return `${allocation.min} to ${allocation.max}`
+    }
+  } else {
+    if (allocation.max == UNLIMITED) {
+      return `Some`
+    } else {
+      return `Up to ${allocation.max}`
+    }
+  }
+}
+
 class AllocationRange extends Select {
   selectedLabel() {
-    return this.props.allocation.countString()
+    return countString(this.props.allocation)
   }
 
   renderDropdown() {
@@ -26,7 +48,7 @@ class AllocationRange extends Select {
     return (
       <div className="select-options">
         <div className="allocation-range list">
-          <p>{allocation.countString()}</p>
+          <p>{countString(allocation)}</p>
           <RangeSlider
             min={this.positionFromValue(min)}
             max={this.positionFromValue(max)}
@@ -69,14 +91,14 @@ class AllocationRange extends Select {
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
     const value = Math.round(Math.exp(position * maxl)) - 1
-    return value === maximum ? Allocation.UNLIMITED : value
+    return value === maximum ? UNLIMITED : value
   }
 
   positionFromValue(value) {
     const { group } = this.props
     const maximum = group.members.length + 1
     const maxl = Math.log(maximum + 1)
-    return value === Allocation.UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
+    return value === UNLIMITED ? 1.0 : Math.log(value + 1) / maxl
   }
 }
 
@@ -93,8 +115,10 @@ class EventRole extends React.Component {
       onChange,
       onDragStart,
       onDelete,
-      offset
+      offset,
     } = this.props
+    const roles = sortBy(values(this.props.roles), r => r.name.toLocaleLowerCase())
+
     return (
       <li
         className="allocation"
@@ -113,8 +137,8 @@ class EventRole extends React.Component {
           onChange={(min, max) => this.change({ min, max })}
         />
         <Select
-          selected={allocation.roleId || group.roles[0].id}
-          options={group.roles.map(({ id, name, plural }) => [
+          selected={allocation.roleId || roles[0].id}
+          options={roles.map(({ id, name, plural }) => [
             id,
             allocation.max === 1 ? name : plural
           ])}
@@ -134,11 +158,11 @@ class EventRole extends React.Component {
   }
 }
 
-export default class EventRoles extends React.Component {
+class EventRoles extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      allocations: props.event.allocations.map(a => a.clone()),
+      allocations: props.allocations.slice(0),
       dirty: false
     }
     this.dragStart = this.dragStart.bind(this)
@@ -146,8 +170,16 @@ export default class EventRoles extends React.Component {
     this.dragStop = this.dragStop.bind(this)
   }
 
+  componentWillReceiveProps({ allocations }) {
+    if (allocations) {
+      this.setState({
+        allocations: allocations.map(a => ({ ...a }))
+      })
+    }
+  }
+
   render() {
-    const { event, group } = this.props
+    const { event, group, roles } = this.props
     const { allocations, dirty, dragging } = this.state
     return (
       <section className="event-roles">
@@ -157,6 +189,7 @@ export default class EventRoles extends React.Component {
               key={allocation.id}
               allocation={allocation}
               group={group}
+              roles={roles}
               offset={dragging ? dragging.offsets[i] : 0}
               onChange={a => this.changeRole(a, i)}
               onDelete={() => this.deleteRole(allocation)}
@@ -179,21 +212,20 @@ export default class EventRoles extends React.Component {
   }
 
   addRole() {
-    const { event, group, onChange } = this.props
+    const { event, group, roles, onChange } = this.props
     const { allocations } = this.state
-    const ids = allocations.map(a => a.roleId)
-    const roleId = (group.roles.filter(r => ids.indexOf(r.id) === -1)[0] ||
-    group.roles[0] || {}).id
+    const ids = allocations.map(a => a.roleId.toString())
+    const roleId = difference(keys(roles), ids)[0] || keys(roles)[0]
     if (roleId) {
-      const allocation = new Allocation({
+      const allocation = {
         roleId,
         id: Math.min(0, ...allocations.map(a => a.id)) - 1,
         position: allocations.length,
         min: 0,
-        max: Allocation.UNLIMITED
-      })
+        max: UNLIMITED
+      }
       allocations.push(allocation)
-      this.setState({ dirty: true })
+      this.setState({ allocations, dirty: true })
     }
   }
 
@@ -213,16 +245,10 @@ export default class EventRoles extends React.Component {
   }
 
   saveChanges() {
-    const { event, onChange } = this.props
     const { allocations, dirty } = this.state
     if (dirty) {
-      event.allocations = allocations
+      this.props.saveChanges(allocations)
       this.setState({ dirty: false })
-      roles = event.allocations.map(allocation =>
-        pick(allocation, ['id', 'roleId', 'min', 'max']))
-      fetch(event.url + '/roles', { method: 'PATCH', body: { roles } })
-        .then(response => response.json)
-        .then(attrs => onChange(event.update({ allocations: attrs })))
     }
   }
 
@@ -311,3 +337,27 @@ export default class EventRoles extends React.Component {
     return e.clientY
   }
 }
+
+const mapStateToProps = ({ allocations, groups, roles }, { event }) => {
+  const group = groups[event.groupId]
+  const eventId = event.url.replace(/\d{4}-\d{2}-\d{2}\/?$/, '')
+  return {
+    allocations: allocations[eventId] || [],
+    group,
+    roles: pick(roles, group.roles)
+  }
+}
+
+const mapDispatchToProps = (dispatch, { event }) => ({
+  saveChanges: (roles) => dispatch(query(
+    ENTITIES.REFRESH,
+    event.url + '/roles',
+    {
+      schema: eventSchema,
+      method: 'PATCH',
+      body: { roles }
+    }
+  ))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventRoles)

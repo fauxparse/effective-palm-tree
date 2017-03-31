@@ -7,12 +7,14 @@ import { Router, Route, IndexRoute, IndexRedirect } from 'react-router'
 import { syncHistoryWithStore, routerMiddleware } from 'react-router-redux'
 import history from './lib/history'
 import reducer from './reducers'
+import { reactiveQueryMiddleware } from './lib/reactive_query'
 import Security from './components/security'
 import Events from './components/events'
 import EventDetails from './components/event_details'
 
 const store = createStore(
   reducer,
+  applyMiddleware(reactiveQueryMiddleware),
   applyMiddleware(thunk),
   applyMiddleware(routerMiddleware(history))
 )

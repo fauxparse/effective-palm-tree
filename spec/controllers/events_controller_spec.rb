@@ -96,7 +96,7 @@ RSpec.describe EventsController, type: :request do
       end
 
       it 'renders the allocations' do
-        expect(json).to eq expected_response
+        expect(json).to match a_hash_including(allocations: expected_response)
       end
     end
   end

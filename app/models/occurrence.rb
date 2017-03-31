@@ -4,6 +4,7 @@ class Occurrence < ApplicationRecord
 
   belongs_to :event
   has_one :group, through: :event
+  has_many :allocations, through: :event
   has_many :assignments, dependent: :destroy, autosave: true
   has_many :availability, dependent: :destroy, autosave: true do
     def build(attrs = {})

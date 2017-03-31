@@ -1,9 +1,11 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { find, findIndex, forEach, keyBy, some, sortBy } from 'lodash'
+import { find, findIndex, forEach, keyBy, pick, some, sortBy } from 'lodash'
 import fetch from '../lib/fetch'
 import Event from '../models/event'
 import Avatar from './avatar'
+import { actions as assignmentActions } from '../actions/assignments'
 
 // prettier-ignore
 const ICONS = {
@@ -18,20 +20,20 @@ const ICONS = {
 class MemberItem extends React.Component {
   render() {
     const {
-      event,
       member,
-      assignment,
+      allocation,
       className,
       children,
       avatar,
       onDragStart
     } = this.props
-    const startDrag = e => onDragStart(e, member, assignment)
+    const allocationId = allocation && allocation.id
+    const startDrag = e => onDragStart(e, member, allocationId)
     return (
       <li
-        className={classNames('member', className, { assigned: assignment })}
+        className={classNames('member', className, { assigned: allocationId })}
         data-member-id={member.id}
-        data-allocation-id={assignment ? assignment.allocation.id : 'none'}
+        data-allocation-id={allocationId || 'none'}
       >
         <span
           className="action"
@@ -62,24 +64,19 @@ class RoleGroup extends React.Component {
   render() {
     const {
       allocation,
-      event,
       role,
       members,
       selections,
       onDragStart
     } = this.props
-    const assignments = sortBy(allocation.assignments, a =>
-      members[a.memberId].name.toLocaleLowerCase())
-
     return (
       <section className="role">
         <h4>{allocation.max === 1 ? role.name : role.plural}</h4>
         <ul>
-          {assignments.map(assignment => (
+          {this.assignments().map(assignment => (
             <MemberItem
               key={assignment.memberId}
-              assignment={assignment}
-              event={event}
+              allocation={allocation}
               member={members[assignment.memberId]}
               selected={isSelected(selections, assignment.memberId, allocation)}
               selecting={selections.length > 0}
@@ -90,9 +87,17 @@ class RoleGroup extends React.Component {
       </section>
     )
   }
+
+  assignments() {
+    const { allocation, assignments, members, role } = this.props
+    return sortBy(
+      assignments,
+      a => members[a.memberId].name.toLocaleLowerCase()
+    )
+  }
 }
 
-export default class EventAssignments extends React.Component {
+class EventAssignments extends React.Component {
   constructor(props) {
     super(props)
     this.state = { showAll: false, selections: [] }
@@ -126,18 +131,16 @@ export default class EventAssignments extends React.Component {
   }
 
   roleGroups() {
-    const { event, group } = this.props
-    const { allocations } = event
-    const { roles } = group
+    const { allocations, assignments, event, group, members, roles } = this.props
     const { selections } = this.state
-    const members = keyBy(group.members, m => m.id)
 
     return allocations.map(allocation => (
       <RoleGroup
         key={allocation.id}
+        assignments={assignments.filter(a => a.allocationId === allocation.id)}
         allocation={allocation}
         event={event}
-        role={find(roles, r => r.id === allocation.roleId)}
+        role={roles[allocation.roleId]}
         members={members}
         selections={selections}
         onDragStart={(e, member, assignment) =>
@@ -147,7 +150,7 @@ export default class EventAssignments extends React.Component {
   }
 
   available() {
-    const { event, group } = this.props
+    const { event, group, members } = this.props
     const { showAll, selections, dragging } = this.state
     return (
       <section className={classNames('role', 'none', { 'show-all': showAll })}>
@@ -158,8 +161,7 @@ export default class EventAssignments extends React.Component {
           </small>
         </h4>
         <ul>
-          {group
-            .sort()
+          {sortBy(members, m => m.name.toLocaleLowerCase())
             .map(m => this.availableMemberItem(event, m, selections))}
         </ul>
       </section>
@@ -167,18 +169,19 @@ export default class EventAssignments extends React.Component {
   }
 
   availableMemberItem(event, member, selections) {
-    let availability = event.availabilityFor(member)
-    availability = availability == Event.AVAILABLE
+    const { assignments } = this.props
+    const availability = this.props.availability[member.id]
+    const available = availability === Event.AVAILABLE
       ? 'available'
       : availability === Event.UNAVAILABLE ? 'unavailable' : 'unknown'
-    const icon = ICONS[availability.toUpperCase()]
-    const avatar = event.isAssigned(member)
+    const icon = ICONS[available.toUpperCase()]
+    const avatar = some(assignments, a => a.memberId === member.id)
       ? false
-      : <span className={classNames('avatar', availability)}>{icon}</span>
+      : <span className={classNames('avatar', available)}>{icon}</span>
     return (
       <MemberItem
         key={member.id}
-        className={availability}
+        className={available}
         event={event}
         member={member}
         avatar={avatar}
@@ -190,7 +193,7 @@ export default class EventAssignments extends React.Component {
   }
 
   dropTargets() {
-    const { event, group } = this.props
+    const { allocations, group, roles } = this.props
     const { dragging } = this.state
     const targetId = dragging && dragging.targetId
     return (
@@ -199,8 +202,8 @@ export default class EventAssignments extends React.Component {
         ref="dropTargets"
         onTouchMove={e => e.stopPropagation()}
       >
-        {event.allocations.map(a =>
-          this.dropTarget(a, group.role(a.roleId), targetId === a.id))}
+        {allocations.map(a =>
+          this.dropTarget(a, roles[a.roleId], targetId === a.id))}
         <footer>
           <DropTarget key={-1} id={-1} hover={targetId === -1}>
             <h4>{ICONS.REMOVE}<span>Remove</span></h4>
@@ -222,13 +225,16 @@ export default class EventAssignments extends React.Component {
   }
 
   dropTarget(allocation, role, hover) {
-    const { dragging } = this.state
-    const id = allocation.id || allocation
-    return (
-      <DropTarget key={id} id={id} hover={hover}>
-        <h4>{role.pluralize(dragging ? dragging.selections.length : 1)}</h4>
-      </DropTarget>
-    )
+    if (role) {
+      const { dragging } = this.state
+      const id = allocation.id || allocation
+      const count = dragging ? dragging.selections.length : 1
+      return (
+        <DropTarget key={id} id={id} hover={hover}>
+          <h4>{count == 1 ? role.name : role.plural}</h4>
+        </DropTarget>
+      )
+    }
   }
 
   draggables() {
@@ -239,7 +245,9 @@ export default class EventAssignments extends React.Component {
     }
   }
 
-  dragStart(e, member, assignment) {
+  dragStart(e, member, allocationId) {
+    const { allocations } = this.props
+
     // Stop the same action triggering both touch and mouse events
     if (this.dragStartEvent) return
     this.dragStartEvent = e
@@ -257,15 +265,14 @@ export default class EventAssignments extends React.Component {
     const rect = item.getBoundingClientRect()
 
     if (!selections.length) {
-      selections.push([member.id, assignment && assignment.allocation.id])
+      selections.push([member.id, allocationId])
     }
     const dragging = {
       origin: { x, y },
       offset: { x: x - rect.left, y: y - rect.top },
       item,
       member,
-      assignment,
-      allocation: assignment && assignment.allocation,
+      allocation: find(allocations, a => a.id === allocationId),
       selections,
       ghosts: [],
       moved: false,
@@ -341,9 +348,9 @@ export default class EventAssignments extends React.Component {
   }
 
   dragStop(e) {
-    const { event, onChange } = this.props
+    const { event } = this.props
     const { dragging, selections } = this.state
-    const { moved, member, assignment } = dragging
+    const { moved, member, allocation } = dragging
 
     clearTimeout(dragging.dragStartTimer)
     setTimeout(
@@ -359,10 +366,9 @@ export default class EventAssignments extends React.Component {
           parseInt(dragging.targetId, 10)
         )
         this.setState({ selections: [] })
-        onChange(event)
       }
     } else {
-      this.toggleSelection(member, assignment)
+      this.toggleSelection(member, allocation)
     }
 
     const body = document.querySelector('body')
@@ -374,7 +380,7 @@ export default class EventAssignments extends React.Component {
   }
 
   dragGhosts(selections, x, y) {
-    const { group } = this.props
+    const { group, members } = this.props
     const { list } = this.refs
     return selections.map(([memberId, allocationId]) => {
       const listItem = list.querySelector(
@@ -392,15 +398,14 @@ export default class EventAssignments extends React.Component {
             transform: `translate3d(0, 0, 0)`
           }}
         >
-          {selections.length === 1 && <Avatar member={group.member(memberId)} />}
+          {selections.length === 1 && <Avatar member={members[memberId]} />}
         </div>
       )
     })
   }
 
-  toggleSelection(member, assignment) {
+  toggleSelection(member, allocation) {
     const { selections } = this.state
-    const allocation = assignment && assignment.allocation
     const allocationId = allocation && allocation.id
 
     const index = findIndex(
@@ -410,25 +415,19 @@ export default class EventAssignments extends React.Component {
     if (index > -1) {
       selections.splice(index, 1)
     } else {
-      selections.push([member.id, allocation && allocation.id])
+      selections.push([member.id, allocationId])
     }
     this.setState({ selections })
   }
 
   updateAssignments(selections, allocationId) {
-    const { event } = this.props
-    fetch(event.url + '/assignments', {
-      method: 'PATCH',
-      body: {
-        assignments: selections.map(([memberId, old]) => [
-          memberId,
-          old || 0,
-          allocationId || 0
-        ])
-      }
-    })
-    selections.forEach(([memberId, oldAllocationId]) =>
-      event.updateAssignment(memberId, oldAllocationId, allocationId))
+    this.props.assign(
+      selections.map(([memberId, old]) => [
+        memberId,
+        old || 0,
+        allocationId || 0
+      ])
+    )
   }
 }
 
@@ -459,7 +458,7 @@ function compareAvailability(availability) {
 function isSelected(selections, member, allocation) {
   const memberId = member.id || member
   const allocationId = allocation && allocation.id
-  return find(selections, ([m, a]) => m === memberId && a === allocationId)
+  return some(selections, ([m, a]) => m === memberId && a === allocationId)
 }
 
 function dragPosition(e) {
@@ -477,3 +476,22 @@ function inside(x, y, rect) {
 function isTouchEvent(e) {
   return e.targetTouches && e.targetTouches.length > 0
 }
+
+const mapStateToProps = ({ allocations, assignments, availability, groups, members, roles }, { event }) => {
+  const group = groups[event.groupId]
+  const eventId = event.url.replace(/\d{4}-\d{2}-\d{2}\/?$/, '')
+  return {
+    allocations: allocations[eventId] || [],
+    assignments: assignments[event.url] || [],
+    availability: availability[event.url] || {},
+    group,
+    members: pick(members, group.members),
+    roles: pick(roles, group.roles)
+  }
+}
+
+const mapDispatchToProps = (dispatch, { event }) => ({
+  assign: (selections) => dispatch(assignmentActions.assign(event, selections))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventAssignments)

@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { pick } from 'lodash'
 import history from '../lib/history'
 import fetch from '../lib/fetch'
 import Header from './header'
@@ -9,7 +10,9 @@ import EventAssignments from './event_assignments'
 import EventAvailability from './event_availability'
 import EventRoles from './event_roles'
 import { Tab, TabList } from './tabs'
-import { actions as eventActions } from '../actions/events'
+import { query } from '../lib/reactive_query'
+import { constants as ENTITIES } from '../actions/entities'
+import { event as eventSchema } from '../schema'
 
 // prettier-ignore
 const ICONS = {
@@ -20,10 +23,9 @@ const ICONS = {
 
 class EventDetails extends React.Component {
   constructor(props) {
-    const { group, event, date } = props.params
     super(props)
     this.state = { tab: 'assignments' }
-    if (group && event && date) this.loadEvent(group, event, date)
+    props.loadEvent()
   }
 
   render() {
@@ -54,32 +56,14 @@ class EventDetails extends React.Component {
   }
 
   contents() {
-    const { event, group, refreshEvent } = this.props
+    const { event, group, members, roles } = this.props
     const { tab } = this.state
     if (tab == 'assignments') {
-      return (
-        <EventAssignments
-          event={event}
-          group={group}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventAssignments event={event} />
     } else if (tab == 'availability') {
-      return (
-        <EventAvailability
-          event={event}
-          group={group}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventAvailability event={event} />
     } else if (tab == 'roles') {
-      return (
-        <EventRoles
-          event={event}
-          group={group}
-          onChange={refreshEvent}
-        />
-      )
+      return <EventRoles event={event} />
     }
   }
 
@@ -92,26 +76,24 @@ class EventDetails extends React.Component {
     e.stopPropagation()
     history.push('/events')
   }
-
-  async loadEvent(groupId, eventId, date) {
-    const url = `/events/${groupId}/${eventId}/${date}`
-    fetch(location.pathname)
-      .then(response => response.json())
-      .then(attrs => this.setState({ event: new Event(attrs) }))
-  }
 }
 
-const mapStateToProps = ({ events, groups }, { location, params }) => {
+const mapStateToProps = (state, { location, params }) => {
+  const group = state.groups[params.group]
   return {
-    event: events[location.pathname],
-    group: groups[params.group]
+    event: state.events[location.pathname],
+    group,
+    members: pick(state.members, group.members),
+    roles: pick(state.roles, group.roles)
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  refreshEvent: event => {
-    dispatch(eventActions.refresh(event))
-  }
+const mapDispatchToProps = (dispatch, { params: { group, event, date } }) => ({
+  loadEvent: () => dispatch(query(
+    ENTITIES.REFRESH,
+    `/events/${group}/${event}/${date}`,
+    { schema: eventSchema }
+  ))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventDetails)
