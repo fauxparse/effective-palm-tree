@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import { keyBy, keys, sortBy, values } from 'lodash'
-import fetch from '../lib/fetch'
 import { query } from '../lib/reactive_query'
 import InfinitelyScrollable from './infinitely_scrollable'
 import Event from '../models/event'
@@ -138,10 +137,15 @@ class Calendar extends React.Component {
     const { now, fetch, months } = this.props
     indices = indices.filter(i => !months[i])
     if (indices.length) {
-      const start = now.clone().startOf('month').add(indices[0], 'months')
-      const stop = now.clone().add(indices[indices.length - 1] + 1, 'months')
+      const start = this.monthStart(indices[0])
+      const stop = this.monthStart(indices[indices.length - 1] + 1)
       fetch(start, stop, indices[0])
     }
+  }
+
+  monthStart(index) {
+    const { now } = this.props
+    return now.clone().startOf('month').add(index, 'months')
   }
 
   fillMonths(offset) {

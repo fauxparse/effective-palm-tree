@@ -21,7 +21,7 @@ const indexByMonth = (state, events) => {
 const setLoading = (state, start, stop, index, loading) => {
   let date = start.clone()
 
-  while (!date.isAfter(stop)) {
+  while (date.isBefore(stop)) {
     const key = date.format('YYYY-MM')
     state[key] = {
       events: [],
