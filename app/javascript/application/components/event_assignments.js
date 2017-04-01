@@ -245,8 +245,6 @@ class EventAssignments extends React.Component {
   }
 
   dragStart(e, member, allocationId) {
-    const { allocations } = this.props
-
     // Stop the same action triggering both touch and mouse events
     if (this.dragStartEvent) { return }
     this.dragStartEvent = e
@@ -256,6 +254,20 @@ class EventAssignments extends React.Component {
     // Prevent mouse scrolling
     if (!isTouchEvent(e)) { e.preventDefault() }
 
+    this.startDragging(e, member, allocationId)
+
+    const body = document.querySelector('body')
+    if (isTouchEvent(e)) {
+      body.addEventListener('touchmove', this.dragMove)
+      body.addEventListener('touchend', this.dragStop)
+    } else {
+      body.addEventListener('mousemove', this.dragMove)
+      body.addEventListener('mouseup', this.dragStop)
+    }
+  }
+
+  startDragging(e, member, allocationId) {
+    const { allocations } = this.props
     const selections = this.state.selections.slice(0)
     const [x, y] = dragPosition(e)
     let item = e.target
@@ -279,15 +291,6 @@ class EventAssignments extends React.Component {
       dragStartTimer: setTimeout(() => this.dragMove(e, true), 300)
     }
     this.setState({ dragging })
-
-    const body = document.querySelector('body')
-    if (isTouchEvent(e)) {
-      body.addEventListener('touchmove', this.dragMove)
-      body.addEventListener('touchend', this.dragStop)
-    } else {
-      body.addEventListener('mousemove', this.dragMove)
-      body.addEventListener('mouseup', this.dragStop)
-    }
   }
 
   dragMove(e, force = false) {

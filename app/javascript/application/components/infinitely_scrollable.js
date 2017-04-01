@@ -126,23 +126,31 @@ export default function InfinitelyScrollable(WrappedComponent) {
       } = this.state.autoScroll || {}
 
       if (amplitude) {
-        let elapsed = Date.now() - timestamp
-        let delta = -amplitude * Math.exp(-elapsed / TIME_CONSTANT)
-        if (delta > 0.5 || delta < -0.5) {
-          this.setState({ offset: Math.round(target + delta) })
-          requestAnimationFrame(this.autoScroll)
-        } else if (target !== undefined) {
-          this.setState({ offset: target })
-        }
+        this.autoScrollAmplitude(origin, target, timestamp, amplitude)
       } else if (duration) {
-        let elapsed = Date.now() - timestamp
-        this.setState({
-          offset: Math.round(
-            this.ease(elapsed, origin, target - origin, duration)
-          )
-        })
-        if (elapsed <= duration) { requestAnimationFrame(this.autoScroll) }
+        this.autoScrollDuration(origin, target, timestamp, duration)
       }
+    }
+
+    autoScrollAmplitude(origin, target, timestamp, amplitude) {
+      const elapsed = Date.now() - timestamp
+      const delta = -amplitude * Math.exp(-elapsed / TIME_CONSTANT)
+      if (delta > 0.5 || delta < -0.5) {
+        this.setState({ offset: Math.round(target + delta) })
+        requestAnimationFrame(this.autoScroll)
+      } else if (target !== undefined) {
+        this.setState({ offset: target })
+      }
+    }
+
+    autoScrollDuration(origin, target, timestamp, duration) {
+      const elapsed = Date.now() - timestamp
+      this.setState({
+        offset: Math.round(
+          this.ease(elapsed, origin, target - origin, duration)
+        )
+      })
+      if (elapsed <= duration) { requestAnimationFrame(this.autoScroll) }
     }
 
     // exponential ease in/out
