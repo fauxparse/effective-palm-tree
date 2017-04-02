@@ -4,17 +4,8 @@ import classNames from 'classnames'
 import { find, findIndex, forEach, keyBy, pick, some, sortBy } from 'lodash'
 import Event from '../models/event'
 import Avatar from './avatar'
+import Icon from './icon'
 import { actions as assignmentActions } from '../actions/assignments'
-
-// prettier-ignore
-const ICONS = {
-  AVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M9 17l4 4 10-10"/></g></svg>,
-  UNAVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M22 10L10 22M22 22L10 10"/></g></svg>,
-  UNKNOWN: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M11.4 9c.8-1.8 2.5-3 4.6-3 2.8 0 5 2.2 5 5s-2.2 5-5 5v3"/><path d="M14,25a2,2 0 1,0 4,0a2,2 0 1,0 -4,0"/></g></svg>,
-  CHECKBOX: <svg width="24" height="24" viewBox="0 0 24 24"><g transform="translate(.5 .5)"><circle cx="12" cy="12" r="11"/><path d="M6 12l4 4 8-8"/></g></svg>,
-  CANCEL: <svg width="24" height="24" viewBox="0 0 24 24"><g transform="translate(.5 .5)"><path d="M19.8 4.2L4.2 19.8"/><circle cx="12" cy="12" r="11"/></g></svg>,
-  REMOVE: <svg width="24" height="24" viewBox="0 0 24 24"><g><path d="M20.5 5.5v18h-16v-18M1.5 5.5h22"/><path d="M12.5 11.5v6M8.5 11.5v6M16.5 11.5v6"/><path d="M8.5 5.5v-4h8v4"/></g></svg>
-}
 
 class MemberItem extends React.Component {
   render() {
@@ -50,9 +41,7 @@ class MemberItem extends React.Component {
   avatar() {
     const { selected, selecting, avatar, member } = this.props
     if (selecting) {
-      return React.cloneElement(ICONS.CHECKBOX, {
-        className: classNames('checkbox', { checked: selected })
-      })
+      return <Icon name="CONTROLS.CHECKBOX" className={['checkbox', { checked: selected }]}/>
     } else {
       return avatar || <Avatar member={member} />
     }
@@ -170,10 +159,8 @@ class EventAssignments extends React.Component {
   availableMemberItem(event, member, selections) {
     const { assignments } = this.props
     const availability = this.props.availability[member.id]
-    const available = availability === Event.AVAILABLE
-      ? 'available'
-      : availability === Event.UNAVAILABLE ? 'unavailable' : 'unknown'
-    const icon = ICONS[available.toUpperCase()]
+    const available = Event.availableClass(availability)
+    const icon = <Icon name="AVAILABILITY" />
     const avatar = some(assignments, a => a.memberId === member.id)
       ? false
       : <span className={classNames('avatar', available)}>{icon}</span>
@@ -205,10 +192,10 @@ class EventAssignments extends React.Component {
           this.dropTarget(a, roles[a.roleId], targetId === a.id))}
         <footer>
           <DropTarget key={-1} id={-1} hover={targetId === -1}>
-            <h4>{ICONS.REMOVE}<span>Remove</span></h4>
+            <h4><Icon name="CONTROLS.REMOVE"/><span>Remove</span></h4>
           </DropTarget>
           <DropTarget key={0} id={0} hover={targetId === 0}>
-            <h4>{ICONS.CANCEL}<span>Cancel</span></h4>
+            <h4><Icon name="CONTROLS.CANCEL"/><span>Cancel</span></h4>
           </DropTarget>
         </footer>
         <div

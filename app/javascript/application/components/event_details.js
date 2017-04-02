@@ -22,7 +22,7 @@ class EventDetails extends React.Component {
   }
 
   render() {
-    const { event, group } = this.props
+    const { event, group, availability } = this.props
     const { tab } = this.state
     const loading = !event
     return (
@@ -38,7 +38,7 @@ class EventDetails extends React.Component {
             </h2>
             <TabList selected={tab} onSwitch={this.switchTab.bind(this)}>
               <Tab name="assignments"><Icon name="TABS.ASSIGNMENTS"/></Tab>
-              <Tab name="availability"><Icon name="TABS.AVAILABILITY"/></Tab>
+              <Tab name="availability" className={Event.availableClass(availability)}><Icon name="AVAILABILITY"/></Tab>
               <Tab name="roles"><Icon name="TABS.ROLES"/></Tab>
             </TabList>
           </div>
@@ -71,13 +71,15 @@ class EventDetails extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { location, params }) => {
-  const group = state.groups[params.group]
+const mapStateToProps = ({ groups, events, members, roles, availability }, { location, params }) => {
+  const group = groups[params.group]
+  const event = events[location.pathname]
   return {
-    event: state.events[location.pathname],
+    event,
     group,
-    members: pick(state.members, group.members),
-    roles: pick(state.roles, group.roles)
+    members: pick(members, group.members),
+    roles: pick(roles, group.roles),
+    availability: group && event && availability[event.url][group.memberId]
   }
 }
 

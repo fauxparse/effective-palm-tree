@@ -18,7 +18,12 @@ const ICONS = {
     ADMIN: <svg width={12} height={12} viewBox="0 0 12 12"><circle cx="6" cy="6" r="5.5"/><path d="M6 2l1.236 2.505L10 4.906l-2 1.95.472 2.753L6 8.309l-2.472 1.3L4 6.856l-2-1.95 2.764-.401z"/></svg>
   },
 
-  AVAILABILITY: <svg width={24} height={24} viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="11" /><g className="check"><path d="M5.5 11.5l4 4 8-8" /></g><g className="cross"><path d="M7.5 7.5l8 8" /><path d="M15.5 7.5l-8 8" /></g><g className="question"><path d="M11.5 13.5v-1c1.6 0 3-1.4 3-3s-1.4-3-3-3c-1.2 0-2.3.9-2.8 1.9" /><path d="M11.5 16.5v1" /></g></svg>,
+  AVAILABILITY: <svg width={24} height={24} viewBox="0 0 24 24"><g className="availability-icon"><circle cx="11.5" cy="11.5" r="11" /><g className="check"><path d="M5.5 11.5l4 4 8-8" /></g><g className="cross"><path d="M7.5 7.5l8 8" /><path d="M15.5 7.5l-8 8" /></g><g className="question"><path d="M11.5 13.5v-1c1.6 0 3-1.4 3-3s-1.4-3-3-3c-1.2 0-2.3.9-2.8 1.9" /><path d="M11.5 16.5v1" /></g></g></svg>,
+
+  MY_AVAILABILITY: {
+    AVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M9 17l4 4 10-10"/></g></svg>,
+    UNAVAILABLE: <svg width="32" height="32" viewBox="0 0 32 32"><g transform="translate(.5 .5)"><circle cx="16" cy="16" r="15"/><path d="M22 10L10 22M22 22L10 10"/></g></svg>
+  },
 
   CALENDAR: {
     NO_EVENTS: <svg width={24} height={24} viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="11" /><path d="M19.277 3.723 L3.723 19.277" /></svg>
@@ -26,9 +31,12 @@ const ICONS = {
 
   CONTROLS: {
     ADD: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M12.5 2.5v20M22.5 12.5h-20"/></svg>,
+    CANCEL: <svg width={24} height={24} viewBox="0 0 24 24"><path transform="translate(.5 .5)" d="M19.8 4.2L4.2 19.8M1,12a11,11 0 1,0 22,0a11,11 0 1,0 -22,0"/></svg>,
     CARET: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M8.5 10.5 L12.5 14.5 L16.5 10.5" /></svg>,
+    CHECKBOX: <svg width={24} height={24} viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="11" /><path d="M5.5 11.5l4 4 8-8" /></svg>,
     DRAG: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M16.5 16.5l-4 4-4-4M8.5 8.5l4-4 4 4"/></svg>,
     DELETE: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M19.5 5.5l-14 14M19.5 19.5l-14-14"/></svg>,
+    REMOVE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M20.5 5.5v18h-16v-18M1.5 5.5h22M12.5 11.5v6M8.5 11.5v6M16.5 11.5v6M8.5 5.5v-4h8v4"/></svg>,
     SAVE: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
   },
 

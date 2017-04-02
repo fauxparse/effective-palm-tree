@@ -1,8 +1,10 @@
 import React from 'react'
+import classNames from 'classnames'
 
-const Tab = ({ children, name, selected, onSwitch }) => (
+const Tab = ({ children, name, selected, onSwitch, className }) => (
   <div
     role="tab"
+    className={classNames(className)}
     aria-selected={selected === name}
     onClick={() => onSwitch(name)}
   >

@@ -46,139 +46,141 @@
     flex: 1;
     overflow-y: auto;
   }
+}
 
-  .my-availability {
-    background: $oc-yellow-0;
-    flex: 0;
+.my-availability {
+  background: $oc-yellow-0;
+  flex: 0;
+  margin: 0;
+  padding: 0.5em 0;
+  position: relative;
+  transition: all $slow-duration $base-timing;
+
+  p {
+    line-height: 1.5rem;
     margin: 0;
-    padding: 0.5em 0;
-    position: relative;
+    transition: all $slow-duration $base-timing;
+  }
+
+  .instructions {
+    text-align: center;
+    transition-delay: $slow-duration;
+  }
+
+  .buttons {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 0;
     transition: all $slow-duration $base-timing;
 
-    p {
-      line-height: 1.5rem;
-      margin: 0;
-      transition: all $slow-duration $base-timing;
+    button {
+      @include size(2rem);
+      background: none;
+      border-radius: 50%;
+      margin: 0.5rem;
+      outline: none;
+      padding: 0;
+      position: relative;
+      transition: all $slow-duration $base-timing $base-duration;
+
+      svg {
+        @include size(2rem);
+        display: block;
+        margin: 0;
+
+        circle,
+        path {
+          fill: none;
+          stroke: $secondary-font-color;
+          stroke-width: 1px;
+        }
+
+        circle {
+          fill: white;
+          opacity: 0.75;
+          transition: opacity $slow-duration $base-timing $base-duration;
+        }
+      }
+
+      &[rel="yes"] path {
+        stroke: $green;
+      }
+
+      &[rel="no"] path {
+        stroke: $red;
+      }
+
+      &::after {
+        @include size(3rem);
+        @include position(absolute, -0.5rem -0.5rem -0.5rem -0.5rem);
+        border-radius: 50%;
+        content: "";
+      }
+    }
+  }
+
+  .status {
+    @include position(absolute, 1.5rem $keyline null $keyline);
+    @include ellipsis;
+    align-items: center;
+    display: flex;
+    height: 4rem;
+    justify-content: space-between;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  &[data-availability="true"],
+  &[data-availability="false"] {
+    margin-bottom: -1.5rem;
+    transform: translateY(-1.5rem);
+    transition-delay: $base-duration;
+
+    .buttons {
+      transition-delay: $base-duration;
+
+      button {
+        circle {
+          opacity: 0;
+        }
+      }
     }
 
     .instructions {
-      text-align: center;
-      transition-delay: $slow-duration;
-    }
-
-    .buttons {
-      align-items: center;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin: 0;
-      transition: all $slow-duration $base-timing;
-
-      button {
-        @include size(2rem);
-        background: none;
-        border-radius: 50%;
-        margin: 0.5rem;
-        outline: none;
-        padding: 0;
-        position: relative;
-        transition: all $slow-duration $base-timing $base-duration;
-
-        svg {
-          @include size(2rem);
-          display: block;
-          margin: 0;
-
-          circle,
-          path {
-            fill: none;
-            stroke: $secondary-font-color;
-            stroke-width: 1px;
-          }
-
-          circle {
-            fill: white;
-            transition: opacity $slow-duration $base-timing $base-duration;
-          }
-        }
-
-        &[rel="yes"] path {
-          stroke: $green;
-        }
-
-        &[rel="no"] path {
-          stroke: $red;
-        }
-
-        &::after {
-          @include size(3rem);
-          @include position(absolute, -0.5rem -0.5rem -0.5rem -0.5rem);
-          border-radius: 50%;
-          content: "";
-        }
-      }
+      opacity: 0;
+      transform: translateY(-100%);
+      transition-delay: 0;
     }
 
     .status {
-      @include position(absolute, 1.5rem 0 null 4.5rem);
-      align-items: center;
-      display: flex;
-      height: 4rem;
-      justify-content: space-between;
+      opacity: 1;
+      transform: translateX(0%);
+      transition-delay: $medium-duration;
+    }
+  }
+
+  &[data-availability="true"] {
+    .buttons {
+      transform: translateX(calc(50% - 0.25rem));
+    }
+
+    [rel="no"] {
       opacity: 0;
-      transform: translateX(50%);
+      transform: translateX(-3rem);
+    }
+  }
+
+  &[data-availability="false"] {
+    .buttons {
+      transform: translateX(calc(50% - 3.25rem));
     }
 
-    &[data-availability="true"],
-    &[data-availability="false"] {
-      // background: rgba($oc-yellow-0, 0);
-      margin-bottom: -1.5rem;
-      transform: translateY(-1.5rem);
-      transition-delay: $base-duration;
-
-      .buttons {
-        transition-delay: $base-duration;
-
-        button {
-          circle {
-            opacity: 0;
-          }
-        }
-      }
-
-      .instructions {
-        opacity: 0;
-        transform: translateY(-100%);
-        transition-delay: 0;
-      }
-
-      .status {
-        opacity: 1;
-        transform: translateX(0%);
-        transition-delay: $medium-duration;
-      }
-    }
-
-    &[data-availability="true"] {
-      .buttons {
-        transform: translateX(calc(3.25rem - 50%));
-      }
-
-      [rel="no"] {
-        opacity: 0;
-        transform: translateX(-3rem);
-      }
-    }
-
-    &[data-availability="false"] {
-      .buttons {
-        transform: translateX(calc(0.25rem - 50%));
-      }
-
-      [rel="yes"] {
-        opacity: 0;
-        transform: translateX(3rem);
-      }
+    [rel="yes"] {
+      opacity: 0;
+      transform: translateX(3rem);
     }
   }
 }
@@ -196,78 +198,39 @@
     li {
       align-items: center;
       display: flex;
-      padding: 0.25rem 1rem;
+      padding: 0.5rem 1rem;
     }
 
     .name {
       flex: 1;
       color: $secondary-font-color;
       transition: color $base-duration $base-timing;
+      margin-left: ($keyline - 3rem);
+    }
+
+    .avatar {
+      opacity: 0.5;
+      transition: opacity $base-duration $base-timing;
     }
 
     .available .name {
       color: $base-font-color;
     }
 
-    button {
-      @include size($button-size);
-      background: none;
-      margin: 0 1.5rem 0 -0.5rem;
-      outline: none;
-      padding: 0.25rem;
+    .available .avatar {
+      opacity: 1;
+    }
 
-      circle,
-      path {
-        fill: none;
-        stroke: $medium-gray;
-        stroke-width: 1px;
-      }
+    button {
+      @include touch-target;
+      background: none;
+      margin: 0;
+      outline: none;
+      padding: 0;
 
       svg {
-        @include size(2rem);
         display: block;
       }
-    }
-
-    .icon-yes path {
-      stroke: $green;
-      stroke-dasharray: 20;
-      stroke-dashoffset: 20;
-    }
-
-    .icon-no path {
-      stroke: $red;
-      stroke-dasharray: 17;
-      stroke-dashoffset: 17;
-    }
-
-    .icon-unknown path {
-      stroke: $secondary-font-color;
-      stroke-dasharray: 25;
-      stroke-dashoffset: 25;
-    }
-
-    .icon-unknown circle {
-      stroke: $secondary-font-color;
-      transform: scale(0);
-      transform-origin: 50% 50%;
-    }
-
-    .available .icon-yes path,
-    .unavailable .icon-no path,
-    .unknown .icon-unknown path {
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 400ms $base-timing;
-    }
-
-    .unavailable .icon-no path{
-      transition-duration: 200ms;
-      &:nth-child(2) { transition-delay: 200ms; }
-    }
-
-    .unknown .icon-unknown circle {
-      transform: scale(1);
-      transition: transform 400ms $ease-out-back 400ms;
     }
   }
 }
@@ -518,15 +481,7 @@
       .avatar.available,
       .avatar.unavailable,
       .avatar.unknown {
-        circle {
-          display: none;
-        }
-
-        path {
-          fill: none;
-          stroke: $secondary-font-color;
-          stroke-width: 1px;
-        }
+        padding: 0.25em;
       }
 
       .avatar.available path { stroke: $green; }

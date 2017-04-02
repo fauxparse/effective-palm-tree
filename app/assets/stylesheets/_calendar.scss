@@ -151,49 +151,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
         @include touch-target;
         @include size(1.5em);
         display: block;
-
-        circle {
-          fill: $base-background-color;
-          stroke: $medium-gray;
-          stroke-width: 1px;
-        }
-
-        path {
-          fill: none;
-          stroke-linecap: square;
-          stroke-width: 1px;
-        }
-
-        .check path {
-          stroke: $green;
-          stroke-dasharray: 17;
-          stroke-dashoffset: 17;
-        }
-
-        .cross path {
-          stroke: $red;
-          stroke-dasharray: 12;
-          stroke-dashoffset: 12;
-        }
-
-        .question path {
-          stroke: $medium-gray;
-          stroke-dasharray: 14;
-          stroke-dashoffset: -14;
-        }
       }
-
-      &.available .check path,
-      &.unavailable .cross path,
-      &.unknown .question path {
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset $medium-duration $base-timing;
-
-        &:nth-child(2) {
-          transition-delay: $medium-duration;
-        }
-      }
-
 
       a {
         color: $base-font-color;

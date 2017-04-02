@@ -11,6 +11,16 @@ const Event = {
     } else {
       return Event.AVAILABLE
     }
+  },
+
+  availableClass: (availability) => {
+    if (availability === Event.AVAILABLE) {
+      return 'available'
+    } else if (availability === Event.UNAVAILABLE) {
+      return 'unavailable'
+    } else {
+      return 'unknown'
+    }
   }
 }
 
