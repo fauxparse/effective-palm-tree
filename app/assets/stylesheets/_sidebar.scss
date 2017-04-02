@@ -29,12 +29,15 @@
       padding: 0.5rem 0;
     }
 
-    &::before {
+    .icon {
       @include size($icon-size);
-      background: currentColor;
-      border-radius: 50%;
-      content: "";
       margin: 0.5em 1em 0.5em 0.5em;
+
+      path {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1px;
+      }
     }
   }
 

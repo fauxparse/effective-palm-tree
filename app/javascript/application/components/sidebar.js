@@ -1,11 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import Icon from './icon'
 import { actions as userActions } from '../actions/user'
 
-const NavigationItem = ({ active, children, onClick }) => (
+const NavigationItem = ({ icon, active, children, onClick }) => (
   <li aria-selected={active}>
     <a href="#" onClick={onClick}>
+      <Icon name={icon}/>
       <span>{children}</span>
     </a>
   </li>
@@ -14,13 +16,14 @@ const NavigationItem = ({ active, children, onClick }) => (
 const sidebarActions = dispatch => ({
   logOut: () => dispatch(userActions.logOut())
 })
+
 const PrimaryNavigation = connect(undefined, sidebarActions)(props => (
   <nav>
     <ul>
-      <NavigationItem active="true">Events</NavigationItem>
-      <NavigationItem>People</NavigationItem>
-      <NavigationItem>Settings</NavigationItem>
-      <NavigationItem onClick={props.logOut}>Log out</NavigationItem>
+      <NavigationItem icon="SIDEBAR.EVENTS">Events</NavigationItem>
+      <NavigationItem icon="SIDEBAR.PEOPLE">People</NavigationItem>
+      <NavigationItem icon="SIDEBAR.SETTINGS">Settings</NavigationItem>
+      <NavigationItem icon="SIDEBAR.LOG_OUT" onClick={props.logOut}>Log out</NavigationItem>
     </ul>
   </nav>
 ))

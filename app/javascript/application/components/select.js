@@ -3,12 +3,7 @@ import { find } from 'lodash'
 import classNames from 'classnames'
 import Portal from 'react-portal'
 import Tether from 'tether'
-
-const CARET = (
-  <svg width="24px" height="24px" viewBox="0 0 24 24">
-    <path d="M8 10 L12 14 L16 10" transform="translate(0.5, 0.5)" />
-  </svg>
-)
+import Icon from './icon'
 
 export default class Select extends React.Component {
   constructor(props) {
@@ -30,7 +25,7 @@ export default class Select extends React.Component {
           onClick={e => this.triggerClicked(e)}
         >
           <span>{this.selectedLabel()}</span>
-          {CARET}
+          <Icon name="CONTROLS.CARET"/>
         </a>
         <Portal
           ref="portal"

@@ -4,6 +4,7 @@ import moment from 'moment-timezone'
 import classNames from 'classnames'
 import CalendarEvent from './calendar_event'
 import Loader from './loader'
+import Icon from './icon'
 import { actions as eventActions } from '../actions/events'
 
 class CalendarMonth extends React.Component {
@@ -38,10 +39,7 @@ class CalendarMonth extends React.Component {
     } else {
       return (
         <p className="empty">
-          <svg width="39" height="39" viewBox="0 0 39 39">
-            <circle cx="19.5" cy="19.5" r="11" />
-            <path d="M27.277 11.723 L11.723 27.277" />
-          </svg>
+          <Icon name="CALENDAR.NO_EVENTS" />
           <span>No events</span>
         </p>
       )

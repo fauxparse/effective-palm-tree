@@ -1,3 +1,15 @@
+@mixin touch-target {
+  position: relative;
+
+  &::before {
+    @include position(absolute, 50% null null 50%);
+    @include size($button-size);
+    border-radius: 50%;
+    content: "";
+    margin: ($button-size / -2);
+  }
+}
+
 #{$all-buttons} {
   align-items: center;
   background: none;

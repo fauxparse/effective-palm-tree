@@ -5,16 +5,9 @@ import Tether from 'tether'
 import { query } from '../lib/reactive_query'
 import { constants as ENTITIES } from '../actions/entities'
 import { event as eventSchema } from '../schema'
+import Icon from './icon'
 import Select from './select'
 import RangeSlider from './range_slider'
-
-// prettier-ignore
-const ICONS = {
-  ADD: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12.5 2.5v20M22.5 12.5h-20"/></svg>,
-  DRAG: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M16.5 16.5l-4 4-4-4M8.5 8.5l4-4 4 4"/></svg>,
-  DELETE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M19.5 5.5l-14 14M19.5 19.5l-14-14"/></svg>,
-  SAVE: <svg width="24" height="24" viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
-}
 
 const UNLIMITED = null
 
@@ -129,7 +122,7 @@ class EventRole extends React.Component {
           onMouseDown={onDragStart}
           onTouchStart={onDragStart}
         >
-          {ICONS.DRAG}
+          <Icon name="CONTROLS.DRAG"/>
         </span>
         <AllocationRange
           allocation={allocation}
@@ -145,7 +138,7 @@ class EventRole extends React.Component {
           onChange={roleId => this.change({ roleId })}
         />
         <button className="icon-button" onClick={onDelete}>
-          {ICONS.DELETE}
+          <Icon name="CONTROLS.DELETE"/>
         </button>
       </li>
     )
@@ -199,11 +192,11 @@ class EventRoles extends React.Component {
         </ul>
         <footer className="buttons">
           <button onClick={this.addRole.bind(this)}>
-            {ICONS.ADD}
+            <Icon name="CONTROLS.ADD"/>
             <span>Add a role</span>
           </button>
           <button onClick={this.saveChanges.bind(this)} disabled={!dirty}>
-            {ICONS.SAVE}
+            <Icon name="CONTROLS.SAVE"/>
             <span>Save changes</span>
           </button>
         </footer>
