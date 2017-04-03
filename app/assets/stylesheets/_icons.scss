@@ -1,14 +1,19 @@
+.icon {
+  @include size($icon-size);
+
+  circle,
+  path {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-width: 1px;
+  }
+}
+
 .availability-icon {
   circle {
     fill: $base-background-color;
     stroke: $medium-gray;
-    stroke-width: 1px;
-  }
-
-  path {
-    fill: none;
-    stroke-linecap: square;
-    stroke-width: 1px;
   }
 
   .check path {

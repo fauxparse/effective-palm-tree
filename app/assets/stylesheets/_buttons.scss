@@ -6,6 +6,7 @@
     @include size($button-size);
     border-radius: 50%;
     content: "";
+    cursor: pointer;
     margin: ($button-size / -2);
   }
 }

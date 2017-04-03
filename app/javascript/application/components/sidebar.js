@@ -1,32 +1,79 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
+import { sortBy } from 'lodash'
 import classNames from 'classnames'
 import Icon from './icon'
+import Avatar from './avatar'
 import { actions as userActions } from '../actions/user'
 
-const NavigationItem = ({ icon, active, children, onClick }) => (
+const NavigationItem = ({ icon, active, href, title, children, onClick }) => (
   <li aria-selected={active}>
-    <a href="#" onClick={onClick}>
-      <Icon name={icon}/>
-      <span>{children}</span>
-    </a>
+    <Link to={href || '#'} onClick={onClick}>
+      {typeof icon === 'string' ? <Icon name={icon} /> : icon}
+      <span className="title">{title}</span>
+      {children}
+    </Link>
   </li>
 )
 
-const sidebarActions = dispatch => ({
+class Links extends React.Component {
+  render() {
+    const { groups, members, logOut } = this.props
+    return (
+      <nav>
+        <section>
+          <ul>
+            <NavigationItem
+              icon="SIDEBAR.EVENTS"
+              href="/events"
+              title="Upcoming events"
+            />
+          </ul>
+        </section>
+        <section>
+          <h4>Groups</h4>
+          <ul>
+            {groups.map(group => (
+              <NavigationItem
+                icon={<Avatar member={members[group.memberId]} />}
+                key={group.slug}
+                href={`/groups/${group.slug}`}
+                title={group.name}
+              />
+            ))}
+            <NavigationItem
+              icon="CONTROLS.ADD"
+              href="/groups/new"
+              title="Create a new group"
+            />
+          </ul>
+        </section>
+        <section>
+          <ul>
+            <NavigationItem icon="SIDEBAR.SETTINGS" title="Settings" />
+            <NavigationItem
+              icon="SIDEBAR.LOG_OUT"
+              title="Log out"
+              onClick={logOut}
+            />
+          </ul>
+        </section>
+      </nav>
+    )
+  }
+}
+
+const mapStateToProps = ({ groups, members }) => ({
+  members,
+  groups: sortBy(groups, group => group.name.toLocaleLowerCase())
+})
+
+const mapDispatchToProps = dispatch => ({
   logOut: () => dispatch(userActions.logOut())
 })
 
-const PrimaryNavigation = connect(undefined, sidebarActions)(props => (
-  <nav>
-    <ul>
-      <NavigationItem icon="SIDEBAR.EVENTS">Events</NavigationItem>
-      <NavigationItem icon="SIDEBAR.PEOPLE">People</NavigationItem>
-      <NavigationItem icon="SIDEBAR.SETTINGS">Settings</NavigationItem>
-      <NavigationItem icon="SIDEBAR.LOG_OUT" onClick={props.logOut}>Log out</NavigationItem>
-    </ul>
-  </nav>
-))
+const Navigation = connect(mapStateToProps, mapDispatchToProps)(Links)
 
 export default class Sidebar extends React.Component {
   constructor(props) {
@@ -46,7 +93,7 @@ export default class Sidebar extends React.Component {
           checked={open}
           onChange={e => this.setState({ open: e.target.checked })}
         />
-        <PrimaryNavigation />
+        <Navigation />
         <label htmlFor="show-sidebar" className="shim" />
       </aside>
     )

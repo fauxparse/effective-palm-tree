@@ -25,6 +25,7 @@ $main-menu-item-count: 4;
     @include size($button-size);
     background: none;
     border-radius: 50%;
+    cursor: pointer;
     font-weight: $base-font-weight;
     margin: 0;
     outline: none;
