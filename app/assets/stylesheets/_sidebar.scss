@@ -10,33 +10,58 @@
     background: $base-background-color;
     box-shadow: 0 0 .5rem rgba(0, 0, 0, 0.25);
     max-width: calc(100% - #{$sizing-increment});
-    padding: 1rem;
+    overflow-y: auto;
+    padding: 0;
     transform: translateX(-110%);
     transition: transform $slow-duration $sharp-timing;
     width: $sizing-increment * 6;
     z-index: 100;
   }
 
-  a {
-    color: $base-font-color;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-
-    ul {
-      list-style: none;
-      margin: 0;
-      padding: 0.5rem 0;
+  section {
+    + section {
+      border-top: $base-border;
     }
 
-    .icon {
-      @include size($icon-size);
-      margin: 0.5em 1em 0.5em 0.5em;
+    h4 {
+      color: $secondary-font-color;
+      font-size: $small-font-size;
+      font-weight: $base-font-weight;
+      line-height: 1.5rem;
+      margin: 0.5rem 0 0;
+      padding: 0 1rem;
+      text-transform: uppercase;
+    }
+  }
 
-      path {
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 1px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+  }
+
+  a {
+    align-items: center;
+    color: $secondary-font-color;
+    display: flex;
+    flex-direction: row;
+
+    .avatar,
+    .icon {
+      margin: 0.5em calc(#{$keyline} - 1em - #{$icon-size}) 0.5em 1em;
+    }
+
+    .avatar {
+      @include size($icon-size);
+      .icon-admin { display: none; }
+    }
+
+    .title {
+      @include ellipsis;
+      flex: 1;
+
+      &:first-child {
+        margin-left: $keyline;
       }
     }
   }
