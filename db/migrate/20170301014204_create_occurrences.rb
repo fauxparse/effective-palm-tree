@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateOccurrences < ActiveRecord::Migration[5.1]
   def change
     create_table :occurrences do |t|
@@ -8,7 +9,7 @@ class CreateOccurrences < ActiveRecord::Migration[5.1]
       t.boolean :deleted, required: true, default: false
       t.timestamps
 
-      t.index [:event_id, :starts_at, :ends_at], unique: true
+      t.index %i[event_id starts_at ends_at], unique: true
     end
   end
 end

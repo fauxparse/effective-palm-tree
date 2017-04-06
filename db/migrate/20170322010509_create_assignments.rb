@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateAssignments < ActiveRecord::Migration[5.1]
   def change
     create_table :assignments do |t|
@@ -8,10 +9,10 @@ class CreateAssignments < ActiveRecord::Migration[5.1]
       t.timestamps
       t.timestamp :confirmed_at
 
-      t.index [:occurrence_id, :allocation_id, :member_id],
+      t.index %i[occurrence_id allocation_id member_id],
         unique: true,
         name: :index_assignments_per_occurrence
-      t.index [:member_id, :occurrence_id]
+      t.index %i[member_id occurrence_id]
     end
   end
 end

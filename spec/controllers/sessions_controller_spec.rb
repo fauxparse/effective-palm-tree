@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe SessionsController, type: :request do
   subject { response }
+
   let(:user) { nil }
   let(:current_user) { request.env[:clearance].current_user }
 
@@ -20,6 +22,7 @@ RSpec.describe SessionsController, type: :request do
 
       describe 'response' do
         subject { json }
+
         it { is_expected.to include email: user.email }
       end
     end
@@ -35,11 +38,13 @@ RSpec.describe SessionsController, type: :request do
 
       context 'with a good password' do
         let(:session_params) { { email: user.email, password: user.password } }
+
         it { is_expected.to redirect_to root_path }
       end
 
       context 'with a bad password' do
         let(:session_params) { { email: user.email, password: 'bad' } }
+
         it { is_expected.to have_http_status :unauthorized }
       end
     end
@@ -60,6 +65,7 @@ RSpec.describe SessionsController, type: :request do
 
         describe 'response' do
           subject { json }
+
           it { is_expected.to include email: user.email }
         end
       end

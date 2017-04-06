@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class EventsController < ApplicationController
   def index
     respond_to do |format|
@@ -19,7 +20,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.json do
         UpdateAssignments.new(occurrence, assignment_params).call
-        render json: occurrence, include: [:allocations, :assignments]
+        render json: occurrence, include: %i[allocations assignments]
       end
     end
   end
@@ -39,7 +40,7 @@ class EventsController < ApplicationController
   end
 
   def role_params
-    params.permit(roles: [:id, :min, :max, :role_id])[:roles]
+    params.permit(roles: %i[id min max role_id])[:roles]
   end
 
   def assignment_params

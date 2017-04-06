@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Occurrence, type: :model do
   subject(:occurrence) { event.occurrences.occurring_at(event.schedule.first) }
+
   let(:event) { create(:event) }
 
   describe '#to_param' do

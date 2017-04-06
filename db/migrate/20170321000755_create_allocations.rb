@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateAllocations < ActiveRecord::Migration[5.1]
   def change
     create_table :allocations do |t|
@@ -9,7 +10,7 @@ class CreateAllocations < ActiveRecord::Migration[5.1]
       t.integer :position, required: true
       t.timestamps
 
-      t.index [:event_id, :role_id]
+      t.index %i[event_id role_id]
     end
   end
 end

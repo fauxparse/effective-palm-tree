@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateMembers < ActiveRecord::Migration[5.1]
   def change
     create_table :members do |t|
@@ -8,7 +9,7 @@ class CreateMembers < ActiveRecord::Migration[5.1]
       t.boolean :admin, required: true, default: false
       t.timestamps
 
-      t.index [:group_id, :slug], unique: true
+      t.index %i[group_id slug], unique: true
     end
   end
 end

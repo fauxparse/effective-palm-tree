@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class UpdateEventRoles
   attr_reader :event, :attributes
 

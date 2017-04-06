@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SwitchToIceCube < ActiveRecord::Migration[5.1]
   def up
     remove_column :events, :duration

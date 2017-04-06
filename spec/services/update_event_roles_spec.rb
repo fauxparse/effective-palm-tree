@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UpdateEventRoles, type: :service do
   subject(:service) { described_class.new(event, roles) }
+
   let(:event) { create(:event) }
   let(:mc) { create(:role, name: 'MC', group: event.group) }
   let(:player) { create(:role, name: 'player', group: event.group) }

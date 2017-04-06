@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UpdateAssignments, type: :service do
   subject(:service) { UpdateAssignments.new(occurrence, changes) }
+
   let(:event) { create(:event, :with_roles) }
   let(:member) { create(:member, group: event.group) }
   let(:date) { event.starts_at.to_date }

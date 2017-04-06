@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
   subject(:event) { create(:event, group: group) }
+
   let(:group) { create(:group) }
 
   it { is_expected.to be_valid }
@@ -70,6 +72,7 @@ RSpec.describe Event, type: :model do
 
   describe '#occurrences' do
     subject(:occurrences) { event.occurrences }
+
     let(:event) { create(:event, :weekly) }
     let(:start_date) { event.schedule.first.to_date }
 
@@ -78,6 +81,7 @@ RSpec.describe Event, type: :model do
 
       context 'the start date' do
         let(:date) { start_date }
+
         it { is_expected.to be_an_instance_of Occurrence }
 
         context 'when the occurrence already exists' do
@@ -101,11 +105,13 @@ RSpec.describe Event, type: :model do
 
       context 'a week after the start date' do
         let(:date) { start_date + 1.week }
+
         it { is_expected.to be_an_instance_of Occurrence }
       end
 
       context 'the day before the start date' do
         let(:date) { start_date - 1.day }
+
         it { is_expected.to be_nil }
       end
     end
@@ -113,6 +119,7 @@ RSpec.describe Event, type: :model do
 
   describe '::between' do
     subject(:range) { Event.between(range_start, range_end) }
+
     let(:range_start) do
       build(:event).tap(&:valid?).starts_at.beginning_of_month
     end

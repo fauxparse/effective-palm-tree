@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateEvents < ActiveRecord::Migration[5.1]
   def change
     create_table :events do |t|
@@ -13,7 +14,7 @@ class CreateEvents < ActiveRecord::Migration[5.1]
       t.timestamps
 
       t.index :slug
-      t.index [:starts_at, :ends_at]
+      t.index %i[starts_at ends_at]
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Event < ApplicationRecord
   include Sluggable
   include TimeRanges
@@ -40,7 +41,7 @@ class Event < ApplicationRecord
   serialize :schedule_options, JSON
   composed_of :schedule,
     class_name: 'IceCube::Schedule',
-    mapping: %w(schedule_options to_hash),
+    mapping: %w[schedule_options to_hash],
     constructor: :from_hash
 
   before_validation :cache_time_boundaries, if: :schedule?

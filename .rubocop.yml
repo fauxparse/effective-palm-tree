@@ -1,4 +1,5 @@
 inherit_from: .rubocop_todo.yml
+require: rubocop-rspec
 
 AllCops:
   Exclude:
@@ -6,10 +7,18 @@ AllCops:
     - 'db/schema.rb'
     - 'vendor/**/*'
 
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*'
+
 Metrics/AbcSize:
   Exclude:
     - 'db/migrate/*'
-     
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
 Metrics/LineLength:
   Exclude:
     - 'Gemfile'
@@ -21,6 +30,9 @@ Metrics/LineLength:
 Metrics/MethodLength:
   Exclude:
     - 'db/migrate/*'
+
+RSpec/NestedGroups:
+  Max: 6
 
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation

@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 playshop = Group.create(name: 'PlayShop')
-NAMES = %w(
+NAMES = %w[
   Matt Jen Ryan Sam Lori Christine Maddy Janaye Aaron George Maria Jed Harriet
   Stevie Liam Gabby Pippa Oli Tom Austin Callum Sabrina Barney Zoe
-).freeze
+].freeze
 
 NAMES.each.with_index(23) do |name, i|
   playshop.members.create!(
@@ -39,9 +40,9 @@ musos = live.allocations.create!(role: muso, min: 0, max: 1)
 live.occurrences.occurring_on(Date.civil(2017, 3, 17)).tap do |show|
   show.save!
   {
-    mcs => %w(Matt),
-    players => %w(Jen Janaye Aaron Barney),
-    musos => %w(Oli)
+    mcs => %w[Matt],
+    players => %w[Jen Janaye Aaron Barney],
+    musos => %w[Oli]
   }.each do |role, names|
     names.map { |name| Member.find_by(name: name) }.each do |member|
       show.assignments.create!(member: member, allocation: role)

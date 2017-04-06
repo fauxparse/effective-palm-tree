@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe OccurrenceSerializer, type: :serializer do
   subject(:serializer) { OccurrenceSerializer.new(occurrence) }
+
   let(:occurrence) { event.occurrences.occurring_at(event.schedule.first) }
   let(:event) { create(:event, :with_roles) }
   let(:member) { create(:member, group: event.group) }
@@ -26,10 +28,10 @@ describe OccurrenceSerializer, type: :serializer do
       let(:url) { '/event/path/here' }
 
       before do
-        allow_any_instance_of(described_class)
+        allow(serializer)
           .to receive(:scope)
           .and_return(urls)
-        expect(urls)
+        allow(urls)
           .to receive(:event_occurrence_path)
           .with(event.group, event, occurrence)
           .and_return(url)

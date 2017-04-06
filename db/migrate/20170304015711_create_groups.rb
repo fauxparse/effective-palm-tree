@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CreateGroups < ActiveRecord::Migration[5.1]
   def change
     create_table :groups do |t|
@@ -12,8 +13,8 @@ class CreateGroups < ActiveRecord::Migration[5.1]
 
     change_table :events do |t|
       t.belongs_to :group, required: true, foreign_key: { on_delete: :cascade }
-      t.index [:group_id, :slug], unique: true
-      t.index [:group_id, :starts_at, :ends_at]
+      t.index %i[group_id slug], unique: true
+      t.index %i[group_id starts_at ends_at]
     end
   end
 end

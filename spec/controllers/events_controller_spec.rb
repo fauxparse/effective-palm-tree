@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe EventsController, type: :request do
   subject { response }
+
   let(:group) { create(:group) }
   let(:member) { create(:member, :verified, group: group) }
   let(:user_id) { member.user.try(:to_param) }

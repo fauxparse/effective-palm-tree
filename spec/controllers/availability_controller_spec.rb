@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe AvailabilityController, type: :request do
   subject { response }
+
   let(:group) { create(:group) }
   let(:member) { create(:member, :verified, group: group) }
   let(:user_id) { member.user.try(:to_param) }
@@ -53,12 +55,14 @@ RSpec.describe AvailabilityController, type: :request do
       describe 'availability' do
         before { patch! }
         subject { available }
+
         it { is_expected.to be true }
       end
     end
 
     context 'when availability was previously recorded' do
       let(:availability) { { member.id => false } }
+
       before do
         occurrence.availability.build(member: member).save
       end

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe UpdateAvailability, type: :service do
   subject(:service) { UpdateAvailability.new(occurrence, availability) }
+
   let(:group) { create(:group) }
   let(:member) { create(:member, group: group) }
   let(:event) { create(:event, :weekly, group: group) }

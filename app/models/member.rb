@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class Member < ApplicationRecord
   include Sluggable
 
@@ -9,5 +10,5 @@ class Member < ApplicationRecord
   validates :user_id, presence: true, if: :admin?
   validates :user_id, uniqueness: { scope: :group_id, allow_blank: true }
 
-  scope :admin, -> { where(admin: true) }
+  scope :admin, (-> { where(admin: true) })
 end

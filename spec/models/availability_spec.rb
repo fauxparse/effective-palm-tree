@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Availability, type: :model do
   subject(:availability) do
     build(:availability, member: member, occurrence: occurrence)
   end
+
   let(:occurrence) { create(:occurrence) }
   let(:member) { create(:member, group: occurrence.event.group) }
 

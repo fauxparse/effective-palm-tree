@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Member, type: :model do
   subject(:member) { create(:member, group: group) }
+
   let(:group) { create(:group) }
 
   it { is_expected.to be_persisted }
@@ -16,6 +18,7 @@ RSpec.describe Member, type: :model do
 
     context 'when a user exists' do
       let(:another_group) { group }
+
       before { create(:member, group: another_group) }
 
       it { is_expected.not_to eq 'matt' }

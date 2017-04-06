@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class SessionsController < Clearance::SessionsController
   def show
     respond_to do |format|
@@ -52,7 +53,7 @@ class SessionsController < Clearance::SessionsController
   def render_current_user
     render(
       json: current_user,
-      include: { memberships: { group: [:members, :roles] } }
+      include: { memberships: { group: %i[members roles] } }
     )
   end
 end

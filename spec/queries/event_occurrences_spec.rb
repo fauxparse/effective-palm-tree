@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe EventOccurrences do
   subject(:occurrences) { query_object.all }
-  let(:query_object) { EventOccurrences.new(**options) }
+
+  let(:query_object) { described_class.new(**options) }
   let(:options) { {} }
 
   it { is_expected.to be_empty }
