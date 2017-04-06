@@ -8,7 +8,7 @@ if ENV['CIRCLE_ARTIFACTS']
 end
 
 SimpleCov.add_filter do |src_file|
-  File.readlines(src_file.filename).size <= 5
+  File.readlines(src_file.filename).size <= 6
 end
 
 SimpleCov.start 'rails'
