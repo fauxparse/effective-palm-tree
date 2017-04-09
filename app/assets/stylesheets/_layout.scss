@@ -18,3 +18,19 @@ main {
   flex: 1;
   position: relative;
 }
+
+.stackable {
+  transition: transform $slow-duration $base-timing;
+
+  .stackable {
+    transform: translateX(100%);
+  }
+
+  &.parent {
+    transform: translateX(-100%);
+  }
+
+  .parent &.parent {
+    transform: translateX(0%);
+  }
+}
