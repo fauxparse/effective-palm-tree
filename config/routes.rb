@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  get 'availability/update'
-
   resource :session, only: %i[show create destroy]
 
   resources :events, only: %i[index new]
@@ -13,6 +11,7 @@ Rails.application.routes.draw do
       patch 'assignments' => 'events#assignments'
     end
   end
+  resources :groups
 
   root to: 'events#index'
 end
