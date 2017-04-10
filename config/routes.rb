@@ -11,7 +11,9 @@ Rails.application.routes.draw do
       patch 'assignments' => 'events#assignments'
     end
   end
-  resources :groups
+  resources :groups do
+    resources :members
+  end
 
   root to: 'events#index'
 end

@@ -10,6 +10,7 @@ import reducer from './reducers'
 import { reactiveQueryMiddleware } from './lib/reactive_query'
 import Security from './components/security'
 import Groups from './components/groups'
+import Members from './components/members'
 import Events from './components/events'
 import EventDetails from './components/event_details'
 
@@ -29,7 +30,11 @@ document.addEventListener("DOMContentLoaded", e => {
             <Route path=":group/:event/:date" component={EventDetails}/>
           </Route>
           <Route path="groups" component={Groups.Index}>
-            <Route path=":id" component={Groups.Show}/>
+            <Route path=":groupId" component={Groups.Show}>
+              <Route path="members" component={Members.Index}>
+                <Route path=":memberId" component={Members.Show} />
+              </Route>
+            </Route>
           </Route>
           <IndexRedirect to="/events"/>
         </Route>
