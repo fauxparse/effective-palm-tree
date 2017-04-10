@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class GroupsController < ApplicationController
-  def index
-  end
+  def index; end
 
   def show
     respond_to do |format|
       format.json do
-        render json: membership, include: { group: [:members, :roles] }
+        render json: membership, include: { group: %i[members roles] }
       end
     end
   end

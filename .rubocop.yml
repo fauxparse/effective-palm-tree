@@ -18,6 +18,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+    - 'Guardfile'
 
 Metrics/LineLength:
   Exclude:
