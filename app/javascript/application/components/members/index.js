@@ -16,7 +16,7 @@ class Members extends React.Component {
         <section className="index page">
           <Header title="Members" />
           <section>
-            <ul class="member-list">
+            <ul className="member-list">
               {members.map(member => (
                 <Member group={group} member={member} key={member.id} />
               ))}
