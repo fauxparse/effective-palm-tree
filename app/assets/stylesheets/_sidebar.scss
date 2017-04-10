@@ -53,7 +53,14 @@
 
     .avatar {
       @include size($icon-size);
-      .icon-admin { display: none; }
+
+      .icon-avatar {
+        margin: 0;
+      }
+
+      .icon-admin {
+        display: none;
+      }
     }
 
     .title {
