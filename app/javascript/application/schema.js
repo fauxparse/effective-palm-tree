@@ -13,7 +13,6 @@ export const group = new schema.Entity('groups', {
   members: [member],
   roles: [role]
 }, {
-  idAttribute: 'slug',
   processStrategy: (attrs, { admin, id }) => ({ ...attrs, admin, memberId: id })
 })
 

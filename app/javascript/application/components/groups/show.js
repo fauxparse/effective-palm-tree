@@ -27,7 +27,7 @@ class Dashboard extends React.Component {
     if (group) {
       return (
         <section className="group-dashboard">
-          <Link to={`/groups/${group.slug}/members`}>Members</Link>
+          <Link to={`/groups/${group.id}/members`}>Members</Link>
         </section>
       )
     }
