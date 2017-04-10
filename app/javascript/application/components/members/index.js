@@ -5,6 +5,7 @@ import { flowRight as compose, pick, sortBy, values } from 'lodash'
 import classNames from 'classnames'
 import Stackable from '../../lib/stackable'
 import Header from '../header'
+import Avatar from '../avatar'
 import Show from './show'
 
 class Members extends React.Component {
@@ -15,8 +16,10 @@ class Members extends React.Component {
         <section className="index page">
           <Header title="Members" />
           <section>
-            <ul>
-              {members.map(member => <Member group={group} member={member} key={member.slug} />)}
+            <ul className="member-list">
+              {members.map(member => (
+                <Member group={group} member={member} key={member.id} />
+              ))}
             </ul>
           </section>
         </section>
@@ -28,8 +31,11 @@ class Members extends React.Component {
 
 const Member = ({ group, member }) => (
   <li>
-    <Link to={`/groups/${group.slug}/members/${member.id}`}>
-      {member.name}
+    <Link to={`/groups/${group.id}/members/${member.slug}`}>
+      <Avatar member={member} />
+      <span className="name">
+        {member.name}
+      </span>
     </Link>
   </li>
 )
@@ -39,10 +45,8 @@ const mapStateToProps = ({ groups, members }, { params: { groupId } }) => {
   const groupMembers = pick(members, group.members || [])
   return {
     group,
-    members: sortBy(
-      values(groupMembers),
-      ({ name }) => name.toLocaleLowerCase()
-    )
+    members: sortBy(values(groupMembers), ({ name }) =>
+      name.toLocaleLowerCase())
   }
 }
 

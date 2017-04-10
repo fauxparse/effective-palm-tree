@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { flowRight as compose } from 'lodash'
+import { find, flowRight as compose } from 'lodash'
 import classNames from 'classnames'
 import Stackable from '../../lib/stackable'
 import Header from '../header'
@@ -18,7 +18,7 @@ class Member extends React.Component {
 }
 
 const mapStateToProps = ({ members }, { params: { memberId: id } }) => {
-  return { member: members[id] }
+  return { member: find(members, ({ slug }) => slug === id) }
 }
 
 export default compose(connect(mapStateToProps), Stackable)(Member)

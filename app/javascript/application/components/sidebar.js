@@ -37,8 +37,8 @@ class Links extends React.Component {
             {groups.map(group => (
               <NavigationItem
                 icon={<Avatar member={members[group.memberId]} />}
-                key={group.slug}
-                href={`/groups/${group.slug}`}
+                key={group.id}
+                href={`/groups/${group.id}`}
                 title={group.name}
               />
             ))}

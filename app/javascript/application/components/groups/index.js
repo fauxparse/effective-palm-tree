@@ -16,7 +16,7 @@ class Groups extends React.Component {
           <Header title="Groups" />
           <section>
             <ul>
-              {groups.map(group => <Group group={group} key={group.slug} />)}
+              {groups.map(group => <Group group={group} key={group.id} />)}
             </ul>
           </section>
         </section>
@@ -28,7 +28,7 @@ class Groups extends React.Component {
 
 const Group = ({ group }) => (
   <li>
-    <Link to={`/groups/${group.slug}`}>
+    <Link to={`/groups/${group.id}`}>
       {group.name}
     </Link>
   </li>

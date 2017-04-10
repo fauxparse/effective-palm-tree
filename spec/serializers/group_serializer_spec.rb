@@ -12,7 +12,7 @@ describe GroupSerializer, type: :serializer do
   describe 'as JSON' do
     subject(:json) { serializer.as_json }
 
-    it { is_expected.to include :name, :slug, :members, :roles }
+    it { is_expected.to include :name, :id, :members, :roles }
 
     describe(':members') do
       subject(:members) { json[:members] }
