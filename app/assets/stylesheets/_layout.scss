@@ -1,5 +1,11 @@
 body {
   overflow: hidden;
+
+  --metric-keyline: 4.5rem;
+
+  @include media($medium-screen) {
+    --metric-keyline: 16rem;
+  }
 }
 
 main {

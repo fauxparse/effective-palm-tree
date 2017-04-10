@@ -1,5 +1,10 @@
-$calendar-gutter-size: 4.5rem;
-$large-calendar-gutter-size: $sizing-increment * 4;
+.events.page {
+  --metric-keyline: 6rem;
+
+  @include media($large-screen) {
+    --metric-keyline: 16rem;
+  }
+}
 
 .calendar {
   @include position(absolute, 0 0 0 0);
@@ -61,7 +66,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
       letter-spacing: 0.1em;
       line-height: 1.5rem;
       margin: 0 0 0.5rem;
-      padding: 0.5rem 0 0.4375rem ($calendar-gutter-size + 1.5rem);
+      padding: 0.5rem 0 0.4375rem var(--metric-keyline);
       text-transform: uppercase;
 
       &.floating {
@@ -73,7 +78,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
     }
 
     &::before {
-      @include position(absolute, 0 null 0 $calendar-gutter-size);
+      @include position(absolute, 0 null 0 calc(var(--metric-keyline) - 1.5em));
       background: $base-border-color;
       content: "";
       pointer-events: none;
@@ -95,17 +100,17 @@ $large-calendar-gutter-size: $sizing-increment * 4;
 
     section {
       position: relative;
-      margin: 0 1em 0.5em $calendar-gutter-size;
+      margin: 0 1em 0.5em calc(var(--metric-keyline) - 1.5em);
     }
 
     h4 {
-      @include position(absolute, 0 null null (-$calendar-gutter-size));
+      @include position(absolute, 0 null null -4.5rem);
       font-size: $base-font-size;
       font-weight: $base-font-weight;
       margin: 0;
       padding: 0 1em 0 0.5em;
       text-align: center;
-      width: $calendar-gutter-size;
+      width: 4.5rem;
       color: $secondary-font-color;
 
       .date {
@@ -179,7 +184,7 @@ $large-calendar-gutter-size: $sizing-increment * 4;
       color: $disabled-font-color;
       font-size: $small-font-size;
       line-height: 1.5rem;
-      margin-left: $calendar-gutter-size;
+      margin-left: calc(var(--metric-keyline) - 1.5rem);
       padding-left: 1.5rem;
       position: relative;
 
@@ -208,26 +213,27 @@ $large-calendar-gutter-size: $sizing-increment * 4;
   }
 
   @include media($medium-screen) {
+
     .month {
       &::before {
-        left: $large-calendar-gutter-size;
+        // left: $large-calendar-gutter-size;
       }
 
       h3 {
-        padding-left: $large-calendar-gutter-size + 1.5rem;
+        // padding-left: $large-calendar-gutter-size + 1.5rem;
       }
 
       section,
       .loading,
       .empty {
-        margin-left: $large-calendar-gutter-size;
+        // margin-left: $large-calendar-gutter-size;
       }
     }
   }
 
   @include media($large-screen) {
     .month section {
-      margin-right: $large-calendar-gutter-size;
+      // margin-right: $large-calendar-gutter-size;
     }
   }
 }
