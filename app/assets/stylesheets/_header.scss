@@ -10,6 +10,7 @@ $main-menu-item-count: 4;
 
   h1 {
     @include ellipsis;
+    flex: 1;
     font-size: 1.25em;
     font-weight: $light-font-weight;
     line-height: 2em;

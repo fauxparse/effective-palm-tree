@@ -4,6 +4,7 @@ import { find, flowRight as compose } from 'lodash'
 import classNames from 'classnames'
 import Stackable from '../../lib/stackable'
 import Header from '../header'
+import Avatar from '../avatar'
 
 class Member extends React.Component {
   render() {
@@ -12,6 +13,21 @@ class Member extends React.Component {
     return (
       <section className={classNames(className, 'member page')}>
         <Header title={member && member.name} />
+        <MemberProfile member={member} />
+      </section>
+    )
+  }
+}
+
+class MemberProfile extends React.Component {
+  render() {
+    const { member = {} } = this.props
+
+    return (
+      <section className="member-profile">
+        <header>
+          <Avatar member={member} />
+        </header>
       </section>
     )
   }

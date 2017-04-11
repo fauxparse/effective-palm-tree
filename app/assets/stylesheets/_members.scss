@@ -1,0 +1,57 @@
+.member.page > header {
+  --metric-keyline: 4.5rem;
+  padding-right: var(--metric-keyline);
+
+  h1 {
+    text-align: center;
+  }
+}
+
+.member-list {
+  flex: 1;
+  overflow-y: auto;
+
+  ul {
+    margin: 0 0 0 var(--metric-keyline);
+    padding: 0.5em 0;
+  }
+
+  li {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    align-items: center;
+    color: $base-font-color;
+    display: flex;
+    margin-left: -4.5em;
+    padding: 0.5em 1em;
+  }
+
+  .avatar {
+    color: $secondary-font-color;
+    margin-right: 1.5em;
+  }
+}
+
+.member-profile {
+  header {
+    padding: 1em;
+
+    .avatar {
+      display: block;
+      font-size: 4em;
+      margin: 0 auto;
+
+      .icon-avatar {
+        color: $secondary-font-color;
+
+        path {
+          stroke-width: 0.25px;
+        }
+      }
+    }
+  }
+}

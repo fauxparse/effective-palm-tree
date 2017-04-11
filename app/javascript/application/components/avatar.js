@@ -1,9 +1,10 @@
 import React from 'react'
 import Icon from './icon'
+import classNames from 'classnames'
 
-export default ({ member, onMouseDown, onTouchStart }) => (
+export default ({ member = {}, className, onMouseDown, onTouchStart }) => (
   <span
-    className="avatar"
+    className={classNames('avatar', className)}
     onMouseDown={onMouseDown}
     onTouchStart={onTouchStart}
   >
