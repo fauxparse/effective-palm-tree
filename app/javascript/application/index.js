@@ -16,9 +16,11 @@ import EventDetails from './components/event_details'
 
 const store = createStore(
   reducer,
-  applyMiddleware(reactiveQueryMiddleware),
-  applyMiddleware(thunk),
-  applyMiddleware(routerMiddleware(history))
+  applyMiddleware(
+    reactiveQueryMiddleware,
+    thunk,
+    routerMiddleware(history)
+  )
 )
 
 document.addEventListener("DOMContentLoaded", e => {

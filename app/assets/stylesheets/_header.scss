@@ -14,25 +14,51 @@ $main-menu-item-count: 4;
     font-size: 1.25em;
     font-weight: $light-font-weight;
     line-height: 2em;
-    margin: 0 0 0 calc(var(--metric-keyline) - 3rem);
+    margin: 0 0 0 calc(var(--metric-keyline) - 0.5rem);
   }
 
-  button,
-  label[for="show-sidebar"] {
-    @include size($button-size);
-    background: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-weight: $base-font-weight;
-    margin: 0;
-    outline: none;
-    position: relative;
-    padding: (($button-size - $icon-size) / 2);
+  h1, button {
+    transition: opacity $medium-duration $base-timing;
+  }
+}
 
-    path {
-      stroke: $secondary-font-color;
-      stroke-linecap: square;
-      stroke-width: 1px;
+.menu-button {
+  @include position(fixed, 0.5rem null null 0.5rem);
+  @include size($button-size);
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: $base-font-weight;
+  margin: 0;
+  outline: none;
+  padding: (($button-size - $icon-size) / 2);
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: none;
+  }
+
+  path {
+    stroke: $secondary-font-color;
+    stroke-linecap: square;
+    stroke-width: 1px;
+    transform-origin: 0% 50%;
+    transition: transform $base-duration $base-timing;
+  }
+
+  &.back {
+    .top {
+      transform: translate(3px, 7px) rotateZ(-45deg) scaleX((10 / 23));
+    }
+
+    .middle {
+      transform-origin: 100% 50%;
+      transform: scaleX((19 / 23));
+    }
+
+    .bottom {
+      transform: translate(3px, -7px) rotateZ(45deg) scaleX((10 / 23));
     }
   }
 }

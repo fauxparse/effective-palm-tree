@@ -17,6 +17,11 @@ main {
     background: $base-background-color;
     display: flex;
     flex-direction: column;
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+    }
   }
 }
 
@@ -34,6 +39,16 @@ main {
 
   &.parent {
     transform: translateX(-100%);
+  }
+
+  &.parent,
+  &:not(.parent) .stackable {
+    > header {
+      h1,
+      button {
+        opacity: 0;
+      }
+    }
   }
 
   .parent &.parent {
