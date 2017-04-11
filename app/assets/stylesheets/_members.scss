@@ -8,9 +8,6 @@
 }
 
 .member-list {
-  flex: 1;
-  overflow-y: auto;
-
   ul {
     margin: 0 0 0 var(--metric-keyline);
     padding: 0.5em 0;

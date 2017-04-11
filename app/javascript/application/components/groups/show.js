@@ -13,7 +13,7 @@ class Group extends React.Component {
     return (
       <section className={classNames(className, 'group page')}>
         <Header title={group && group.name} />
-        <Dashboard group={group} />
+        <Dashboard className="content" group={group} />
         {children}
       </section>
     )
@@ -22,11 +22,11 @@ class Group extends React.Component {
 
 class Dashboard extends React.Component {
   render() {
-    const { group } = this.props
+    const { className, group } = this.props
 
     if (group) {
       return (
-        <section className="group-dashboard">
+        <section className={classNames('group-dashboard', className)}>
           <Link to={`/groups/${group.id}/members`}>Members</Link>
         </section>
       )

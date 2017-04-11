@@ -13,21 +13,23 @@ class Members extends React.Component {
     const { children, className, group, members, params } = this.props
     return (
       <section className={classNames(className, 'members page')}>
-        <section className="index page">
-          <Header title="Members" />
-          <section className="member-list">
-            <ul>
-              {members.map(member => (
-                <Member group={group} member={member} key={member.id} />
-              ))}
-            </ul>
-          </section>
-        </section>
+        <Header title="Members" />
+        <MemberList className="content" members={members} group={group} />
         {children}
       </section>
     )
   }
 }
+
+const MemberList = ({ className, group, members }) => (
+  <section className={classNames('member-list', className)}>
+    <ul>
+      {members.map(member => (
+      <Member group={group} member={member} key={member.id} />
+      ))}
+    </ul>
+  </section>
+)
 
 const Member = ({ group, member }) => (
   <li>

@@ -12,13 +12,11 @@ class Groups extends React.Component {
     const { children, className, groups, params } = this.props
     return (
       <section className={classNames(className, 'groups page')}>
-        <section className="index page">
-          <Header title="Groups" />
-          <section>
-            <ul>
-              {groups.map(group => <Group group={group} key={group.id} />)}
-            </ul>
-          </section>
+        <Header title="Groups" />
+        <section className="content">
+          <ul>
+            {groups.map(group => <Group group={group} key={group.id} />)}
+          </ul>
         </section>
         {children}
       </section>

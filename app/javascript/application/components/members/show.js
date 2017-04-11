@@ -13,7 +13,7 @@ class Member extends React.Component {
     return (
       <section className={classNames(className, 'member page')}>
         <Header title={member && member.name} />
-        <MemberProfile member={member} />
+        <MemberProfile className="content" member={member} />
       </section>
     )
   }
@@ -21,10 +21,10 @@ class Member extends React.Component {
 
 class MemberProfile extends React.Component {
   render() {
-    const { member = {} } = this.props
+    const { className, member = {} } = this.props
 
     return (
-      <section className="member-profile">
+      <section className={classNames(className, 'member-profile')}>
         <header>
           <Avatar member={member} />
         </header>
