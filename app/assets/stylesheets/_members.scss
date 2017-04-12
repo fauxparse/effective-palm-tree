@@ -1,29 +1,23 @@
 .member.page > header {
-  --metric-keyline: 4.5rem;
-  padding-right: var(--metric-keyline);
+  padding-left: $sizing-increment;
+  padding-right: $sizing-increment;
 
   h1 {
+    margin: 0;
+    padding: 0;
     text-align: center;
   }
 }
 
 .member-list {
   ul {
-    margin: 0 0 0 var(--metric-keyline);
-    padding: 0.5em 0;
-  }
-
-  li {
-    display: block;
-    margin: 0;
-    padding: 0;
+    @include list;
   }
 
   a {
     align-items: center;
     color: $base-font-color;
     display: flex;
-    margin-left: -4.5em;
     padding: 0.5em 1em;
   }
 
@@ -46,6 +40,7 @@
         color: $secondary-font-color;
 
         path {
+          transform: none !important;
           stroke-width: 0.25px;
         }
       }

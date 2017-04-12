@@ -1,10 +1,5 @@
-.events.page > header,
-.events.page .calendar {
-  --metric-keyline: 6rem;
-
-  @include media($medium-screen) {
-    --metric-keyline: 16rem;
-  }
+.events.page > header h1 {
+  padding-left: 1.5rem;
 }
 
 .calendar {
@@ -67,7 +62,7 @@
       letter-spacing: 0.1em;
       line-height: 1.5rem;
       margin: 0 0 0.5rem;
-      padding: 0.5rem 0 0.4375rem var(--metric-keyline);
+      padding: 0.5rem 0 0.4375rem ($keyline + 1.5rem);
       text-transform: uppercase;
 
       &.floating {
@@ -79,7 +74,7 @@
     }
 
     &::before {
-      @include position(absolute, 0 null 0 calc(var(--metric-keyline) - 1.5em));
+      @include position(absolute, 0 null 0 $keyline);
       background: $base-border-color;
       content: "";
       pointer-events: none;
@@ -101,7 +96,7 @@
 
     section {
       position: relative;
-      margin: 0 1em 0.5em calc(var(--metric-keyline) - 1.5em);
+      margin: 0 1em 0.5em $keyline;
     }
 
     h4 {
@@ -185,7 +180,7 @@
       color: $disabled-font-color;
       font-size: $small-font-size;
       line-height: 1.5rem;
-      margin-left: calc(var(--metric-keyline) - 1.5rem);
+      margin-left: $keyline;
       padding-left: 1.5rem;
       position: relative;
 
@@ -213,9 +208,30 @@
     }
   }
 
+  @include media($medium-screen) {
+    .month {
+      &::before {
+        left: $keyline-large;
+      }
+
+      h3 {
+        padding-left: ($keyline-large + 1.5rem);
+      }
+
+      .loading,
+      .empty {
+        margin-left: $keyline-large;
+      }
+
+      section {
+        margin-left: $keyline-large;
+      }
+    }
+  }
+
   @include media($large-screen) {
     .month section {
-      margin-right: var(--metric-keyline);
+      margin-right: $keyline-large;
     }
   }
 }

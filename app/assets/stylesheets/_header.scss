@@ -6,7 +6,7 @@ $main-menu-item-count: 4;
   display: flex;
   flex: 0 0 calc(#{$sizing-increment} + 1px);
   flex-direction: row;
-  padding: 0.5em $sizing-increment 0.5em 0.5em;
+  padding: 0.5rem $sizing-increment 0.5rem 0rem;
 
   h1 {
     @include ellipsis;
@@ -14,7 +14,11 @@ $main-menu-item-count: 4;
     font-size: 1.25em;
     font-weight: $light-font-weight;
     line-height: 2em;
-    margin: 0 0 0 calc(var(--metric-keyline) - 0.5rem);
+    margin: 0 0 0 #{$keyline};
+
+    @include media($large-screen) {
+      margin-left: $keyline-large;
+    }
   }
 
   h1, button {

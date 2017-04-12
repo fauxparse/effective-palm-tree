@@ -5,8 +5,12 @@
     flex: 0 0 (2 * $sizing-increment);
     padding-bottom: 0;
     padding-right: 0;
-    padding-left: var(--metric-keyline);
+    padding-left: $keyline;
     position: relative;
+
+    @include media($large-screen) {
+      padding-left: $keyline-large;
+    }
 
     > div {
       align-self: stretch;
@@ -194,11 +198,12 @@
 
   .members {
     flex: 1;
-    margin-left: var(--metric-keyline);
+    margin-left: $keyline;
     padding: 0.5rem 0;
 
     @include media($large-screen) {
-      margin-right: var(--metric-keyline);
+      margin-left: $keyline-large;
+      margin-right: $keyline-large;
     }
 
     li {
@@ -250,10 +255,11 @@
     flex: 1;
     margin: 0 ;
     overflow-y: auto;
+    margin-left: ($keyline - 3.5rem);
 
     @include media($large-screen) {
-      margin-left: calc(var(--metric-keyline) - 3.5em);
-      margin-right: var(--metric-keyline);
+      margin-left: ($keyline-large - 3.5rem);
+      margin-right: $keyline-large;
     }
 
     &.settling .allocation {
@@ -269,7 +275,11 @@
     border-top: $base-border;
     flex: 0 0 $sizing-increment;
     justify-content: space-between;
-    padding: 0.5em var(--metric-keyline);
+    padding: 0.5em 1em;
+
+    @include media($large-screen) {
+      margin: 0 $keyline-large;
+    }
   }
 
   .allocation {
@@ -414,7 +424,11 @@
 
     section {
       padding: 0.5em 0;
-      margin-left: var(--metric-keyline);
+      margin-left: $keyline;
+
+      @include media($large-screen) {
+        margin-left: $keyline-large;
+      }
 
       &:not(:first-child) {
         border-top: $base-border;
@@ -445,7 +459,7 @@
         transition: all $base-duration $base-timing;
 
         @include media($large-screen) {
-          padding-right: var(--metric-keyline);
+          padding-right: $keyline-large;
         }
 
         .action {
