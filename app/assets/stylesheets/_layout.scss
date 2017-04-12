@@ -3,7 +3,7 @@ body {
 
   --metric-keyline: 4.5rem;
 
-  @include media($medium-screen) {
+  @include media($large-screen) {
     --metric-keyline: 16rem;
   }
 }
