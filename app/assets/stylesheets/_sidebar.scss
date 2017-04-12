@@ -83,13 +83,13 @@
     z-index: 1;
   }
 
-  #show-sidebar:checked {
-    ~ nav {
+  &.open {
+    nav {
       transform: translateX(0);
       transition-timing-function: $base-timing;
     }
 
-    ~ .shim {
+    .shim {
       opacity: 1;
       pointer-events: auto;
     }

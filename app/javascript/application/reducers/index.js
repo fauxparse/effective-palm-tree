@@ -8,6 +8,7 @@ import events from './events'
 import groups from './groups'
 import members from './members'
 import roles from './roles'
+import sidebar from './sidebar'
 import user from './user'
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
   members,
   roles,
   routing,
+  sidebar,
   user
 })

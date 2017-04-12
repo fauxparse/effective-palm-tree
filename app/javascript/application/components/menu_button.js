@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import classNames from 'classnames'
+import { actions as sidebarActions } from '../actions/sidebar'
 
 class MenuButton extends React.Component {
   constructor(props) {
@@ -37,10 +38,12 @@ class MenuButton extends React.Component {
 
   click() {
     const { back } = this.state
+    const { go, showSidebar } = this.props
 
     if (back > '/') {
-      this.props.go(back)
+      go(back)
     } else {
+      showSidebar()
     }
   }
 }
@@ -50,7 +53,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  go: (path) => dispatch(push(path))
+  go: (path) => dispatch(push(path)),
+  showSidebar: () => dispatch(sidebarActions.show())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuButton)

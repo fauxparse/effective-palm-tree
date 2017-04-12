@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import Icon from './icon'
 import Avatar from './avatar'
 import { actions as userActions } from '../actions/user'
+import { actions as sidebarActions } from '../actions/sidebar'
 
 const NavigationItem = ({ icon, active, href, title, children, onClick }) => (
   <li aria-selected={active}>
@@ -17,7 +18,7 @@ const NavigationItem = ({ icon, active, href, title, children, onClick }) => (
   </li>
 )
 
-class Links extends React.Component {
+class Navigation extends React.Component {
   render() {
     const { groups, members, logOut } = this.props
     return (
@@ -64,38 +65,28 @@ class Links extends React.Component {
   }
 }
 
-const mapStateToProps = ({ groups, members }) => ({
+class Sidebar extends React.Component {
+  render() {
+    const { groups, members, open, hide, logOut } = this.props
+
+    return (
+      <aside className={classNames('sidebar', { open })}>
+        <Navigation groups={groups} members={members} logOut={logOut} />
+        <div className="shim" onClick={hide} />
+      </aside>
+    )
+  }
+}
+
+const mapStateToProps = ({ groups, members, sidebar }) => ({
+  open: sidebar,
   members,
   groups: sortBy(groups, group => group.name.toLocaleLowerCase())
 })
 
 const mapDispatchToProps = dispatch => ({
-  logOut: () => dispatch(userActions.logOut())
+  logOut: () => dispatch(userActions.logOut()),
+  hide: () => dispatch(sidebarActions.hide())
 })
 
-const Navigation = connect(mapStateToProps, mapDispatchToProps)(Links)
-
-export default class Sidebar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { open: false }
-  }
-
-  render() {
-    const { title } = this.props
-    const { open } = this.state
-
-    return (
-      <aside className={classNames('sidebar', { open })}>
-        <input
-          type="checkbox"
-          id="show-sidebar"
-          checked={open}
-          onChange={e => this.setState({ open: e.target.checked })}
-        />
-        <Navigation />
-        <label htmlFor="show-sidebar" className="shim" />
-      </aside>
-    )
-  }
-}
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar)
