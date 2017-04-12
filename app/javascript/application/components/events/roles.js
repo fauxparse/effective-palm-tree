@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { assign, difference, forOwn, keys, pick, range, sortBy, values } from 'lodash'
 import Tether from 'tether'
-import { query } from '../lib/reactive_query'
-import { constants as ENTITIES } from '../actions/entities'
-import { event as eventSchema } from '../schema'
-import Icon from './icon'
-import Select from './select'
-import RangeSlider from './range_slider'
+import { query } from '../../lib/reactive_query'
+import { constants as ENTITIES } from '../../actions/entities'
+import { event as eventSchema } from '../../schema'
+import Icon from '../icon'
+import Select from '../select'
+import RangeSlider from '../range_slider'
 
 const UNLIMITED = null
 
@@ -175,7 +175,7 @@ class EventRoles extends React.Component {
     const { event, group, roles } = this.props
     const { allocations, dirty, dragging } = this.state
     return (
-      <section className="event-roles">
+      <section className="event-roles content">
         <ul ref="list">
           {allocations.map((allocation, i) => (
             <EventRole

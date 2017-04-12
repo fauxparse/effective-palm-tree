@@ -3,13 +3,12 @@ import { connect } from 'react-redux'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import { keyBy, keys, sortBy, values } from 'lodash'
-import { query } from '../lib/reactive_query'
-import InfinitelyScrollable from './infinitely_scrollable'
-import Event from '../models/event'
+import { query } from '../../lib/reactive_query'
+import InfinitelyScrollable from '../infinitely_scrollable'
+import Event from '../../models/event'
 import CalendarMonth from './calendar_month'
-import Modal from './modal'
-import { constants as ENTITIES } from '../actions/entities'
-import { event as eventSchema } from '../schema'
+import { constants as ENTITIES } from '../../actions/entities'
+import { event as eventSchema } from '../../schema'
 
 class Calendar extends React.Component {
   constructor(props) {
@@ -49,9 +48,6 @@ class Calendar extends React.Component {
       >
         {this.timeline()}
         <button className="bookmark" onClick={() => scrollTo(-1)} />
-        <Modal.Container>
-          {children && React.cloneElement(children, { key: params.id })}
-        </Modal.Container>
       </div>
     )
   }

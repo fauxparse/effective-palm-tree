@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { pick, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
-import { actions as availabilityActions } from '../actions/availability'
-import Event from '../models/event'
-import Avatar from './avatar'
-import Icon from './icon'
+import { actions as availabilityActions } from '../../actions/availability'
+import Event from '../../models/event'
+import Avatar from '../avatar'
+import Icon from '../icon'
 
 class MyAvailability extends React.Component {
   render() {
@@ -75,7 +75,7 @@ class EventAvailability extends React.Component {
   render() {
     const { availability, event, group, members } = this.props
     return (
-      <section className="event-availability" role="tabpanel">
+      <section className="event-availability content" role="tabpanel">
         {this.myAvailability()}
         <ul className="members">
           {sortBy(members, m => m.name.toLocaleLowerCase())

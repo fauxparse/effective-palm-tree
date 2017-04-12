@@ -116,11 +116,15 @@ class Security extends React.Component {
   }
 
   render() {
-    const { children, location, user } = this.props
+    const { children, location, routes, user } = this.props
     const { errors, loaded, loading } = this.state
 
     if (user) {
-      return <Layout location={location}>{children}</Layout>
+      return (
+        <Layout location={location} routes={routes}>
+          {children}
+        </Layout>
+      )
     } else {
       return (
         <Modal.Container>

@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { Link } from 'react-router'
 import moment from 'moment-timezone'
-import Event from '../models/event'
-import Icon from './icon'
-import { actions as availabilityActions } from '../actions/availability'
+import Event from '../../models/event'
+import Icon from '../icon'
+import { actions as availabilityActions } from '../../actions/availability'
 
 class CalendarEvent extends React.Component {
   render() {

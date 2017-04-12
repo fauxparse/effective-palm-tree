@@ -1,7 +1,8 @@
-.events.page {
+.events.page > header,
+.events.page .calendar {
   --metric-keyline: 6rem;
 
-  @include media($large-screen) {
+  @include media($medium-screen) {
     --metric-keyline: 16rem;
   }
 }
@@ -212,28 +213,9 @@
     }
   }
 
-  @include media($medium-screen) {
-
-    .month {
-      &::before {
-        // left: $large-calendar-gutter-size;
-      }
-
-      h3 {
-        // padding-left: $large-calendar-gutter-size + 1.5rem;
-      }
-
-      section,
-      .loading,
-      .empty {
-        // margin-left: $large-calendar-gutter-size;
-      }
-    }
-  }
-
   @include media($large-screen) {
     .month section {
-      // margin-right: $large-calendar-gutter-size;
+      margin-right: var(--metric-keyline);
     }
   }
 }

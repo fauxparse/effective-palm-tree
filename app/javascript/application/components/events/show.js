@@ -1,18 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { pick } from 'lodash'
-import history from '../lib/history'
-import Header from './header'
-import Event from '../models/event'
-import CloseButton from './close_button'
-import EventAssignments from './event_assignments'
-import EventAvailability from './event_availability'
-import EventRoles from './event_roles'
-import { Tab, TabList } from './tabs'
-import Icon from './icon'
-import { query } from '../lib/reactive_query'
-import { constants as ENTITIES } from '../actions/entities'
-import { event as eventSchema } from '../schema'
+import { flowRight as compose, pick } from 'lodash'
+import classNames from 'classnames'
+import Stackable from '../../lib/stackable'
+import Header from '../header'
+import Event from '../../models/event'
+import EventAssignments from './assignments'
+import EventAvailability from './availability'
+import EventRoles from './roles'
+import { Tab, TabList } from '../tabs'
+import Icon from '../icon'
+import { query } from '../../lib/reactive_query'
+import { constants as ENTITIES } from '../../actions/entities'
+import { event as eventSchema } from '../../schema'
 
 class EventDetails extends React.Component {
   constructor(props) {
@@ -22,13 +22,12 @@ class EventDetails extends React.Component {
   }
 
   render() {
-    const { event, group, availability } = this.props
+    const { className, event, group, availability } = this.props
     const { tab } = this.state
     const loading = !event
     return (
-      <section className="event-details page">
+      <section className={classNames('event-details page', className)}>
         <header>
-          <CloseButton onClick={this.close.bind(this)} />
           <div>
             <h2>
               <b>{event && event.name}</b>
@@ -63,12 +62,6 @@ class EventDetails extends React.Component {
   switchTab(tab) {
     this.setState({ tab })
   }
-
-  close(e) {
-    e.preventDefault()
-    e.stopPropagation()
-    history.push('/events')
-  }
 }
 
 const mapStateToProps = ({ groups, events, members, roles, availability }, { location, params }) => {
@@ -90,4 +83,4 @@ const mapDispatchToProps = (dispatch, { params: { group, event, date } }) => ({
   ))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(EventDetails)
+export default compose(connect(mapStateToProps, mapDispatchToProps), Stackable)(EventDetails)

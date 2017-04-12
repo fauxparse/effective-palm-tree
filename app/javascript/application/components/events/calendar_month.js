@@ -3,9 +3,9 @@ import { last, sortBy } from 'lodash'
 import moment from 'moment-timezone'
 import classNames from 'classnames'
 import CalendarEvent from './calendar_event'
-import Loader from './loader'
-import Icon from './icon'
-import { actions as eventActions } from '../actions/events'
+import Loader from '../loader'
+import Icon from '../icon'
+import { actions as eventActions } from '../../actions/events'
 
 class CalendarMonth extends React.Component {
   constructor(props) {

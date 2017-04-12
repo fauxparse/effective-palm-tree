@@ -7,22 +7,17 @@ import Stackable from '../../lib/stackable'
 import Header from '../header'
 import Show from './show'
 
-class Groups extends React.Component {
-  render() {
-    const { children, className, groups, params } = this.props
-    return (
-      <section className={classNames(className, 'groups page')}>
-        <Header title="Groups" />
-        <section className="content">
-          <ul>
-            {groups.map(group => <Group group={group} key={group.id} />)}
-          </ul>
-        </section>
-        {children}
-      </section>
-    )
-  }
-}
+const Groups = ({ children, className, groups, params }) => (
+  <section className={classNames(className, 'groups page')}>
+    <Header title="Groups" />
+    <section className="content">
+      <ul>
+        {groups.map(group => <Group group={group} key={group.id} />)}
+      </ul>
+    </section>
+    {children}
+  </section>
+)
 
 const Group = ({ group }) => (
   <li>

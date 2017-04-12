@@ -9,10 +9,9 @@ import history from './lib/history'
 import reducer from './reducers'
 import { reactiveQueryMiddleware } from './lib/reactive_query'
 import Security from './components/security'
+import Events from './components/events'
 import Groups from './components/groups'
 import Members from './components/members'
-import Events from './components/events'
-import EventDetails from './components/event_details'
 
 const store = createStore(
   reducer,
@@ -28,8 +27,8 @@ document.addEventListener("DOMContentLoaded", e => {
     <Provider store={store}>
       <Router history={syncHistoryWithStore(history, store)}>
         <Route path="/" component={Security}>
-          <Route path="events" component={Events}>
-            <Route path=":group/:event/:date" component={EventDetails}/>
+          <Route path="events" component={Events.Index}>
+            <Route path=":group/:event/:date" component={Events.Show}/>
           </Route>
           <Route path="groups" component={Groups.Index}>
             <Route path=":groupId" component={Groups.Show}>

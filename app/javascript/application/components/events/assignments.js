@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
 import { find, findIndex, forEach, keyBy, pick, some, sortBy } from 'lodash'
-import Event from '../models/event'
-import Avatar from './avatar'
-import Icon from './icon'
-import { actions as assignmentActions } from '../actions/assignments'
+import Event from '../../models/event'
+import Avatar from '../avatar'
+import Icon from '../icon'
+import { actions as assignmentActions } from '../../actions/assignments'
 
 class MemberItem extends React.Component {
   render() {
@@ -104,7 +104,7 @@ class EventAssignments extends React.Component {
     const { dragging } = this.state
     return (
       <section
-        className={classNames('event-assignments', {
+        className={classNames('event-assignments content', {
           dragging: dragging && dragging.moved
         })}
         role="tabpanel"
