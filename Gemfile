@@ -60,18 +60,24 @@ end
 group :development do
   gem 'guard'
   gem 'guard-ctags-bundler', require: false
+  gem 'guard-cucumber', require: false
   gem 'guard-rspec', require: false
   gem 'guard-rubocop', require: false
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'pry-rails'
   gem 'rubocop', require: false
   gem 'spring'
+  gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'
   gem 'web-console', github: 'rails/web-console'
 end
 
 group :test do
+  gem 'capybara-screenshot'
   gem 'codeclimate-test-reporter', '~> 1.0.0'
+  gem 'cucumber-rails', require: false
+  gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner'
+  gem 'poltergeist'
   gem 'rspec-collection_matchers'
   gem 'rubocop-rspec', github: 'backus/rubocop-rspec'
   gem 'shoulda-matchers', '~> 3.1'
