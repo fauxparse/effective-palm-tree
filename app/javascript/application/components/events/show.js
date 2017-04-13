@@ -18,7 +18,10 @@ class EventDetails extends React.Component {
   constructor(props) {
     super(props)
     this.state = { tab: 'assignments' }
-    props.loadEvent()
+  }
+
+  componentDidMount() {
+    this.props.loadEvent()
   }
 
   render() {
