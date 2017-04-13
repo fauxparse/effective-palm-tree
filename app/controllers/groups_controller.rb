@@ -3,17 +3,13 @@
 class GroupsController < ApplicationController
   def index
     respond_to do |format|
-      format.json do
-        render json: memberships, include: { group: %i[members roles] }
-      end
+      format.json { render_memberships(memberships) }
     end
   end
 
   def show
     respond_to do |format|
-      format.json do
-        render json: membership, include: { group: %i[members roles] }
-      end
+      format.json { render_memberships(membership) }
     end
   end
 
@@ -26,5 +22,9 @@ class GroupsController < ApplicationController
 
   def membership
     @membership ||= group(:id).members.find_by(user_id: current_user.id)
+  end
+
+  def render_memberships(data)
+    render json: data, include: { group: %i[members roles] }
   end
 end
