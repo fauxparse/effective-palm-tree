@@ -319,6 +319,8 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
+    show_me_the_cookies (3.1.0)
+      capybara (~> 2.0)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -392,6 +394,7 @@ DEPENDENCIES
   rubocop-rspec!
   sass-rails!
   shoulda-matchers (~> 3.1)
+  show_me_the_cookies
   simplecov
   spring
   spring-commands-cucumber

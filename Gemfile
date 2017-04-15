@@ -81,6 +81,7 @@ group :test do
   gem 'rspec-collection_matchers'
   gem 'rubocop-rspec', github: 'backus/rubocop-rspec'
   gem 'shoulda-matchers', '~> 3.1'
+  gem 'show_me_the_cookies'
   gem 'simplecov'
   gem 'timecop'
 end

@@ -28,6 +28,14 @@
 }
 
 .member-profile {
+  @include media($medium-screen) {
+    padding: 0 $keyline;
+  }
+
+  @include media($large-screen) {
+    padding: 0 $keyline-large;
+  }
+
   header {
     padding: 1em;
 

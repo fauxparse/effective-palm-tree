@@ -22,6 +22,7 @@ Capybara.javascript_driver = :poltergeist
 require 'capybara-screenshot/cucumber'
 
 World(FactoryGirl::Syntax::Methods)
+World(ShowMeTheCookies)
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any

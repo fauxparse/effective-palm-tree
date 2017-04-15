@@ -1,11 +1,8 @@
-Given(/^I am an existing user$/) do
-  @user = create(:user)
-end
-
 When(/^I log in$/) do
+  visit root_path
   within(:css, '.login-dialog') do
-    fill_in 'email', with: @user.email
-    fill_in 'password', with: @user.password
+    fill_in 'email', with: user.email
+    fill_in 'password', with: attributes_for(:user)[:password]
     find(:css, '[type="submit"]').trigger('click')
   end
 end
