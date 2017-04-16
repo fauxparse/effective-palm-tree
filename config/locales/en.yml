@@ -35,5 +35,7 @@ en:
       models:
         invitation:
           attributes:
+            admin_id:
+              must_be_admin: 'must be a group admin'
             member_id:
               invalid_group: 'must be the same group as the inviting member'

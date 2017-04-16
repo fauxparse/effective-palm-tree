@@ -10,6 +10,12 @@ RSpec.describe Invitation, type: :model do
   it { is_expected.to be_pending }
   it { is_expected.to validate_presence_of(:email) }
 
+  context 'when the inviting member is not an admin' do
+    let(:admin) { create(:member, group: member.group) }
+
+    it { is_expected.not_to be_valid }
+  end
+
   context 'when member and admin are from different groups' do
     let(:admin) { create(:administrator) }
 

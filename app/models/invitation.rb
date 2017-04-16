@@ -20,6 +20,7 @@ class Invitation < ApplicationRecord
 
   validates :status, uniqueness: { scope: :member_id }, if: :pending?
 
+  validate :from_admin, if: %i[admin]
   validate :same_group, if: %i[member admin]
 
   private
@@ -29,6 +30,10 @@ class Invitation < ApplicationRecord
       self.token = Clearance::Token.new
       break unless Invitation.where(token: token).exists?
     end
+  end
+
+  def from_admin
+    errors.add(:admin_id, :must_be_admin) unless admin.admin?
   end
 
   def same_group

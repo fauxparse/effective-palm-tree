@@ -63,6 +63,7 @@ group :development do
   gem 'guard-cucumber', require: false
   gem 'guard-rspec', require: false
   gem 'guard-rubocop', require: false
+  gem 'letter_opener', github: 'ryanb/letter_opener'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'pry-rails'
   gem 'rubocop', require: false
@@ -77,6 +78,7 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'cucumber-rails', require: false
   gem 'database_cleaner', github: 'DatabaseCleaner/database_cleaner'
+  gem 'email_spec', github: 'email-spec/email-spec'
   gem 'poltergeist'
   gem 'rspec-collection_matchers'
   gem 'rubocop-rspec', github: 'backus/rubocop-rspec'
