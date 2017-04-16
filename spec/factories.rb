@@ -81,6 +81,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :invitation do
+    member
+    email { "#{member.name.underscore}@sula.co" }
+    admin { create(:administrator, group: member.group) }
+  end
+
   factory :member do
     name 'Matt'
     group
@@ -89,7 +95,8 @@ FactoryGirl.define do
       user
     end
 
-    trait admin: :verified do
+    factory :administrator do
+      verified
       admin true
     end
   end

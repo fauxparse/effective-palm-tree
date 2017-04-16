@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170322020604) do
+ActiveRecord::Schema.define(version: 20170415173234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,20 @@ ActiveRecord::Schema.define(version: 20170322020604) do
     t.index ["slug"], name: "index_groups_on_slug", unique: true
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "member_id"
+    t.bigint "admin_id"
+    t.string "email", limit: 128
+    t.string "token", limit: 64
+    t.string "status", limit: 16, default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_invitations_on_admin_id"
+    t.index ["member_id", "status"], name: "index_invitations_on_member_id_and_status"
+    t.index ["member_id"], name: "index_invitations_on_member_id"
+    t.index ["token"], name: "index_invitations_on_token", unique: true
+  end
+
   create_table "members", force: :cascade do |t|
     t.bigint "group_id"
     t.string "name", limit: 128
@@ -135,6 +149,8 @@ ActiveRecord::Schema.define(version: 20170322020604) do
   add_foreign_key "availability", "members", on_delete: :cascade
   add_foreign_key "availability", "occurrences", on_delete: :cascade
   add_foreign_key "events", "groups", on_delete: :cascade
+  add_foreign_key "invitations", "members", column: "admin_id", on_delete: :cascade
+  add_foreign_key "invitations", "members", on_delete: :cascade
   add_foreign_key "members", "groups", on_delete: :cascade
   add_foreign_key "members", "users", on_delete: :nullify
   add_foreign_key "occurrences", "events", on_delete: :cascade
