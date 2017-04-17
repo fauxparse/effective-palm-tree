@@ -50,5 +50,9 @@ module.exports = {
 
   resolveLoader: {
     modules: [ path.resolve('../vendor/node_modules') ]
+  },
+
+  watchOptions: {
+    ignored: /node_modules/
   }
 }
