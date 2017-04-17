@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :groups do
     resources :members
   end
+  resources :invitations
 
   root to: 'events#index'
 end
