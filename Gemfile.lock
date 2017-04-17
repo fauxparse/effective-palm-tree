@@ -68,6 +68,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    action_mailer_cache_delivery (0.3.7)
+      actionmailer (>= 3.0)
     actioncable (5.1.0.rc1)
       actionpack (= 5.1.0.rc1)
       nio4r (~> 2.0)
@@ -376,6 +378,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  action_mailer_cache_delivery
   active_model_serializers (~> 0.10.0)
   acts_as_list
   auto_strip_attributes (~> 2.1)

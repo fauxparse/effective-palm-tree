@@ -1,7 +1,11 @@
 import { schema } from 'normalizr'
 import moment from 'moment-timezone'
 
-export const member = new schema.Entity('members')
+export const invitation = new schema.Entity('invitations')
+
+export const member = new schema.Entity('members', {
+  invitations: [invitation]
+})
 
 export const role = new schema.Entity('roles')
 

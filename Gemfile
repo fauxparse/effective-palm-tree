@@ -74,6 +74,7 @@ group :development do
 end
 
 group :test do
+  gem 'action_mailer_cache_delivery'
   gem 'capybara-screenshot'
   gem 'codeclimate-test-reporter', '~> 1.0.0'
   gem 'cucumber-rails', require: false

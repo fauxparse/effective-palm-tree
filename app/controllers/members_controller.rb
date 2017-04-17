@@ -9,7 +9,7 @@ class MembersController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json { render json: membership }
+      format.json { render json: membership, includes: :pending_invitations }
     end
   end
 
@@ -20,6 +20,10 @@ class MembersController < ApplicationController
   end
 
   def membership
-    @membership ||= group.members.includes(:user).find_by(slug: params[:id])
+    @membership ||=
+      group
+      .members
+      .includes(:user, :pending_invitations)
+      .find_by(slug: params[:id])
   end
 end

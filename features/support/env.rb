@@ -21,6 +21,8 @@ Capybara.javascript_driver = :poltergeist
 
 require 'capybara-screenshot/cucumber'
 
+require 'email_spec/cucumber'
+
 World(FactoryGirl::Syntax::Methods)
 World(ShowMeTheCookies)
 

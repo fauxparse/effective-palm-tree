@@ -6,6 +6,7 @@ import availability from './availability'
 import calendar from './calendar'
 import events from './events'
 import groups from './groups'
+import invitations from './invitations'
 import members from './members'
 import roles from './roles'
 import sidebar from './sidebar'
@@ -18,6 +19,7 @@ export default combineReducers({
   calendar,
   events,
   groups,
+  invitations,
   members,
   roles,
   routing,

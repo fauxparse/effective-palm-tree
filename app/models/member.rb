@@ -7,6 +7,9 @@ class Member < ApplicationRecord
   belongs_to :user, optional: true, inverse_of: :memberships
   has_many :availability, dependent: :destroy
   has_many :invitations, dependent: :destroy
+  has_many :pending_invitations,
+    -> { merge(Invitation.pending) },
+    class_name: 'Invitation'
 
   validates :user_id, presence: true, if: :admin?
   validates :user_id, uniqueness: { scope: :group_id, allow_blank: true }

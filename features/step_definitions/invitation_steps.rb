@@ -10,10 +10,13 @@ end
 Then(/^I should see progress as the invitation is sent$/) do
   within(:css, 'section.invitation') do
     expect(page).to have_content('Sending…')
-    # expect(page).to have_content('Sent')
+    expect(page).to have_content('Invited')
   end
 end
 
 Then(/^Hicks should receive an invitation email$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  invitation_emails =
+    unread_emails_for(member_email)
+    .select { |m| m.subject =~ /invited/i }
+  expect(invitation_emails).not_to be_empty
 end

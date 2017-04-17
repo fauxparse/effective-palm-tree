@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { last } from 'lodash'
+import { query } from '../../lib/reactive_query'
+import { invitation as schema } from '../../schema'
 
 class Invitation extends React.Component {
   constructor(props) {
@@ -17,6 +20,24 @@ class Invitation extends React.Component {
   }
 
   invitationForm() {
+    const { invitation } = this.props
+    if (invitation) {
+      return this.pendingInvitation()
+    } else {
+      return this.newInvitation()
+    }
+  }
+
+  pendingInvitation() {
+    const { sender } = this.props
+    return (
+      <p>
+        Invited by {sender.name}
+      </p>
+    )
+  }
+
+  newInvitation() {
     const { member, group, invitation } = this.props
     const { email, sending } = this.state
     const emailChanged = e => this.setState({ email: e.target.value })
@@ -49,11 +70,31 @@ class Invitation extends React.Component {
     const { email, sending } = this.state
     if (email && !sending) {
       this.setState({ sending: true })
+      this.props.sendInvitation(email)
     }
   }
 }
 
-const mapStateToProps = () => ({})
-const mapDispatchToProps = dispatch => ({})
+const mapStateToProps = ({ invitations, members }, { member }) => {
+  const invitation = last(member && invitations[member.id] || [])
+  return {
+    invitation,
+    sender: invitation && members[invitation.adminId]
+  }
+}
+
+const mapDispatchToProps = (dispatch, { member }) => ({
+  sendInvitation: (email) =>
+    dispatch(
+      query(
+        '/invitations',
+        {
+          schema,
+          method: 'POST',
+          body: { memberId: member.id, email }
+        }
+      )
+    )
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Invitation)
