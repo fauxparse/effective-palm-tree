@@ -38,8 +38,10 @@ const fetchError = (options, dispatch) => error =>
 const callback = (when, action) =>
   ({ type: callbackName(action) + '.' + when, ...action.options.params })
 
-const callbackName = (action) =>
-  action.options && action.options.callback || ENTITIES.REFRESH
+const callbackName = ({ options: { callback, method } = {} } = {}) =>
+  callback ||
+  (method && method.toUpperCase() === 'DELETE' && ENTITIES.DELETE) ||
+  ENTITIES.REFRESH
 
 const apiResponse = (action, dispatch) => json => {
   const { options: { params, schema } } = action

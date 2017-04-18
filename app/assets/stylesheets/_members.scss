@@ -57,3 +57,68 @@
     }
   }
 }
+
+.invitation {
+  display: block;
+  margin: 0 auto 1em;
+  max-width: 20em;
+  text-align: center;
+
+  [type="email"] {
+    background: none;
+    border-bottom: $base-border;
+    border-radius: 0;
+    border-width: 0 0 1px;
+    box-shadow: none;
+    line-height: 1.5em;
+    padding: 0.5em 0 calc(0.5em - 1px);
+    text-align: center;
+
+    &:hover {
+      border-width: 0 0 1px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px $base-background-color inset !important;
+    }
+  }
+
+  .buttons {
+    margin: 0;
+    transform: translateX(calc(25% + 0.125em));
+    transition: transform $medium-duration $base-timing;
+  }
+
+  button {
+    flex: 1;
+    text-align: center;
+
+    span {
+      flex: 1;
+    }
+
+    + button {
+      margin-left: 1em;
+    }
+  }
+
+  [rel="cancel"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.sent {
+    [rel="cancel"] {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .buttons {
+      transform: translateX(0);
+    }
+  }
+}

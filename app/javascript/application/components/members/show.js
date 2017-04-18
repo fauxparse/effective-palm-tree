@@ -35,7 +35,9 @@ class MemberProfile extends React.Component {
         <header>
           <Avatar member={member} />
         </header>
-        <Invitation member={member} group={group} />
+        {member &&
+          !member.registered &&
+          <Invitation member={member} group={group} />}
       </section>
     )
   }
@@ -52,16 +54,10 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch, { params: { groupId, memberId } }) => ({
   fetchMember: () => {
-    dispatch(
-      query(
-        `/groups/${groupId}/members/${memberId}`,
-        { schema }
-      )
-    )
+    dispatch(query(`/groups/${groupId}/members/${memberId}`, { schema }))
   }
 })
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  Stackable
-)(Member)
+export default compose(connect(mapStateToProps, mapDispatchToProps), Stackable)(
+  Member
+)

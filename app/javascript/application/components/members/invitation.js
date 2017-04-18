@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { last } from 'lodash'
+import moment from 'moment-timezone'
+import classNames from 'classnames'
 import { query } from '../../lib/reactive_query'
 import { invitation as schema } from '../../schema'
 
@@ -10,90 +12,118 @@ class Invitation extends React.Component {
     this.state = { sending: false, email: '' }
   }
 
-  render() {
-    const { member, group, invitation } = this.props
-    return (
-      <section className="invitation">
-        {member.registered || this.invitationForm()}
-      </section>
-    )
-  }
-
-  invitationForm() {
-    const { invitation } = this.props
-    if (invitation) {
-      return this.pendingInvitation()
-    } else {
-      return this.newInvitation()
+  componentWillReceiveProps({ invitation }) {
+    if (invitation !== this.props.invitation) {
+      const email = invitation && invitation.email || ''
+      this.setState({ sending: false, email })
     }
   }
 
-  pendingInvitation() {
-    const { sender } = this.props
-    return (
-      <p>
-        Invited by {sender.name}
-      </p>
-    )
-  }
-
-  newInvitation() {
+  render() {
     const { member, group, invitation } = this.props
     const { email, sending } = this.state
     const emailChanged = e => this.setState({ email: e.target.value })
+    const className = classNames('invitation', { sending, sent: invitation })
 
     return (
-      <form className="invitation" onSubmit={this.submit.bind(this)}>
+      <form className={className} onSubmit={this.submit.bind(this)}>
         <fieldset disabled={sending}>
-          <p>Invite {member.name} to join {group.name}!</p>
+          <p>
+            {this.heading()}
+          </p>
           <div className="form-control">
-            <label htmlFor="email">Email address</label>
             <input
               type="email"
-              id="email"
               name="email"
+              placeholder="Email address"
               value={email}
               required
+              disabled={sending || invitation}
               onInput={emailChanged}
             />
           </div>
-          <button type="submit">
-            <span>{sending ? 'Sending…' : 'Send invitation'}</span>
-          </button>
+          <div className="buttons">
+            <button type="submit" rel="send">
+              <span>
+                {sending ? 'Sending…' : invitation ? 'Re-send' : 'Send'}
+              </span>
+            </button>
+            <button type="button" rel="cancel" onClick={this.cancel.bind(this)}>
+              <span>Cancel</span>
+            </button>
+          </div>
         </fieldset>
       </form>
     )
   }
 
+  heading() {
+    const { group, member, invitation, sender } = this.props
+
+    if (invitation) {
+      const date = moment(invitation.createdAt).format('D MMMM, YYYY')
+      return `Invited on ${date}${sender ? ' by ' + sender.name : ''}`
+    } else {
+      return `Invite ${member.name} to join ${group.name}!`
+    }
+  }
+
   submit(e) {
     e.preventDefault()
+    if (this.props.invitation) {
+      this.resend(this.props.invitation)
+    } else {
+      this.send()
+    }
+  }
+
+  send() {
     const { email, sending } = this.state
     if (email && !sending) {
       this.setState({ sending: true })
       this.props.sendInvitation(email)
     }
   }
-}
 
-const mapStateToProps = ({ invitations, members }, { member }) => {
-  const invitation = last(member && invitations[member.id] || [])
-  return {
-    invitation,
-    sender: invitation && members[invitation.adminId]
+  resend(invitation) {
+    this.setState({ sending: true })
+    this.props.resendInvitation(invitation.token)
+  }
+
+  cancel() {
+    const { invitation, cancelInvitation } = this.props
+    cancelInvitation(invitation.token)
   }
 }
 
+const mapStateToProps = ({ invitations, members }, { member }) => {
+  const invitation = member && invitations[member.id]
+  const sender = invitation && members[invitation.adminId]
+  return { invitation, sender }
+}
+
 const mapDispatchToProps = (dispatch, { member }) => ({
-  sendInvitation: (email) =>
+  sendInvitation: email =>
     dispatch(
-      query(
-        '/invitations',
-        {
-          schema,
-          method: 'POST',
-          body: { memberId: member.id, email }
-        }
-      )
+      query('/invitations', {
+        schema,
+        method: 'POST',
+        body: { memberId: member.id, email }
+      })
+    ),
+  resendInvitation: token =>
+    dispatch(
+      query(`/invitations/${token}`, {
+        schema,
+        method: 'PUT',
+      })
+    ),
+  cancelInvitation: token =>
+    dispatch(
+      query(`/invitations/${token}`, {
+        schema,
+        method: 'DELETE'
+      })
     )
 })
 

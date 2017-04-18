@@ -23,6 +23,10 @@ class Invitation < ApplicationRecord
   validate :from_admin, if: %i[admin]
   validate :same_group, if: %i[member admin]
 
+  def to_param
+    token
+  end
+
   private
 
   def generate_token
