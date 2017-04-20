@@ -88,7 +88,7 @@ FactoryGirl.define do
   end
 
   factory :member do
-    name 'Matt'
+    name 'Ripley'
     group
 
     trait :verified do
@@ -96,6 +96,7 @@ FactoryGirl.define do
     end
 
     factory :administrator do
+      name 'Burke'
       verified
       admin true
     end

@@ -97,7 +97,7 @@ class Invitation extends React.Component {
 }
 
 const mapStateToProps = ({ invitations, members }, { member }) => {
-  const invitation = member && invitations[member.id]
+  const invitation = member && invitations.byMemberId[member.id]
   const sender = invitation && members[invitation.adminId]
   return { invitation, sender }
 }

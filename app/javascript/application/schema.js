@@ -1,7 +1,7 @@
 import { schema } from 'normalizr'
 import moment from 'moment-timezone'
 
-export const invitation = new schema.Entity('invitations', {}, {
+export const invitation = new schema.Entity('invitations', {
   idAttribute: 'token'
 })
 
@@ -41,3 +41,5 @@ export const event = new schema.Entity('events', {
     endsAt: moment(attrs.endsAt)
   })
 })
+
+invitation.define({ member, admin: member, group })

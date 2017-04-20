@@ -5,8 +5,7 @@ module MemberHelpers
 
   def admin_member
     @admin_member ||=
-      FactoryGirl.create(:member, :verified, admin: true, group: group)
-    @member = @admin_member
+      FactoryGirl.create(:administrator, group: group)
   end
 
   def member

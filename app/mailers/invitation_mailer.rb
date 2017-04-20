@@ -5,7 +5,7 @@ class InvitationMailer < ApplicationMailer
     @invitation = invitation
     @admin = invitation.admin
     @member = invitation.member
-    @group = @member.group
+    @group = invitation.group
 
     mail(
       to: @invitation.email,

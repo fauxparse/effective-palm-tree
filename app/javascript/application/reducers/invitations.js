@@ -2,21 +2,34 @@ import { assign, groupBy, omit, values } from 'lodash'
 import { constants as USER } from '../actions/user'
 import { constants as ENTITIES } from '../actions/entities'
 
-export default (state = {}, action) => {
+export default (state = { byMemberId: {}, byToken: {} }, action) => {
   if (action.type === ENTITIES.REFRESH) {
     return {
-      ...state,
-      ...values(action.entities.invitations).reduce(
-        (result, item) => assign(result, { [item.memberId]: item }),
-        {}
-      )
+      byMemberId: {
+        ...state.byMemberId,
+        ...values(action.entities.invitations).reduce(
+          (result, item) => assign(result, { [item.memberId]: item }),
+          {}
+        )
+      },
+      byToken: {
+        ...state.byToken,
+        ...values(action.entities.invitations).reduce(
+          (result, item) => assign(result, { [item.token]: item }),
+          {}
+        )
+      }
     }
   } else if (action.type === ENTITIES.DELETE) {
-    return omit(state, values(action.entities.invitations).map(
-      ({ memberId }) => memberId
-    ))
+    const invitations = values(action.entities.invitations)
+    const memberIds = invitations.map(({ memberId }) => memberId)
+    const tokens = invitations.map(({ token }) => token)
+    return {
+      byMemberId: omit(state.byMemberId, memberIds),
+      byToken: omit(state.byToken, tokens)
+    }
   } else if (action.type === USER.LOGOUT) {
-    return {}
+    return { byMemberId: {}, byToken: {} }
   } else {
     return state
   }

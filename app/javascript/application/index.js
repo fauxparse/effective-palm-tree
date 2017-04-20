@@ -12,6 +12,7 @@ import Security from './components/security'
 import Events from './components/events'
 import Groups from './components/groups'
 import Members from './components/members'
+import Invitation from './components/invitation'
 
 const store = createStore(
   reducer,
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", e => {
               </Route>
             </Route>
           </Route>
+          <Route path="invitations/:token" component={Invitation} />
           <IndexRedirect to="/events"/>
         </Route>
       </Router>

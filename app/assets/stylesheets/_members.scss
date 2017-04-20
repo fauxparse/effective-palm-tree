@@ -58,12 +58,47 @@
   }
 }
 
-.invitation {
+form.invitation {
   display: block;
   margin: 0 auto 1em;
   max-width: 20em;
   text-align: center;
 
+  .envelope {
+    @include size(4em);
+    display: block;
+    margin: 1em auto;
+
+    path {
+      fill: none;
+      stroke: $base-border-color;
+      stroke-width: 1px;
+    }
+  }
+
+  .buttons {
+    margin: 0;
+  }
+
+  button {
+    flex: 1;
+    text-align: center;
+
+    span {
+      flex: 1;
+    }
+
+    + button {
+      margin-left: 1em;
+    }
+  }
+}
+
+.invitation.page .content {
+  padding: 1em;
+}
+
+.member-profile .invitation {
   [type="email"] {
     background: none;
     border-bottom: $base-border;
@@ -91,19 +126,6 @@
     margin: 0;
     transform: translateX(calc(25% + 0.125em));
     transition: transform $medium-duration $base-timing;
-  }
-
-  button {
-    flex: 1;
-    text-align: center;
-
-    span {
-      flex: 1;
-    }
-
-    + button {
-      margin-left: 1em;
-    }
   }
 
   [rel="cancel"] {

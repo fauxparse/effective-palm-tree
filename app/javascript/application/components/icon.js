@@ -40,6 +40,10 @@ const ICONS = {
     SAVE: <svg width={24} height={24} viewBox="0 0 24 24"><path d="M2.5 10.5l7 7 13-13"/></svg>
   },
 
+  ILLUSTRATIONS: {
+    ENVELOPE: <svg width="64" height="64" viewBox="0 0 64 64"><path d="M12.5 22.5l-10 5.8v34.2h60V28.3l-10-5.8M12.5 33.9V2.5h40v31.2M2.5 28.3l60 34.2M62.5 28.3L31.7 44.9M22.5 14.5h20M22.5 24.5h20"/></svg>
+  },
+
   LOADER: <svg width={24} height={24} viewBox="0 0 24 24"><circle cx="11.5" cy="11.5" r="11" /><path d="M11.5 0.5 A 11 11 0 0 1 22.5 11.5" /></svg>,
 
   TABS: {

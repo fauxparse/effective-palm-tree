@@ -14,19 +14,19 @@ RSpec.describe Member, type: :model do
   describe '#to_param' do
     subject(:slug) { member.to_param }
 
-    it { is_expected.to eq 'matt' }
+    it { is_expected.to eq 'ripley' }
 
     context 'when a user exists' do
       let(:another_group) { group }
 
       before { create(:member, group: another_group) }
 
-      it { is_expected.not_to eq 'matt' }
+      it { is_expected.not_to eq 'ripley' }
 
       context 'in another group' do
         let(:another_group) { create(:group, name: 'Other') }
 
-        it { is_expected.to eq 'matt' }
+        it { is_expected.to eq 'ripley' }
       end
     end
   end

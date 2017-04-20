@@ -13,6 +13,8 @@ Capybara.register_driver(:poltergeist) do |app|
     app,
     js_errors: false,
     inspector: true,
+    host: 'localhost',
+    port: 3001,
     phantomjs_options: ['--load-images=no', '--ignore-ssl-errors=yes']
   )
 end

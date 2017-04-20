@@ -1,4 +1,10 @@
 class InvitationsController < ApplicationController
+  def show
+    respond_to do |format|
+      format.json { render_invitation include: %i[member admin group] }
+    end
+  end
+
   def create
     if member && admin
       create_invitation
@@ -29,9 +35,9 @@ class InvitationsController < ApplicationController
 
   private
 
-  def render_invitation
+  def render_invitation(options = {})
     status = invitation.valid? ? :ok : :not_acceptable
-    render json: invitation, status: status
+    render options.merge(json: invitation, status: status)
   end
 
   def invitation_params
@@ -49,7 +55,11 @@ class InvitationsController < ApplicationController
   end
 
   def invitation
-    @invitation ||= Invitation.find_by!(token: params[:id])
+    @invitation ||=
+      Invitation
+      .pending
+      .includes(:admin, member: :group)
+      .find_by!(token: params[:id])
   end
 
   def create_invitation

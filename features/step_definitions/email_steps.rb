@@ -205,7 +205,7 @@ When(/^(?:I|they|"([^"]*?)") follows? "([^"]*?)" in the email$/) do |address, li
   visit_in_email(link, address)
 end
 
-When(/^(?:I|they) click the first link in the email$/) do
+When(/^(?:I|they) click the(?: first)? link in the email$/) do
   click_first_link_in_email
 end
 

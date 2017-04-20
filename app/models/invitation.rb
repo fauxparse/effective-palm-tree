@@ -1,6 +1,7 @@
 class Invitation < ApplicationRecord
   belongs_to :member
   belongs_to :admin, class_name: 'Member'
+  has_one :group, through: :member
 
   enum status: {
     pending: 'pending',
