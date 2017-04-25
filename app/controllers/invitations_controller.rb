@@ -25,7 +25,9 @@ class InvitationsController < ApplicationController
   end
 
   def destroy
-    if admin_for_invitation?
+    if !invitation
+      head :ok
+    elsif admin_for_invitation?
       invitation.destroy
       render_invitation
     else
@@ -33,11 +35,23 @@ class InvitationsController < ApplicationController
     end
   end
 
+  def accept
+    AcceptInvitation
+      .new(invitation, current_user)
+      .on(:success) { render_invitation_with_group_members }
+      .on(:expired, :invalid, :already_a_member) { head :not_acceptable }
+      .call
+  end
+
   private
 
   def render_invitation(options = {})
     status = invitation.valid? ? :ok : :not_acceptable
     render options.merge(json: invitation, status: status)
+  end
+
+  def render_invitation_with_group_members
+    render_invitation include: { member: { group: :members } }
   end
 
   def invitation_params

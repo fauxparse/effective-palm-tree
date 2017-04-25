@@ -5,9 +5,7 @@ export const invitation = new schema.Entity('invitations', {
   idAttribute: 'token'
 })
 
-export const member = new schema.Entity('members', {
-  invitations: [invitation]
-})
+export const member = new schema.Entity('members')
 
 export const role = new schema.Entity('roles')
 
@@ -43,3 +41,4 @@ export const event = new schema.Entity('events', {
 })
 
 invitation.define({ member, admin: member, group })
+member.define({ group, invitations: [invitation] })

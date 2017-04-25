@@ -34,6 +34,8 @@ Then(/^Hicks should receive an invitation email$/) do
   expect(invitation_emails(member_email)).not_to be_empty
 end
 
-Then(/^I should see that "([^"]*)" has invited me to join "([^"]*)"$/) do |admin, group|
+Then(
+  /^I should see that "([^"]*)" has invited me to join "([^"]*)"$/
+) do |admin, group|
   expect(page).to have_content("#{admin} has invited you to join #{group}")
 end

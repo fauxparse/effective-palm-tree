@@ -156,6 +156,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    cry (0.1.0)
     cucumber (2.4.0)
       builder (>= 2.1.2)
       cucumber-core (~> 1.5.0)
@@ -390,6 +391,7 @@ DEPENDENCIES
   clearance
   codeclimate-test-reporter (~> 1.0.0)
   coffee-rails (~> 4.2)
+  cry
   cucumber-rails
   database_cleaner!
   email_spec!
